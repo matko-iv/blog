@@ -19,17 +19,13 @@ Digitalizacija: čuveni proces u kojem se papirologija pretvara u PDF papirologi
 
 ## eUprava — hrabar pokušaj
 
-[eUprava](https://euprava.me) je sistem koji je zamišljen da vam omogući da sve državne stvari riješite online. I zaista — neke stvari *možete* riješiti online. Recimo, možete provjeriti da li vam je istekla lična karta. A onda otići na šalter da je obnovite.
+[eUprava](https://euprava.gov.me) je sistem koji je zamišljen da vam omogući da sve državne stvari riješite online. I zaista — neke stvari *možete* riješiti online. Recimo, možete provjeriti da li vam je istekla lična karta. A onda otići na šalter da je obnovite.
 
 Sistem zahtijeva digitalnu potvrdu identiteta, koja zahtijeva poseban čitač kartica, koji zahtijeva driver koji radi samo na Windowsu 7, koji zahtijeva... da odustanete i odete na šalter.
 
-## HTTPS je opcija, ne obaveza
+Moj omiljeni detalj: određeni broj državnih sajtova godinama nije imao HTTPS. U 2024. godini. Znači, kada pristupate sajtu koji čuva vaše lične podatke, veza nije bila šifrovana. **E viva!!!!** Za one koji ne znaju šta to znači: zamislite da šaljete pismo sa ličnim podacima, ali umjesto koverte koristite razglednicu. I poštar čita. I komšija čita. I svi čitaju.
 
-Moj omiljeni detalj: određeni broj državnih sajtova godinama nije imao HTTPS. U 2024. godini. Znači, kada pristupate sajtu koji čuva vaše lične podatke, veza nije bila šifrovana. **E viva!!!!**
-
-Za one koji ne znaju šta to znači: zamislite da šaljete pismo sa ličnim podacima, ali umjesto koverte koristite razglednicu. I poštar čita. I komšija čita. I svi čitaju.
-
-Bar su imali animaciju na loading screen-u. Top!
+Bar su imali animaciju na loading screen-u. Bomba!!
 
 ## Sajt opštine [insert bilo koja opština]
 
@@ -46,20 +42,8 @@ Neka pravila koja važe za skoro sve:
 
 ## Zašto je ovo bitno
 
-Šalu na stranu — ovo zapravo *jeste* problem. Ljudi gube vrijeme, posao se usporava, turisti se zbunjuju, investitori odustaju. Dobra veb infrastruktura nije luksuz — to je osnova funkcionalne države.
-
-Crna Gora ima sjajne IT stručnjake. Imamo ljude koji mogu napraviti odlične sajtove i aplikacije.
-
-## Predlog za poboljšanje
-
-1. **Zaposlite ljude koji znaju šta rade** — nepotizammaxxing ne preporučujemo
-2. **HTTPS svuda** — ovo nije preporuka, ovo je minimum
-3. **Testirajte na mobilnom** — 70% korisnika dolazi sa telefona
-4. **Ažurirajte sadržaj** — vijesti iz 2022. na naslovnoj strani nisu "evergreen content", to je nemaran odnos
-5. **Napravite jedan dobar dizajn sistem** i koristite ga za sve organe — ne treba svaka opština da ima svoj "kreativni" pristup
+Šalu na stranu — ovo zapravo *jeste* problem. Ljudi gube vrijeme, posao se usporava, turisti se zbunjuju, investitori odustaju. Dobra veb infrastruktura nije luksuz — to je osnova funkcionalne države. Crna Gora ima sjajne IT stručnjake. Imamo ljude koji mogu napraviti odlične sajtove i aplikacije. **Zaposlite ljude koji znaju šta rade** — nepotizammaxxing ne preporučujemo.
 
 Ali realno, ako čitate ovo, vjerovatno niste osoba koja o tome odlučuje. Pa hajde da se samo nasmijemo i nastavimo da koristimo šaltere.
 
----
-
-*Autor ne snosi odgovornost za eventualne traume nastale posjetom navedenih sajtova. Pregledajte na sopstvenu odgovornost. Držite Ctrl+W na gotovosti.*
+*Autor ne snosi odgovornost za eventualne traume nastale posjetom navedenih sajtova*

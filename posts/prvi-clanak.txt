@@ -1,21 +1,15 @@
 Unaprijeđena vremenska prognoza za Budvu koristeći mašinsko učenje
 11. februar 2026
 
-Na aplikaciji vam piše "sunčano", a vi gledate kroz prozor i pada kiša? E, to mi se dešavalo dovoljno puta da sam odlučio da stvar uzmem u svoje ruke.
-
 Plan je bio jednostavan: uzeti 6 globalnih vremenskih modela, baciti ih u mašinu za učenje, i nadati se da će rezultat biti bolji. I jeste.
 
 ## Zašto jedna prognoza nije dovoljna
 
-Zamislite da imate 6 drugara koji vam govore kakvo će vrijeme biti. Jedan je optimista — uvijek kaže "biće sunce". Drugi je pesimista — po njemu uvijek pada kiša. Treći je precizan ali samo utorkom.
-
-E to su vremenski modeli.
-
-Nijedan od njih ne može biti najbolji za sve. Ali kad ih staviš zajedno i pustiš mašinu da uči iz njihovih grešaka... e tu nastaje magija. Ili barem manja greška.
+Nijedan od 6 globalnih i kontinentalnih modela koji su dostupni široj javnosti (pa i meni) ne može biti najbolji za sve. Ali kad ih staviš zajedno i pustiš mašinu da uči iz njihovih grešaka, moguće je napraviti mnogo manju grešku.
 
 ## XGBoost gradient booster
 
-[XGBoost](https://xgboost.readthedocs.io/) je u suštini algoritam koji kaže: "Daj mi podatke, ja ću naći obrazac" Dao sam mu:
+[XGBoost](https://xgboost.readthedocs.io/) je u suštini algoritam koji uzima podatke i pravi koeficijent koji odgovara rasponu i magnitudi greške. Dao sam mu:
 
 - **6 modela** kao input (i to ECMWF, GFS, ARPEGE, ICON, METEO FRANCE i ITALIAMETEO)
 - **9 parametara**: temperatura, vlažnost, vjetar, pritisak, oblačnost, padavine i još par stvari
@@ -27,9 +21,8 @@ Da stavim u perspektivu — najbolji pojedinačni model ima grešku od 1.4°C. M
 
 ## Stvari koje sam naučio na teži način
 
-1. **Feature engineering je 80% posla** — sat u danu, mjesec, lag features...
-2. **Bias correction po mjesecu i satu** — kad otkriješ da ECMWF *svaki januar* daje 2°C više, korekcija je trivijalna ali efekat ogroman
-3. **Oblačnost je noćna mora** — modeli sa 25km rezolucijom bukvalno ne vide Budvu. Za njih je to jedan piksel negdje između mora i planine
+- **Feature engineering je 80% posla** — sat u danu, mjesec, lag features...
+- **Bias correction po mjesecu i satu** — kad otkriješ da ECMWF *svaki januar* daje 2°C više, korekcija je trivijalna ali efekat ogroman. Tako za bilo koju situaciju.
 
 ### Kod (za one koji vole takve stvari)
 
@@ -43,12 +36,6 @@ for model in MODELS:
     # Mašina kaže kako korigovati
 ```
 
-## Pipeline koji radi sam
-
-Najljepši dio: sve je automatizovano. GitHub Actions pokreće pipeline **svaki sat**, vuče najnovije prognoze svih 6 modela, primijeni korekciju, i publishuje rezultat. Ja bukvalno ne moram ništa raditi. Osim kad se nešto pokvari. Što se dešava češće nego što bih volio.
-
 Pogledajte [live prognozu](https://matko-iv.github.io/vrijeme/forecast.html) ili [GitHub repo](https://github.com/matko-iv/vrijeme).
-
----
 
 *Prognoza se ažurira svakog sata. Ako griješi, krivite modele, ne mene. Ja sam samo posrednik.*
