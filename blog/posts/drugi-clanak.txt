@@ -1,0 +1,27 @@
+Zašto su vremenske prognoze za Crnu Goru toliko loše
+8. februar 2026
+
+Ako živite u Budvi, Kotoru ili bilo gdje na crnogorskom primorju, vjerovatno ste primijetili — **prognoze su često netačne**. Evo zašto.
+
+## Topografija je ubica
+
+Crna Gora ima jednu od najkompleksnijih topografija u Evropi. U krugu od 50km imate:
+
+- More na 0m nadmorske visine
+- Lovćen na 1749m
+- Skadarsko jezero kao ogromno vodeno tijelo
+- Uske doline koje kanališu vjetar
+
+Globalni modeli imaju rezoluciju od **10-25km**. To znači da za njih Budva, Cetinje i Lovćen mogu biti *isti grid cell*. Zamislite da pokušavate prognozirati vrijeme za plažu koristeći podatke sa planine.
+
+## Šta pomaže?
+
+Lokalna korekcija. Ako znate da ECMWF *uvijek* pretjeruje sa oblačnošću u Budvi za 15-20%, možete to korigovati. Ako znate da GFS sistematski daje previše vjetra, možete to smanjiti.
+
+> Machine learning to radi automatski — uči obrasce grešaka iz istorijskih podataka.
+
+## Budućnost
+
+Idealno bi bilo imati regionalni model sa rezolucijom **<2km** specifično za Crnu Goru. Do tada, korekcija ensemble-a je najbolje što imamo.
+
+Pročitajte [detaljnu analizu](https://matko-iv.github.io/vrijeme/) sa svim brojevima.

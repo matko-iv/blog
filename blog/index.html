@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog – Matija Ivanović</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #24292e;
+            background: #ffffff;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        h1 {
+            font-size: 40px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.25;
+            color: #24292e;
+        }
+
+        h2 {
+            font-size: 30px;
+            font-weight: 600;
+            margin-top: 50px;
+            margin-bottom: 18px;
+            line-height: 1.25;
+            color: #24292e;
+        }
+
+        h3 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 35px;
+            margin-bottom: 14px;
+            color: #24292e;
+        }
+
+        p {
+            margin-bottom: 18px;
+            color: #24292e;
+        }
+
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        code {
+            background: #f6f8fa;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin: 24px 0;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        ul, ol {
+            margin-left: 28px;
+            margin-bottom: 18px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 24px 0;
+            display: block;
+            border-radius: 6px;
+        }
+
+        blockquote {
+            border-left: 3px solid #0366d6;
+            padding: 12px 20px;
+            margin: 24px 0;
+            color: #586069;
+            font-style: italic;
+            background: #f6f8fa;
+            border-radius: 0 6px 6px 0;
+        }
+
+        blockquote p {
+            margin-bottom: 0;
+            color: #586069;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e1e4e8;
+            margin: 48px 0;
+        }
+
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e1e4e8;
+            font-size: 15px;
+        }
+
+        .site-header a {
+            color: #586069;
+            text-decoration: none;
+        }
+
+        .site-header a:hover {
+            color: #24292e;
+        }
+
+        .site-header .site-name {
+            font-weight: 600;
+            color: #24292e;
+        }
+
+        .site-header nav a {
+            margin-left: 20px;
+        }
+
+        /* ─── Article ─── */
+        .article {
+            margin-bottom: 0;
+        }
+
+        .article-header {
+            margin-bottom: 24px;
+        }
+
+        .article-title {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #24292e;
+            margin-bottom: 8px;
+        }
+
+        .article-date {
+            color: #586069;
+            font-size: 14px;
+        }
+
+        .article-body h2 {
+            margin-top: 36px;
+        }
+
+        .article-body h3 {
+            margin-top: 28px;
+        }
+
+        .article-divider {
+            border: none;
+            border-top: 1px solid #e1e4e8;
+            margin: 56px 0;
+        }
+
+        /* ─── Note/Callout ─── */
+        .note {
+            background: #f6f8fa;
+            border-left: 3px solid #586069;
+            padding: 15px 20px;
+            margin: 28px 0;
+            font-size: 16px;
+        }
+
+        /* ─── Footer ─── */
+        .footer {
+            text-align: center;
+            color: #586069;
+            font-size: 13px;
+            padding: 24px 0;
+            margin-top: 60px;
+            border-top: 1px solid #e1e4e8;
+        }
+
+        .footer a { color: #0366d6; }
+
+        /* ─── Loading ─── */
+        #blog-content .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #586069;
+            font-size: 15px;
+        }
+
+        @media (max-width: 680px) {
+            body {
+                font-size: 16px;
+                padding: 40px 16px;
+            }
+
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            h3 { font-size: 20px; }
+            .article-title { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="site-header">
+        <a href="/" class="site-name">Matija Ivanović</a>
+        <nav>
+            <a href="#" style="color:#0366d6;font-weight:600;">Blog</a>
+            <a href="https://github.com/matko-iv" target="_blank">GitHub</a>
+            <a href="mailto:ivanovicmatija2007@gmail.com">Kontakt</a>
+        </nav>
+    </div>
+
+    <h1>Blog</h1>
+    <p style="color:#586069;margin-bottom:48px;">Razmišljanja o programiranju, meteorologiji i ostalim zanimljivim temama.</p>
+
+    <div id="blog-content">
+        <div class="loading">Učitavanje članaka...</div>
+    </div>
+
+    <div class="footer">
+        <p>Matija Ivanović · <a href="mailto:ivanovicmatija2007@gmail.com">Kontakt</a></p>
+    </div>
+
+<script>
+/*
+ * ─── TXT → HTML Blog Engine ───
+ *
+ * Učitava .txt fajlove iz posts/ foldera.
+ * Svaki fajl je jedan članak. Ime fajla = slug.
+ *
+ * FORMAT TXT FAJLA:
+ * ─────────────────
+ * Prva linija:  naslov članka
+ * Druga linija: datum (npr. "11. februar 2026")
+ * Treća linija: prazna (separator)
+ * Ostatak:      tekst članka sa formatiranjem
+ *
+ * FORMATIRANJE:
+ * ─────────────
+ * ## Naslov sekcije          →  <h2>
+ * ### Podnaslov              →  <h3>
+ * **bold tekst**             →  <strong>
+ * *italic tekst*             →  <em>
+ * `kod`                      →  <code>
+ * [tekst linka](url)         →  <a href="url">
+ * ![alt tekst](url slike)    →  <img>
+ * > citat                    →  <blockquote>
+ * - stavka liste             →  <ul><li>
+ * 1. numerisana lista        →  <ol><li>
+ * ```                        →  <pre><code> blok
+ * ---                        →  <hr>
+ * Prazna linija              →  novi paragraf
+ */
+
+// ─── Lista članaka (dodaj nove .txt fajlove ovdje) ───
+const POSTS = [
+    'prvi-clanak.txt',
+    'drugi-clanak.txt',
+];
+
+function parseTxt(raw) {
+    const lines = raw.split('\n');
+    const title = lines[0].trim();
+    const date = lines[1].trim();
+
+    // Find content start (after first empty line)
+    let contentStart = 2;
+    while (contentStart < lines.length && lines[contentStart].trim() === '') contentStart++;
+
+    const contentLines = lines.slice(contentStart);
+    const html = renderContent(contentLines);
+    return { title, date, html };
+}
+
+function renderContent(lines) {
+    let html = '';
+    let i = 0;
+    let inList = null; // 'ul' or 'ol'
+
+    while (i < lines.length) {
+        const line = lines[i];
+
+        // Code block
+        if (line.trim().startsWith('```')) {
+            if (inList) { html += `</${inList}>`; inList = null; }
+            const lang = line.trim().slice(3).trim();
+            i++;
+            let code = '';
+            while (i < lines.length && !lines[i].trim().startsWith('```')) {
+                code += escapeHtml(lines[i]) + '\n';
+                i++;
+            }
+            i++; // skip closing ```
+            html += `<pre><code>${code.trimEnd()}</code></pre>\n`;
+            continue;
+        }
+
+        // Horizontal rule
+        if (line.trim() === '---' || line.trim() === '***') {
+            if (inList) { html += `</${inList}>`; inList = null; }
+            html += '<hr>\n';
+            i++;
+            continue;
+        }
+
+        // H2
+        if (line.startsWith('## ')) {
+            if (inList) { html += `</${inList}>`; inList = null; }
+            html += `<h2>${inlineFormat(line.slice(3).trim())}</h2>\n`;
+            i++;
+            continue;
+        }
+
+        // H3
+        if (line.startsWith('### ')) {
+            if (inList) { html += `</${inList}>`; inList = null; }
+            html += `<h3>${inlineFormat(line.slice(4).trim())}</h3>\n`;
+            i++;
+            continue;
+        }
+
+        // Blockquote
+        if (line.startsWith('> ')) {
+            if (inList) { html += `</${inList}>`; inList = null; }
+            let quote = '';
+            while (i < lines.length && lines[i].startsWith('> ')) {
+                quote += lines[i].slice(2) + ' ';
+                i++;
+            }
+            html += `<blockquote><p>${inlineFormat(quote.trim())}</p></blockquote>\n`;
+            continue;
+        }
+
+        // Unordered list
+        if (line.match(/^[-*] /)) {
+            if (inList !== 'ul') {
+                if (inList) html += `</${inList}>`;
+                html += '<ul>\n';
+                inList = 'ul';
+            }
+            html += `<li>${inlineFormat(line.slice(2).trim())}</li>\n`;
+            i++;
+            continue;
+        }
+
+        // Ordered list
+        if (line.match(/^\d+\. /)) {
+            if (inList !== 'ol') {
+                if (inList) html += `</${inList}>`;
+                html += '<ol>\n';
+                inList = 'ol';
+            }
+            html += `<li>${inlineFormat(line.replace(/^\d+\.\s*/, '').trim())}</li>\n`;
+            i++;
+            continue;
+        }
+
+        // Close list if not continuing
+        if (inList && !line.match(/^[-*] /) && !line.match(/^\d+\. /)) {
+            html += `</${inList}>\n`;
+            inList = null;
+        }
+
+        // Empty line = paragraph break (skip)
+        if (line.trim() === '') {
+            i++;
+            continue;
+        }
+
+        // Image (standalone line)
+        if (line.trim().match(/^!\[.*\]\(.*\)$/)) {
+            const m = line.trim().match(/^!\[(.*?)\]\((.*?)\)$/);
+            if (m) {
+                html += `<img src="${m[2]}" alt="${m[1]}">\n`;
+                i++;
+                continue;
+            }
+        }
+
+        // Regular paragraph — collect consecutive non-empty, non-special lines
+        let para = '';
+        while (i < lines.length && lines[i].trim() !== '' &&
+               !lines[i].startsWith('## ') && !lines[i].startsWith('### ') &&
+               !lines[i].startsWith('> ') && !lines[i].startsWith('```') &&
+               !lines[i].match(/^[-*] /) && !lines[i].match(/^\d+\. /) &&
+               lines[i].trim() !== '---' && lines[i].trim() !== '***' &&
+               !lines[i].trim().match(/^!\[.*\]\(.*\)$/)) {
+            para += lines[i] + ' ';
+            i++;
+        }
+        if (para.trim()) {
+            html += `<p>${inlineFormat(para.trim())}</p>\n`;
+        }
+    }
+
+    if (inList) html += `</${inList}>\n`;
+    return html;
+}
+
+function inlineFormat(text) {
+    // Images inline
+    text = text.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="display:inline;margin:0;vertical-align:middle">');
+    // Links
+    text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+    // Bold
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    // Italic
+    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    // Inline code
+    text = text.replace(/`(.*?)`/g, '<code>$1</code>');
+    return text;
+}
+
+function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+async function loadBlog() {
+    const container = document.getElementById('blog-content');
+    let allHtml = '';
+    let loaded = 0;
+
+    for (let idx = 0; idx < POSTS.length; idx++) {
+        const file = POSTS[idx];
+        try {
+            const resp = await fetch('posts/' + file);
+            if (!resp.ok) continue;
+            const raw = await resp.text();
+            const post = parseTxt(raw);
+
+            if (loaded > 0) {
+                allHtml += '<hr class="article-divider">';
+            }
+
+            allHtml += `
+            <article class="article">
+                <div class="article-header">
+                    <div class="article-title">${post.title}</div>
+                    <div class="article-date">${post.date}</div>
+                </div>
+                <div class="article-body">
+                    ${post.html}
+                </div>
+            </article>`;
+            loaded++;
+        } catch(e) {
+            console.warn('Ne mogu učitati: ' + file, e);
+        }
+    }
+
+    if (loaded === 0) {
+        container.innerHTML = '<p style="color:#586069;text-align:center;padding:40px 0;">Nema još članaka. Dodaj .txt fajlove u posts/ folder.</p>';
+    } else {
+        container.innerHTML = allHtml;
+    }
+}
+
+loadBlog();
+</script>
+
+</body>
+</html>
