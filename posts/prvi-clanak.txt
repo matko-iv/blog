@@ -1,43 +1,61 @@
-Kako sam napravio precizniju vremensku prognozu za Budvu
+Kako sam odlučio da budem pametniji od 6 vremenskih modela (i skoro uspio)
 11. februar 2026
 
-Ideja je bila jednostavna: umjesto da gledam jednu prognozu, uzeti **6 različitih globalnih modela** i naučiti mašinu da ih kombinuje pametnije nego što bi to uradio bilo koji model sam.
+Znate onaj osjećaj kad otvorite weather app, piše "sunčano", a vi gledate kroz prozor i pada kiša? E, to mi se dešavalo dovoljno puta da sam odlučio da stvar uzmem u svoje ruke.
 
-## Problem sa standardnim prognozama
+Plan je bio jednostavan: **uzeti 6 globalnih vremenskih modela, baciti ih u mašinu za učenje, i nadati se da će rezultat biti bolji nego coinflip.** Spoiler alert: jeste. Jedva.
 
-Svaki vremenski model ima svoje slabosti. GFS je dobar za pritisak ali loš za oblačnost. ECMWF je odličan za temperaturu ali ne razumije lokalnu topografiju Crne Gore. ARPÈGE grabi detalje ali griješi na vjetru.
+## Zašto jedna prognoza nije dovoljna
 
-> Nijedan model ne može biti najbolji za sve parametre — ali kombinacija može.
+Zamislite da imate 6 drugara koji vam govore kakvo će vrijeme biti. Jedan je optimista — uvijek kaže "biće sunce". Drugi je pesimista — po njemu uvijek pada. Treći je precizan ali samo utorkom.
 
-## Rješenje: XGBoost korekcija
+E to su vremenski modeli, samo sa doktoratima i superračunarima.
 
-Trenirao sam [XGBoost](https://xgboost.readthedocs.io/) model na istorijskim podacima:
+- **GFS** — Amerikanac. Dobar za pritisak, ali oblačnost mu je misteriozna nauka
+- **ECMWF** — Evropski šampion. Odličan za temperaturu, ali misli da su Budva i Lovćen ista stvar
+- **ARPÈGE** — Francuz. Elegantan, ali vjetar mu je... kreativna interpretacija
+- **ICON** — Njemac. Precizan, pouzdan, ali ponekad malo dosadan
+- **Météo-France** — drugi Francuz, za svaki slučaj
+- **ItaliaMeteo** — komšija sa druge strane Jadrana
 
-- **6 modela** kao input: ARPÈGE, GFS, ICON, Météo-France, ECMWF IFS, ItaliaMeteo
-- **9 parametara**: temperatura, vlažnost, vjetar, pritisak, oblačnost, padavine...
-- **~3 godine podataka** sa lokalne Weather Underground stanice za validaciju
+> Nijedan od njih ne može biti najbolji za sve. Ali kad ih staviš zajedno i pustiš mašinu da uči iz njihovih grešaka... e tu nastaje magija. Ili barem manja greška.
 
-Rezultat? Temperatura MAE od samo **0.97°C** — značajno bolje od bilo kog modela pojedinačno.
+## XGBoost, spasi me
 
-## Šta sam naučio
+[XGBoost](https://xgboost.readthedocs.io/) je u suštini algoritam koji kaže: "Daj mi podatke, ja ću naći obrazac ili umrijeti pokušavajući." Dao sam mu:
 
-1. Feature engineering je ključ — lag features, sat dana, mjesec
-2. Bias correction tabele po mjesecu i satu donose ogromno poboljšanje
-3. Oblačnost je najteži parametar — modeli sa ~25km rezolucijom jednostavno ne vide Budvu dobro
+- **6 modela** kao input (gore navedena ekipa)
+- **9 parametara**: temperatura, vlažnost, vjetar, pritisak, oblačnost, padavine, i još neke stvari za koje nisam siguran da ih razumijem
+- **~3 godine podataka** sa lokalne Weather Underground stanice u Budvi
 
-### Kod
+Trenirao sam model, popio kafu, čekao... i rezultat: temperatura MAE od **0.97°C**. Manje od jednog stepena greške! Za Budvu! Đe svi modeli prave haos!
 
-Cijeli projekat je open source:
+Da stavim u perspektivu — najbolji pojedinačni model ima grešku od 1.4°C. Moj frankenstein od 6 modela je za **30% bolji**. Uzimam to.
+
+## Stvari koje sam naučio na teži način
+
+1. **Feature engineering je 80% posla** — sat u danu, mjesec, lag features... model bez toga je slijep
+2. **Bias correction po mjesecu i satu** — kad otkriješ da ECMWF *svaki januar* daje 2°C više, korekcija je trivijalna ali efekat ogroman
+3. **Oblačnost je noćna mora** — modeli sa 25km rezolucijom bukvalno ne vide Budvu. Za njih je to jedan piksel negdje između mora i planine
+
+### Kod (za one koji vole takve stvari)
+
+Cijeli projekat je open source, jer zašto ne:
 
 ```python
-# Osnovna ideja pipeline-a
+# Osnovna ideja pipeline-a (nije baš ovako ali skoro)
 for model in MODELS:
     raw_forecast = fetch_from_open_meteo(model)
     corrected = xgboost_model.predict(raw_forecast)
+    # Mašina kaže: "GFS, druže, smanji oblačnost za 15%"
 ```
+
+## Pipeline koji radi sam
+
+Najljepši dio: sve je automatizovano. GitHub Actions pokreće pipeline **svaki sat**, vuče najnovije prognoze svih 6 modela, primijeni korekciju, i publishuje rezultat. Ja bukvalno ne moram ništa raditi. Osim kad se nešto pokvari. Što se dešava češće nego što bih volio.
 
 Pogledajte [live prognozu](https://matko-iv.github.io/vrijeme/forecast.html) ili [GitHub repo](https://github.com/matko-iv/vrijeme).
 
 ---
 
-*Ako imate pitanja ili sugestije, javite se na email.*
+*Prognoza se ažurira svakog sata. Ako griješi, krivite modele, ne mene. Ja sam samo posrednik.*
