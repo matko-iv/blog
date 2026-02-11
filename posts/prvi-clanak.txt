@@ -1,53 +1,46 @@
-Kako sam odlučio da budem pametniji od 6 vremenskih modela (i skoro uspio)
+Unaprijeđena vremenska prognoza za Budvu koristeći mašinsko učenje
 11. februar 2026
 
-Znate onaj osjećaj kad otvorite weather app, piše "sunčano", a vi gledate kroz prozor i pada kiša? E, to mi se dešavalo dovoljno puta da sam odlučio da stvar uzmem u svoje ruke.
+Na aplikaciji vam piše "sunčano", a vi gledate kroz prozor i pada kiša? E, to mi se dešavalo dovoljno puta da sam odlučio da stvar uzmem u svoje ruke.
 
-Plan je bio jednostavan: **uzeti 6 globalnih vremenskih modela, baciti ih u mašinu za učenje, i nadati se da će rezultat biti bolji nego coinflip.** Spoiler alert: jeste. Jedva.
+Plan je bio jednostavan: uzeti 6 globalnih vremenskih modela, baciti ih u mašinu za učenje, i nadati se da će rezultat biti bolji. I jeste.
 
 ## Zašto jedna prognoza nije dovoljna
 
-Zamislite da imate 6 drugara koji vam govore kakvo će vrijeme biti. Jedan je optimista — uvijek kaže "biće sunce". Drugi je pesimista — po njemu uvijek pada. Treći je precizan ali samo utorkom.
+Zamislite da imate 6 drugara koji vam govore kakvo će vrijeme biti. Jedan je optimista — uvijek kaže "biće sunce". Drugi je pesimista — po njemu uvijek pada kiša. Treći je precizan ali samo utorkom.
 
-E to su vremenski modeli, samo sa doktoratima i superračunarima.
+E to su vremenski modeli.
 
-- **GFS** — Amerikanac. Dobar za pritisak, ali oblačnost mu je misteriozna nauka
-- **ECMWF** — Evropski šampion. Odličan za temperaturu, ali misli da su Budva i Lovćen ista stvar
-- **ARPÈGE** — Francuz. Elegantan, ali vjetar mu je... kreativna interpretacija
-- **ICON** — Njemac. Precizan, pouzdan, ali ponekad malo dosadan
-- **Météo-France** — drugi Francuz, za svaki slučaj
-- **ItaliaMeteo** — komšija sa druge strane Jadrana
+Nijedan od njih ne može biti najbolji za sve. Ali kad ih staviš zajedno i pustiš mašinu da uči iz njihovih grešaka... e tu nastaje magija. Ili barem manja greška.
 
-> Nijedan od njih ne može biti najbolji za sve. Ali kad ih staviš zajedno i pustiš mašinu da uči iz njihovih grešaka... e tu nastaje magija. Ili barem manja greška.
+## XGBoost gradient booster
 
-## XGBoost, spasi me
+[XGBoost](https://xgboost.readthedocs.io/) je u suštini algoritam koji kaže: "Daj mi podatke, ja ću naći obrazac" Dao sam mu:
 
-[XGBoost](https://xgboost.readthedocs.io/) je u suštini algoritam koji kaže: "Daj mi podatke, ja ću naći obrazac ili umrijeti pokušavajući." Dao sam mu:
+- **6 modela** kao input (i to ECMWF, GFS, ARPEGE, ICON, METEO FRANCE i ITALIAMETEO)
+- **9 parametara**: temperatura, vlažnost, vjetar, pritisak, oblačnost, padavine i još par stvari
+- **~3 godine podataka** sa lokalne Weather Underground stanice u Budvi sa svim gore navedenim parametrima + solarna radijacija
 
-- **6 modela** kao input (gore navedena ekipa)
-- **9 parametara**: temperatura, vlažnost, vjetar, pritisak, oblačnost, padavine, i još neke stvari za koje nisam siguran da ih razumijem
-- **~3 godine podataka** sa lokalne Weather Underground stanice u Budvi
+Rezultat: temperatura MAE od **0.97°C**. Manje od jednog stepena greške!
 
-Trenirao sam model, popio kafu, čekao... i rezultat: temperatura MAE od **0.97°C**. Manje od jednog stepena greške! Za Budvu! Đe svi modeli prave haos!
-
-Da stavim u perspektivu — najbolji pojedinačni model ima grešku od 1.4°C. Moj frankenstein od 6 modela je za **30% bolji**. Uzimam to.
+Da stavim u perspektivu — najbolji pojedinačni model ima grešku od 1.4°C. Moj frankenstein od 6 modela je za **30% bolji**.
 
 ## Stvari koje sam naučio na teži način
 
-1. **Feature engineering je 80% posla** — sat u danu, mjesec, lag features... model bez toga je slijep
+1. **Feature engineering je 80% posla** — sat u danu, mjesec, lag features...
 2. **Bias correction po mjesecu i satu** — kad otkriješ da ECMWF *svaki januar* daje 2°C više, korekcija je trivijalna ali efekat ogroman
 3. **Oblačnost je noćna mora** — modeli sa 25km rezolucijom bukvalno ne vide Budvu. Za njih je to jedan piksel negdje između mora i planine
 
 ### Kod (za one koji vole takve stvari)
 
-Cijeli projekat je open source, jer zašto ne:
+Cijeli projekat će veoma brzo biti open source (frankenstein je i po izgledu koda), jer zašto ne:
 
 ```python
 # Osnovna ideja pipeline-a (nije baš ovako ali skoro)
 for model in MODELS:
     raw_forecast = fetch_from_open_meteo(model)
     corrected = xgboost_model.predict(raw_forecast)
-    # Mašina kaže: "GFS, druže, smanji oblačnost za 15%"
+    # Mašina kaže kako korigovati
 ```
 
 ## Pipeline koji radi sam

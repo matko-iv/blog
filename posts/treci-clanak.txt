@@ -1,9 +1,9 @@
 Kako sam mjesec i po pravio sajt za parkiranje (i zašto)
 1. februar 2026
 
-Ako vam neko kaže "napravi sajt za parking, koliko ti treba?" — nemojte reći dvije nedjelje. Lagaćete. Meni je trebalo **mjesec i po dana**. I to radnog, ne kalendarskog. I ne, nije samo landing page. Mada, da sam napravio samo landing page, bih završio za dan i otišao na plažu.
+Meni je trebalo **mjesec i po dana**. I to radnog, ne kalendarskog. I ne, nije samo landing page. Mada, da sam napravio samo landing page, završio bih za dan i otišao na plažu.
 
-Ali ne. Ja sam morao da napravim [Parkiranje.me](https://parkiranje.me).
+[Parkiranje.me](https://parkiranje.me).
 
 ## Šta je uopšte Parkiranje.me?
 
@@ -13,21 +13,21 @@ Ukratko: platforma đe možeš pronaći, rezervisati i platiti privatno parking 
 
 **Za vlasnike**: Imaš prazan prilaz? Dvorište? Garažu koja služi kao skladište za stvari koje ćeš "jednog dana" baciti? Objavi prostor, postavi cijenu, i počni zarađivati dok spavaš.
 
-> Prosječan vozač u Crnoj Gori godišnje izgubi **19 sati** tražeći parking i potroši **oko 100 eura** na kazne. To sam ja napravio istraživanje za sajt i bio sam šokiran. Mada, kad se sjetim prošlog ljeta u Budvi, zapravo i nisam.
+> Prosječan vozač u Crnoj Gori godišnje izgubi **19 sati** tražeći parking i potroši **oko 100 eura** na kazne. To sam ja napravio istraživanje za sajt i bio sam šokiran.
 
 ## Zašto sam ovo napravio?
 
 Iz frustracije, naravno. Kao i sve dobre stvari.
 
-Živi u Budvi ljeti i probaj parkirati bilo đe blizu centra ili plaže. Parking zona je haos — neki djelovi funkcionišu, neki ne. Parking automati nekad rade, nekad ne. A privatni parkovi naplaćuju kao da parkiraš Ferrari u Monte Karlu, a ne Golfa dvojku u Bečićima.
+Živi u Budvi ljeti i probaj parkirati bilo đe blizu centra ili plaže. Parking zona je haos — neki djelovi funkcionišu, neki ne. Parking automati nekad rade, nekad ne. A parkinzi naplaćuju kao da parkiraš Ferrari u Monte Karlu, a ne Golfa dvojku u Bečićima.
 
-A istovremeno, imate stotine dvorišta, prilaza i garaža koji zjape prazni. Vlasnici bi rado zaradili nešto, ali nemaju kako da se oglase. Vozači bi rado platili, ali nemaju kome.
+A istovremeno, imate masu dvorišta, prilaza i garaža koji zjape prazni. Vlasnici bi rado zaradili nešto, ali nemaju kako da se oglase. Vozači bi rado platili, ali nemaju kome.
 
 **Parkiranje.me** spaja te dvije strane. Jednostavno.
 
 ## Mjesec i po dana — na šta je otišlo vrijeme
 
-Krenuo sam optimistično. "Ma dva vikenda i gotovo." Haha.
+Krenuo sam optimistično. "Ma dva vikenda i gotovo."
 
 ### Sedmica 1-2: Osnova
 Mapa, pretraga po lokaciji, kartice parking mjesta. Osnovna autentifikacija. Izgleda lako kad se napiše u jednoj rečenici, ali mapa koja radi kako treba na mobilnom... to je posebna vrsta pakla.
@@ -43,18 +43,7 @@ Dashboard za vlasnike. Notifikacije. FAQ. Privacy policy (kopija s interneta, ne
 
 I na kraju: **deploy, domena, SSL, i molitva da sve radi.**
 
-## Pokriva cijelu Crnu Goru
-
-Sajt pokriva 6 gradova za početak:
-
-- **Budva** — epicentar parking haosa ljeti
-- **Kotor** — stari grad + uske ulice = noćna mora za vozače
-- **Podgorica** — centar grada, blizu Delta City-ja, svuda problem
-- **Tivat** — Porto Montenegro donosi masu vozača
-- **Herceg Novi** — ljeti nemoguća misija, zimni turistički potencijal
-- **Bar** — manje poznat ali isti problemi
-
-Plan je širiti na cijelu Crnu Goru, a možda i šire. Ko zna. Jednog dana možda i Dubrovnik (šalim se. Ili ne).
+Plan je širiti na cijelu Crnu Goru, a možda i šire. Ko zna.
 
 ## Trenutno stanje
 
@@ -66,6 +55,8 @@ Ako imate prazan parking prostor i hoćete da zaradite — [registrujte se](http
 
 Ili jednostavno posjetite [parkiranje.me](https://parkiranje.me) i recite mi šta mislite.
 
+## Parkiranje.me - najbolje parkiranje.me u Crnoj Gori!!!
+
 ---
 
-*Da, ovo je bestidna reklama za sopstveni sajt na sopstvenom blogu. Ali hej, ko će da mi reklamira ako neću ja.*
+*Da, ovo je bestidna reklama za sopstveni sajt na sopstvenom blogu. Ko će da mi reklamira ako neću ja.*

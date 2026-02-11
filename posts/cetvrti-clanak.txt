@@ -1,11 +1,11 @@
-Vodič kroz veb infrastrukturu državnih organa Crne Gore (satirični)
+Vodič kroz veb infrastrukturu državnih organa Crne Gore
 4. februar 2026
 
-**Upozorenje**: Ovaj članak sadrži satiru, sarkazam, i potencijalno traumatične screenshotove državnih sajtova. Ako radite u IT sektoru, čitajte na sopstvenu odgovornost.
+**Upozorenje**: Ovaj članak sadrži potencijalno traumatične opise državnih sajtova. Ako želite da ostanete normalni, čitajte na sopstvenu odgovornost.
 
 ## Dobrodošli u digitalni vik
 
-Crna Gora je mala, ponosna evropska država sa ambicijama da se pridruži EU. Imamo predivnu prirodu, fantastičnu hranu, i veb infrastrukturu koja izgleda kao da ju je neko napravio na takmičenju "ko može gore" i svi dobili zlatnu medalju.
+Crna Gora je mala država puna korupcije i kokaina sa ambicijama da se pridruži EU. Imamo predivnu prirodu, fantastičnu hranu, i veb infrastrukturu koja izgleda kao da ju je neko napravio dok je imao nekoliko vrsti droga u svom krvotoku.
 
 Hajde da prošetamo digitalnim pejzažom naše voljene države.
 
@@ -13,9 +13,9 @@ Hajde da prošetamo digitalnim pejzažom naše voljene države.
 
 Centralni portal [gov.me](https://www.gov.me) je, da budemo fer, vizuelno prihvatljiv. Čak i funkcioniše. Većinu vremena. Osim kad ne funkcioniše. Što je obično tačno kad vam treba.
 
-Ali probajte naći nešto konkretno. Recimo, informaciju o tome kako registrovati vozilo. Imate 47 kategorija, 12 podkategorija, 6 linkova koji vode na isti PDF iz 2019. godine, i na kraju vas šalju na šalter. 
+Ali probajte naći nešto konkretno. Recimo, informaciju o tome kako registrovati vozilo. Imate 47 kategorija, 12 podkategorija, 6 linkova koji vode na isti PDF iz 2019. godine.
 
-> Digitalizacija: proces u kojem se papirologija pretvara u PDF papirrologiju.
+Digitalizacija: čuveni proces u kojem se papirologija pretvara u PDF papirologiju.
 
 ## eUprava — hrabar pokušaj
 
@@ -25,49 +25,34 @@ Sistem zahtijeva digitalnu potvrdu identiteta, koja zahtijeva poseban čitač ka
 
 ## HTTPS je opcija, ne obaveza
 
-Moj omiljeni detalj: određeni broj državnih sajtova godinama nije imao HTTPS. U 2024. godini. Znači, kada pristupate sajtu koji čuva vaše lične podatke, veza nije bila šifrovana. 
+Moj omiljeni detalj: određeni broj državnih sajtova godinama nije imao HTTPS. U 2024. godini. Znači, kada pristupate sajtu koji čuva vaše lične podatke, veza nije bila šifrovana. **E viva!!!!**
 
 Za one koji ne znaju šta to znači: zamislite da šaljete pismo sa ličnim podacima, ali umjesto koverte koristite razglednicu. I poštar čita. I komšija čita. I svi čitaju.
 
-Ali hej, bar su imali **cool animaciju** na loading screen-u.
-
-## Mobilne aplikacije — digitalna arkeologija
-
-Postoji posebna ljepota u tome kada drzavna institucija objavi mobilnu aplikaciju. Obično ima:
-
-- **2.1 zvjezdice** na Google Play
-- Poslednji update: **mart 2021**
-- Screenshot-ovi iz ere kada je Android 9 bio nov
-- Recenzije tipa: "Ne radi", "Gubi podatke", "Zašto?"
-
-A onda, na dnu opisa: "Za probleme sa aplikacijom kontaktirajte nas na fax broj..."
-
-**Fax. Broj.**
+Bar su imali animaciju na loading screen-u. Top!
 
 ## Sajt opštine [insert bilo koja opština]
 
-Svaka crnogorska opština ima svoj sajt. I svaki od tih sajtova izgleda kao da ga je radio nečiji bratanac koji "zna kompjutere". Neka pravila koja važe za skoro sve:
+Svaka crnogorska opština ima svoj sajt. I svaki od tih sajtova izgleda kao da ga je radio nečiji bratanac koji "zna kompjutere". 
+
+## "A što ima od čkole!?"
+## "Neka je on živ i zdrav!"
+
+Neka pravila koja važe za skoro sve:
 
 1. **Vijesti sa naslovne strane su iz 2022.** — ali sajt tehnički radi, tako da... uspjeh?
 2. **Kontakt stranica** ima telefon koji ne zvoni i email koji niko ne čita
-3. **Responsive dizajn** je koncept za koji nisu čuli. Otvorite na telefonu i dobićete horizontalni scroll bar duži od Jadranskog magistrale
-4. **PDF-ovi** su skenirani papiri, zakošeni pod uglom od 7°, sa rezolucijom koja jedva prikazuje tekst. Ali imaju pečat! Skenirani pečat se računa
-
-## Turistički sajtovi — đe se budžet potrošio na slike
-
-Turistički sajtovi su posebna kategorija. Oni *izgledaju* dobro jer su 90% slike, 8% prazan prostor, i 2% informacija. Predivne slike plavog mora, kamenih ulica, planina u magli...
-
-Ali probajte naći radno vrijeme muzeja. Ili cijenu karte za autobus. Ili bilo šta konkretno. Sajt vam kaže: "Crna Gora — Wild Beauty!" i to je to. Hvala, to sam znao i prije.
+3. **PDF-ovi** su skenirani papiri, zakošeni pod uglom od 7°, sa rezolucijom koja jedva prikazuje tekst. Ali imaju pečat! Skenirani pečat se računa
 
 ## Zašto je ovo bitno
 
 Šalu na stranu — ovo zapravo *jeste* problem. Ljudi gube vrijeme, posao se usporava, turisti se zbunjuju, investitori odustaju. Dobra veb infrastruktura nije luksuz — to je osnova funkcionalne države.
 
-Crna Gora ima sjajne IT stručnjake. Imamo ljude koji mogu napraviti world-class sajtove i aplikacije. Problem nije u talentu — problem je u sistemu koji naručuje sajt po principu "najniža cijena" i onda se čudi kad dobije nešto što izgleda kao školski projekat iz 2012.
+Crna Gora ima sjajne IT stručnjake. Imamo ljude koji mogu napraviti odlične sajtove i aplikacije.
 
 ## Predlog za poboljšanje
 
-1. **Zaposlite ljude koji znaju šta rade** — ne najjeftinijeg ponuđača sa tendera
+1. **Zaposlite ljude koji znaju šta rade** — nepotizammaxxing ne preporučujemo
 2. **HTTPS svuda** — ovo nije preporuka, ovo je minimum
 3. **Testirajte na mobilnom** — 70% korisnika dolazi sa telefona
 4. **Ažurirajte sadržaj** — vijesti iz 2022. na naslovnoj strani nisu "evergreen content", to je nemaran odnos

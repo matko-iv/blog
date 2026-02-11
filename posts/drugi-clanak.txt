@@ -1,11 +1,7 @@
-Zašto su vremenske prognoze za Crnu Goru toliko loše (nije samo do vas)
+Zašto su vremenske prognoze za Crnu Goru toliko loše
 8. februar 2026
 
-Ako živite u Budvi i ikad ste pogledali vremensku prognozu, vjerovatno ste pomislili: "Je l' ovi ljudi uopšte znaju đe je Crna Gora?" Odgovor je: **jedva.**
-
-Ovo nije teorija zavjere. Ovo je geometrija.
-
-## Zemlja koja je napravljena da zbuni meteorologe
+Ako živite u Budvi i ikad ste pogledali vremensku prognozu, vjerovatno ste pomislili: "Je l' ovi ljudi uopšte znaju đe je Crna Gora?" Odgovor je jedva.
 
 Crna Gora je doslovno najgori mogući scenario za vremensku prognozu. Zamislite da pravite model — imate lijepu mrežu od 25x25 km, svaka ćelija ima jednu vrijednost za temperaturu. Radite to za Njemačku, Francusku, ravnu Holandiju — sve super, sve funkcioniše.
 
@@ -17,23 +13,16 @@ U jednoj ćeliji od 25km imate:
 - **Skadarsko jezero** (ogromno vodeno tijelo koje ima svoj mikroklimatski karakter)
 - **Uske doline** koje kanališu vjetar kao prirodni tunel
 
-Model kaže: "Temperatura za ovu ćeliju je 12°C." U Budvi je 18°C, na Cetinjama 6°C, na Lovćenu -2°C. Bravo, baš ste pogodili nikoga.
+Model kaže: "Temperatura za ovu ćeliju je 12°C." U Budvi je 18°C, na Cetinju 6°C, na Lovćenu -2°C. Bravo, pogodili ste ništa!
 
 > To je kao da nekoga pitate koliko je sati, a on kaže "negdje između ponedjeljka i petka."
 
-## Hitovi crnogorske meteorologije
-
 Moj omiljeni primjeri iz podataka:
 
-- **ECMWF** (navodno najbolji model na svijetu) sistematski daje **15-20% više oblačnosti** za Budvu. Zašto? Jer za njega je Budva = planina iza nje
+- **ECMWF** (navodno najbolji model na svijetu) sistematski daje **15-20% više oblačnosti** za Budvu. Zašto? Jer za njega je Budva = planina iza nje koja je djelimično "uravnjena"
 - **GFS** (američki model) je jednom prognozirao vjetar od 45 km/h za Budvu, a bilo je potpuno mirno more. Vjerovatno je mislio na Lovćen. Ili na Čikago
-- **Météo-France** prognozira padavine sa preciznošću hoćete-nećete. Kao onaj drug što kaže "možda dolazim na žurku"
-
-## Machine learning kao obična pamet
 
 Rješenje je zapravo banalno kada razmislite. Ako znate da ECMWF *svaki put* pretjera sa oblačnošću, jednostavno to korigujete. Ako GFS *uvijek* daje previše vjetra ljeti, smanjite. 
-
-> Ja sam to uradio sa mašinskim učenjem. Ali mogao sam i sa Excel tabelom i malo strpljenja. ML samo zvuči pametnije na LinkedIn-u.
 
 Model uči iz 3 godine istorijskih podataka i pravi tabelu: "OK, u januaru u 14h, ECMWF je u prosjeku 1.8°C iznad stvarne temperature. U avgustu u 6 ujutro, GFS je 2.3°C ispod." I onda koriguje.
 
@@ -41,7 +30,7 @@ Model uči iz 3 godine istorijskih podataka i pravi tabelu: "OK, u januaru u 14h
 
 Idealno bi bilo da neko napravi **regionalni model sa rezolucijom <2km** specifično za Crnu Goru. Model koji zna da Budva nije Lovćen. Model koji razumije da Boka Kotorska ima svoj mikroklimat. Model koji zna da Podgorica ljeti gori a Žabljak isti dan ima 15°C.
 
-Ali to košta. I treba neko da to napravi. I da održava. I da plati AWS račun.
+Ali to košta. I treba neko da to napravi. I da održava.
 
 Do tada, imate [moju korekciju](https://matko-iv.github.io/vrijeme/forecast.html). Nije savršena, ali je bolja od originala. A to je ionako suština svega u životu.
 
