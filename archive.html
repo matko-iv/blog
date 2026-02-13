@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arhiv – Matija Ivanović</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #24292e;
+            background: #ffffff;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        h1 {
+            font-size: 40px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.25;
+            color: #24292e;
+        }
+
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e1e4e8;
+            font-size: 15px;
+        }
+
+        .site-header a {
+            color: #586069;
+            text-decoration: none;
+        }
+
+        .site-header a:hover {
+            color: #24292e;
+        }
+
+        .site-header .site-name {
+            font-weight: 600;
+            color: #24292e;
+        }
+
+        .site-header nav a {
+            margin-left: 20px;
+        }
+
+        .archive-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .archive-list li {
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .archive-list li:last-child {
+            border-bottom: none;
+        }
+
+        .archive-list a {
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        .archive-date {
+            color: #586069;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #586069;
+            font-size: 13px;
+            padding: 24px 0;
+            margin-top: 60px;
+            border-top: 1px solid #e1e4e8;
+        }
+
+        .footer a { color: #0366d6; }
+
+        #archive-content .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #586069;
+            font-size: 15px;
+        }
+
+        @media (max-width: 680px) {
+            body {
+                font-size: 16px;
+                padding: 40px 16px;
+            }
+            h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="site-header">
+        <a href="/" class="site-name">Matija Ivanović</a>
+        <nav>
+            <a href="index.html">Blog</a>
+            <a href="#" style="color:#0366d6;font-weight:600;">Arhiv</a>
+            <a href="https://github.com/matko-iv" target="_blank">GitHub</a>
+            <a href="mailto:ivanovicmatija2007@gmail.com">Kontakt</a>
+        </nav>
+    </div>
+
+    <h1>Arhiv</h1>
+    <p style="color:#586069;margin-bottom:36px;">Svi objavljeni članci.</p>
+
+    <div id="archive-content">
+        <div class="loading">Učitavanje...</div>
+    </div>
+
+    <div class="footer">
+        <p>Matija Ivanović · <a href="mailto:ivanovicmatija2007@gmail.com">Kontakt</a></p>
+    </div>
+
+<script>
+const POSTS = [
+    'prvi-clanak.txt',
+    'drugi-clanak.txt',
+    'treci-clanak.txt',
+    'cetvrti-clanak.txt',
+];
+
+function parseDate(dateStr) {
+    const months = {
+        'januar':0,'februar':1,'mart':2,'april':3,'maj':4,'jun':5,
+        'jul':6,'avgust':7,'septembar':8,'oktobar':9,'novembar':10,'decembar':11
+    };
+    const parts = dateStr.replace(/\./g,'').split(/\s+/);
+    const day = parseInt(parts[0]);
+    const month = months[parts[1].toLowerCase()] || 0;
+    const year = parseInt(parts[2]);
+    return new Date(year, month, day);
+}
+
+async function loadArchive() {
+    const container = document.getElementById('archive-content');
+    const posts = [];
+
+    for (const file of POSTS) {
+        try {
+            const resp = await fetch('posts/' + file);
+            if (!resp.ok) continue;
+            const raw = await resp.text();
+            const lines = raw.split('\n');
+            const title = lines[0].trim();
+            const date = lines[1].trim();
+            const slug = file.replace('.txt', '');
+            posts.push({ title, date, slug, dateObj: parseDate(date) });
+        } catch(e) {
+            console.warn('Ne mogu učitati: ' + file, e);
+        }
+    }
+
+    // Sort by date, newest first
+    posts.sort((a, b) => b.dateObj - a.dateObj);
+
+    if (posts.length === 0) {
+        container.innerHTML = '<p style="color:#586069;text-align:center;padding:40px 0;">Nema članaka.</p>';
+        return;
+    }
+
+    let html = '<ul class="archive-list">';
+    for (const post of posts) {
+        html += `<li><a href="index.html#${post.slug}">${post.title}</a><span class="archive-date">— ${post.date}</span></li>`;
+    }
+    html += '</ul>';
+    container.innerHTML = html;
+}
+
+loadArchive();
+</script>
+
+</body>
+</html>
