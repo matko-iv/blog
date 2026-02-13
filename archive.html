@@ -185,7 +185,6 @@ async function loadArchive() {
         }
     }
 
-    // Sort by date, newest first
     posts.sort((a, b) => b.dateObj - a.dateObj);
 
     if (posts.length === 0) {

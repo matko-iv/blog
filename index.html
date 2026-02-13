@@ -156,7 +156,6 @@
             margin-left: 20px;
         }
 
-        /* ─── Article ─── */
         .article {
             margin-bottom: 0;
         }
@@ -192,7 +191,6 @@
             margin: 56px 0;
         }
 
-        /* ─── Note/Callout ─── */
         .note {
             background: #f6f8fa;
             border-left: 3px solid #586069;
@@ -201,7 +199,6 @@
             font-size: 16px;
         }
 
-        /* ─── Footer ─── */
         .footer {
             text-align: center;
             color: #586069;
@@ -213,7 +210,6 @@
 
         .footer a { color: #0366d6; }
 
-        /* ─── Loading ─── */
         #blog-content .loading {
             text-align: center;
             padding: 60px 20px;
@@ -263,38 +259,8 @@
     </div>
 
 <script>
-/*
- * ─── TXT → HTML Blog Engine ───
- *
- * Učitava .txt fajlove iz posts/ foldera.
- * Svaki fajl je jedan članak. Ime fajla = slug.
- *
- * FORMAT TXT FAJLA:
- * ─────────────────
- * Prva linija:  naslov članka
- * Druga linija: datum (npr. "11. februar 2026")
- * Treća linija: prazna (separator)
- * Ostatak:      tekst članka sa formatiranjem
- *
- * FORMATIRANJE:
- * ─────────────
- * ## Naslov sekcije          →  <h2>
- * ### Podnaslov              →  <h3>
- * **bold tekst**             →  <strong>
- * *italic tekst*             →  <em>
- * `kod`                      →  <code>
- * [tekst linka](url)         →  <a href="url">
- * ![alt tekst](url slike)    →  <img>
- * > citat                    →  <blockquote>
- * - stavka liste             →  <ul><li>
- * 1. numerisana lista        →  <ol><li>
- * ```                        →  <pre><code> blok
- * ---                        →  <hr>
- * Prazna linija              →  novi paragraf
- */
-
-// ─── Lista članaka (dodaj nove .txt fajlove ovdje) ───
 const POSTS = [
+    'peti-clanak.txt',
     'prvi-clanak.txt',
     'drugi-clanak.txt',
     'treci-clanak.txt',
@@ -306,7 +272,6 @@ function parseTxt(raw) {
     const title = lines[0].trim();
     const date = lines[1].trim();
 
-    // Find content start (after first empty line)
     let contentStart = 2;
     while (contentStart < lines.length && lines[contentStart].trim() === '') contentStart++;
 
@@ -323,7 +288,6 @@ function renderContent(lines) {
     while (i < lines.length) {
         const line = lines[i];
 
-        // Code block
         if (line.trim().startsWith('```')) {
             if (inList) { html += `</${inList}>`; inList = null; }
             const lang = line.trim().slice(3).trim();
@@ -333,12 +297,11 @@ function renderContent(lines) {
                 code += escapeHtml(lines[i]) + '\n';
                 i++;
             }
-            i++; // skip closing ```
+            i++; 
             html += `<pre><code>${code.trimEnd()}</code></pre>\n`;
             continue;
         }
 
-        // Horizontal rule
         if (line.trim() === '---' || line.trim() === '***') {
             if (inList) { html += `</${inList}>`; inList = null; }
             html += '<hr>\n';
@@ -346,7 +309,6 @@ function renderContent(lines) {
             continue;
         }
 
-        // H2
         if (line.startsWith('## ')) {
             if (inList) { html += `</${inList}>`; inList = null; }
             html += `<h2>${inlineFormat(line.slice(3).trim())}</h2>\n`;
@@ -362,7 +324,6 @@ function renderContent(lines) {
             continue;
         }
 
-        // Blockquote
         if (line.startsWith('> ')) {
             if (inList) { html += `</${inList}>`; inList = null; }
             let quote = '';
@@ -374,7 +335,6 @@ function renderContent(lines) {
             continue;
         }
 
-        // Unordered list
         if (line.match(/^[-*] /)) {
             if (inList !== 'ul') {
                 if (inList) html += `</${inList}>`;
@@ -386,7 +346,6 @@ function renderContent(lines) {
             continue;
         }
 
-        // Ordered list
         if (line.match(/^\d+\. /)) {
             if (inList !== 'ol') {
                 if (inList) html += `</${inList}>`;
@@ -398,19 +357,16 @@ function renderContent(lines) {
             continue;
         }
 
-        // Close list if not continuing
         if (inList && !line.match(/^[-*] /) && !line.match(/^\d+\. /)) {
             html += `</${inList}>\n`;
             inList = null;
         }
 
-        // Empty line = paragraph break (skip)
         if (line.trim() === '') {
             i++;
             continue;
         }
 
-        // Image (standalone line)
         if (line.trim().match(/^!\[.*\]\(.*\)$/)) {
             const m = line.trim().match(/^!\[(.*?)\]\((.*?)\)$/);
             if (m) {
@@ -420,7 +376,6 @@ function renderContent(lines) {
             }
         }
 
-        // Regular paragraph — collect consecutive non-empty, non-special lines
         let para = '';
         while (i < lines.length && lines[i].trim() !== '' &&
                !lines[i].startsWith('## ') && !lines[i].startsWith('### ') &&
@@ -441,15 +396,10 @@ function renderContent(lines) {
 }
 
 function inlineFormat(text) {
-    // Images inline
     text = text.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="display:inline;margin:0;vertical-align:middle">');
-    // Links
     text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-    // Bold
     text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    // Italic
     text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    // Inline code
     text = text.replace(/`(.*?)`/g, '<code>$1</code>');
     return text;
 }
@@ -459,7 +409,6 @@ function escapeHtml(str) {
 }
 
 function parseDate(dateStr) {
-    // Parse dates like "11. februar 2026"
     const months = {
         'januar':0,'februar':1,'mart':2,'april':3,'maj':4,'jun':5,
         'jul':6,'avgust':7,'septembar':8,'oktobar':9,'novembar':10,'decembar':11
@@ -491,10 +440,8 @@ async function loadBlog() {
         }
     }
 
-    // Sort by date, newest first
     posts.sort((a, b) => b.dateObj - a.dateObj);
 
-    // Build latest posts navigation (max 5)
     const latestNav = document.getElementById('latest-posts');
     const latestList = document.getElementById('latest-posts-list');
     const latestCount = Math.min(posts.length, 5);
@@ -506,7 +453,6 @@ async function loadBlog() {
     }
     if (posts.length > 0) latestNav.style.display = 'block';
 
-    // Render articles
     let allHtml = '';
     for (let i = 0; i < posts.length; i++) {
         const post = posts[i];
@@ -531,7 +477,6 @@ async function loadBlog() {
         container.innerHTML = allHtml;
     }
 
-    // Scroll to article if hash is present
     if (window.location.hash) {
         const target = document.querySelector(window.location.hash);
         if (target) target.scrollIntoView({ behavior: 'smooth' });
