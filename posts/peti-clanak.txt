@@ -1,12 +1,12 @@
-Roleplay Nations -- šest godina, tri baze podataka, i kraj priče
+Roleplay Nations — šest godina, tri baze podataka, i kraj priče
 13. februar 2026
 
-Roleplay Nations je Discord bot za simulaciju država. Igrači prave nacije, grade infrastrukturu, ratuju, špijuniraju, trguju, prave alijanse. Počeo sam da ga pravim 2020. kad sam jedva znao Python, i radio sam na njemu off-and-on do danas. Ovo je priča o tom projektu -- šta je, kako je nastao, zašto ga gasim, i šta sam naučio usput.
+Roleplay Nations je Discord bot za simulaciju država. Igrači prave nacije, grade infrastrukturu, ratuju, špijuniraju, trguju, prave alijanse. Počeo sam da ga pravim 2020. kad sam jedva znao Python, i radio sam na njemu off-and-on do danas. Ovo je priča o tom projektu — šta je, kako je nastao, zašto ga gasim, i šta sam naučio usput.
 
 
 ## Kako je počelo
 
-Nisam developer. Nikad nisam bio developer. Nemam još završen fakultet iz informatike (brucoš), ne radim u IT-ju, a kad sam počeo ovaj projekat jedva sam znao šta radim. Bio je 2020., lockdown, dosada, i ja sam koristio Discord kao mnogi. Naišao sam na tzv. "text roleplay". Ljudi su se igrali država i kucali šta rade, da ostali u istom serveru vide. To mi je zvučalo dosta čudno. Smatrao sam da je bolje napraviti nekog automatskog posrednika koji će držati kontrolu. Pomislio sam da mogu napraviti svog. Ispalo je da mogu -- ali ne onako kako sam zamišljao.
+Nisam developer. Nikad nisam bio developer. Nemam još završen fakultet iz informatike (brucoš), ne radim u IT-ju, a kad sam počeo ovaj projekat jedva sam znao šta radim. Bio je 2020., lockdown, dosada, i ja sam koristio Discord kao mnogi. Naišao sam na tzv. "text roleplay". Ljudi su se igrali država i kucali šta rade, da ostali u istom serveru vide. To mi je zvučalo dosta čudno. Smatrao sam da je bolje napraviti nekog automatskog posrednika koji će držati kontrolu. Pomislio sam da mogu napraviti svog. Ispalo je da mogu — ali ne onako kako sam zamišljao.
 
 Počeo sam sa discord.py tutorijalima i Stack Overflow copy-paste-om. Prvih desetak komandi su radile. Nekako. I to je bilo dovoljno da nastavim. Ne možete zamisliti koliko osjećam nostalgije dok kucam ovo.
 
@@ -15,7 +15,7 @@ Počeo sam sa discord.py tutorijalima i Stack Overflow copy-paste-om. Prvih dese
 
 Baza podataka je prošla kroz tri kompletna prepravka. Svaki je bio loš na svoj način.
 
-Prvo je sve bilo u JSON fajlovima. Svaka nacija, svaki resurs, svaki rat -- JSON. Za nekoga ko ne zna zašto je ovo loše: zamislite da imate tabelu sa 200 redova, ali umjesto izlaza koristite Notepad, ručno tražite red koji vam treba, mijenjate ga, i snimate. Svaki put i za svaku operaciju. Dok 30 drugih ljudi rade isto istovremeno.
+Prvo je sve bilo u JSON fajlovima. Svaka nacija, svaki resurs, svaki rat — JSON. Za nekoga ko ne zna zašto je ovo loše: zamislite da imate tabelu sa 200 redova, ali umjesto izlaza koristite Notepad, ručno tražite red koji vam treba, mijenjate ga, i snimate. Svaki put i za svaku operaciju. Dok 30 drugih ljudi rade isto istovremeno.
 
 ```python
 with open('nations.json', 'r') as f:
@@ -25,18 +25,18 @@ with open('nations.json', 'w') as f:
     json.dump(data, f)
 ```
 
-Ovo je radilo mjesecima, sa malim brojem igrača. A onda su došli problemi -- podaci koji nestanu, nacije koje se resetuju, novac koji se pojavi iz ničega. Konkurentan pristup fajl sistemu bez ikakve zaštite.
+Ovo je radilo mjesecima, sa malim brojem igrača. A onda su došli problemi — podaci koji nestanu, nacije koje se resetuju, novac koji se pojavi iz ničega. Konkurentan pristup fajl sistemu bez ikakve zaštite.
 
-Onda sam prešao na SQLite preko `aiosqlite`. Pravi format baze podataka, makar tehnički. Migracija je bila ručna -- bukvalno sam prepisivao podatke. Neki su se izgubili. Igrači su pitali đe su im nacije.
+Onda sam prešao na SQLite preko `aiosqlite`. Pravi format baze podataka, makar tehnički. Migracija je bila ručna — bukvalno sam prepisivao podatke. Neki su se izgubili. Igrači su pitali đe su im nacije.
 
 Negdje oko 2024. sam prešao na PostgreSQL sa `asyncpg` i connection pool-om. Treća migracija, treći put kad su igrači izgubili nešto. Ali ovaj put sam barem otprilike znao šta radim.
 
-Sva tri sistema i dalje postoje u kodu. Možete naći `aiosqlite` importe, JSON čitanje, i `asyncpg` upite -- sve u istom projektu. Šest godina hobiste koji uči baze podataka u realnom vremenu.
+Sva tri sistema i dalje postoje u kodu. Možete naći `aiosqlite` importe, JSON čitanje, i `asyncpg` upite — sve u istom projektu. Šest godina hobiste koji uči baze podataka u realnom vremenu.
 
 
 ## Šta bot zapravo radi
 
-Bot je na kraju izrastao u nešto ozbiljno po obimu, ako ne po kvalitetu koda. Ekonomija sa 22 tipa resursa, proizvodnim zgradama, porezima i mjesečnim ekonomskim update-ovima. Vojska sa tenkovima, avionima, brodovima, raketama, fabrikama u 5 nivoa, skladištima i bitkama. Špijunaža sa agencijom, agentima, 13 osobina i 4 tipa misija. Diplomatija sa alijansama, ugovorima, embargima i zajedničkim kasama. Player-driven tržište resursa i Centralna Međunarodna Banka (MMF možda?) sa dinamičkim cijenama. Čak i aviokompanije -- kupovina aviona, zapošljavanje pilota i osoblja.
+Bot je na kraju izrastao u nešto ozbiljno po obimu, ako ne po kvalitetu koda. Ekonomija sa 22 tipa resursa, proizvodnim zgradama, porezima i mjesečnim ekonomskim update-ovima. Vojska sa tenkovima, avionima, brodovima, raketama, fabrikama u 5 nivoa, skladištima i bitkama. Špijunaža sa agencijom, agentima, 13 osobina i 4 tipa misija. Diplomatija sa alijansama, ugovorima, embargima i zajedničkim kasama. Player-driven tržište resursa i Centralna Međunarodna Banka (MMF možda?) sa dinamičkim cijenama. Čak i aviokompanije — kupovina aviona, zapošljavanje pilota i osoblja.
 
 150+ slash komandi, 14 cogova, oko 17.000 linija koda.
 
@@ -54,25 +54,25 @@ async def after_invoke_hook(interaction):
 
 `time.sleep()` u async funkciji. Blokira cijeli bot na 5 sekundi posle svake komande. Bio je tu od početka.
 
-Ali bot je radio. Igrači su igrali, ratovi su se vodili, alijanse su nastajale i propadale. Format je funkcionisao -- pokrenete komandu, vidite kako se vaša nacija mijenja, trash talk u alliance kanalima, iznenađujuća objava rata u 2 ujutro. Sve na kodu koji bi svaki senior developer opisao kao problem.
+Ali bot je radio. Igrači su igrali, ratovi su se vodili, alijanse su nastajale i propadale. Format je funkcionisao — pokrenete komandu, vidite kako se vaša nacija mijenja, trash talk u alliance kanalima, iznenađujuća objava rata u 2 ujutro. Sve na kodu koji bi svaki senior developer opisao kao problem.
 
 
 ## Discord nation-RP scena
 
 Kad sam počeo 2020., Discord botovi za simulaciju država su bili stvar. Više aktivnih botova, angažovane zajednice, format je imao smisla jer su svi ionako bili na Discordu cijeli dan. 
 
-Ta scena je uglavnom umrla. Većina botova iz te ere je ili mrtva ili jedva održavana. Žanr se prebacio na browser-based simulatore -- prave web aplikacije sa interfejsima, mapama, real-time ažuriranjima, stvari koje Discord bot ne može da pruži. Igre poput Politics and War i NationStates su postavile standard koji slash komanda ne može da dostigne.
+Ta scena je uglavnom umrla. Većina botova iz te ere je ili mrtva ili jedva održavana. Žanr se prebacio na browser-based simulatore — prave web aplikacije sa interfejsima, mapama, real-time ažuriranjima, stvari koje Discord bot ne može da pruži. Igre poput Politics and War i NationStates su postavile standard koji slash komanda ne može da dostigne.
 
-AI je dodatno ubrzo tu promjenu. Ljudi prave full-stack simulatore država sa proper frontendima za sedmice -- ono za šta su meni trebale godine. Isti alati su razlog zašto moj bot više nije konkurentan. Pejzaž se pomjerio, i Discord nation-RP botovi su, nažalost nekima, prošlost.
+AI je dodatno ubrzo tu promjenu. Ljudi prave full-stack simulatore država sa proper frontendima za sedmice — ono za šta su meni trebale godine. Isti alati su razlog zašto moj bot više nije konkurentan. Pejzaž se pomjerio, i Discord nation-RP botovi su, nažalost nekima, prošlost.
 
-Ali ja i dalje mislim da format ima nešto -- neposrednost pokretanja komande, drama u kanalima, spontanost svega toga. Ali kao platforma za ovaj tip igre, Discord ima svoja ograničenja, i publika se uglavnom preselila.
+Ali ja i dalje mislim da format ima nešto — neposrednost pokretanja komande, drama u kanalima, spontanost svega toga. Ali kao platforma za ovaj tip igre, Discord ima svoja ograničenja, i publika se uglavnom preselila.
 
 
 ## Zašto open-source, zašto sada
 
-Bot je sve manje aktivan. Prestao sam redovno raditi nove feature-e, baza igrača se smanjila, i odlučio sam da ugasim Roleplay Nations u januaru 2027. Posle toga planiram da sa drugom sa fakulteta pravim pravi simulator država -- nešto mnogo sofisticiranije, sa svim lekcijama iz grešaka ovog projekta. Od nule, sa pravilnim backendom, pravim frontendom, i arhitekturom koja ima smisla.
+Bot je sve manje aktivan. Prestao sam redovno raditi nove feature-e, baza igrača se smanjila, i odlučio sam da ugasim Roleplay Nations u januaru 2027. Posle toga planiram da sa drugom sa fakulteta pravim pravi simulator država — nešto mnogo sofisticiranije, sa svim lekcijama iz grešaka ovog projekta. Od nule, sa pravilnim backendom, pravim frontendom, i arhitekturom koja ima smisla.
 
-Kod ide na GitHub. Ako neko hoće da pokrene svoju verziju -- može. README ima kompletno uputstvo, od kreiranja Discord aplikacije do PostgreSQL šeme i deployovanja na VPS. Samo znajte u šta se upuštate.
+Kod ide na GitHub. Ako neko hoće da pokrene svoju verziju — može. README ima kompletno uputstvo, od kreiranja Discord aplikacije do PostgreSQL šeme i deployovanja na VPS. Samo znajte u šta se upuštate.
 
 
 ## Šta sam naučio
@@ -90,6 +90,6 @@ Pet stvari, posle šest godina:
 
 Roleplay Nations živi do januara 2027. Kod je na GitHub-u. Sljedeći projekat počinje uskoro, sa pravim planom i nadam se boljom arhitekturom.
 
-Ako ste nekad igrali Roleplay Nations -- hvala vam. Ova igra je bila moja škola programiranja, i bez igrača koji su trpjeli bagove, pucanje servera i neobjašnjive gubitke podataka, ne bih naučio ni pola onoga što znam.
+Ako ste nekad igrali Roleplay Nations — hvala vam. Ova igra je bila moja škola programiranja, i bez igrača koji su trpjeli bagove, pucanje servera i neobjašnjive gubitke podataka, ne bih naučio ni pola onoga što znam.
 
 [GitHub repo](https://github.com/matko-iv/roleplay-nations) | [Discord server](https://discord.gg/vcSrNJP)
