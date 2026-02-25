@@ -1,0 +1,59 @@
+AI obrada slika na Samsung telefonima i njegove mane (Scene Optimizer i "Refining Picture")
+25. februar 2026
+
+Scene Optimizer i povezane opcije poput "Intelligent optimization" ili poruke "Refining picture" dio su Samsungovog AI sistema za automatsko prepoznavanje scene i naknadnu obradu fotografija.
+Scene Optimizer koristi modele mašinskog učenja da prepozna tip
+scene (npr. hrana, noć, pejzaž, tekst, mjesec) i zatim mijenja boje, kontrast, oštrinu i druge parametre kako bi subjekt izgledao "bolje" bez ručnog podešavanja. Na novijim uređajima poput Galaxy S24, ovaj sistem je dio šireg ProVisual/AI engine-a koji obuhvata i naprednije funkcije uređivanja, poput generativnog popunjavanja i AI predloga za editovanje.
+
+## Kako radi
+Scene Optimizer je prvobitno uveden uz Galaxy S10 seriju i od tada koristi neuronske mreže istrenirane na velikim skupovima slika da bi klasifikovao scenu koju kamera vidi u realnom vremenu. Kada algoritam prepozna odgovarajući tip scene, telefon automatski primjenjuje set unaprijed definisanih prilagođavanja: pojačavanje ili spuštanje zasićenja, lokalno
+podešavanje kontrasta (local tone mapping) i redukciju šuma. Za
+specifične objekte poput mjeseca koristi se i multi-frame superresolution: uređaj snimi više kadrova, kombinuje ih, smanjuje šum i dodaje detalje pomoću AI modela koji je treniran na različitim fazama mjeseca.
+
+Poruka "Refining picture" koja se pojavljuje nakon slikanja
+fotografije označava fazu post-processinga u kojoj se snimljeni
+RAW ili osnovni JPEG dodatno obrađuje kroz AI pipeline prije nego što konačna verzija bude prikazana i trajno sačuvana. Kod visokih rezolucija (50 MP, 200 MP) i uključenih opcija kao što su Scene Optimizer, Super HDR i drugo..., ovaj korak može da traje duže i da koristi više radne memorije i privremenog skladišta. Korisnici su prijavljivali slučajeve gdje se "Refining picture" zadržava neuobičajeno dugo, što se obično tretira kao bug koji se privremeno
+rješava čišćenjem cache memorije kamere ili restartom, uz
+očekivanje softverskog ažuriranja.
+
+## Gdje se čuvaju ovi "fantomski" podaci?
+Samsung javno ne dokumentuje detaljan interni raspored foldera za sve privremene AI fajlove, ali je poznato da kamera i galerija koriste aplikacioni prostor u internom storage-u (data particija) i sistemske medijske foldere za keš, thumbnailove i verzije slika. Post-processing i AI optimizacija podrazumijevaju kreiranje privremenih fajlova, međurezultata i dodatnih kopija slika koje se poslije spajaju ili brišu,
+slično načinu na koji multi-frame HDR i super-resolution funkcije rade na drugim telefonima. Praksa iz iskustava korisnika pokazuje da ovi privremeni i pomoćni fajlovi ponekad ne budu pravilno očišćeni, što dovodi do naglog rasta zauzeća memorije pod stavkama kao što su "Camera", "System" ili "Other" storage.
+
+Na zvaničnim stranicama Samsung opisuje Scene Optimizer
+prvenstveno kroz uticaj na kvalitet slike, a ne govori eksplicitno o limitima prostora koje može da zauzme. Međutim, forumi i zajednice korisnika bilježe slučajeve gdje aplikacija kamere i povezane AI funkcije troše desetine gigabajta, što se manifestuje kao skoro puna interna memorija bez jasnog objašnjenja u standardnom UI-ju za storage. U nekim prijavljenim scenarijima pomaže čišćenje cache
+memorije za Camera i Gallery aplikacije, dok ekstremniji slučajevi završavaju na factory reset-u (kao što je bio slučaj kod mene) uređaja kada je sistemski storage već
+ozbiljno fragmentisan ili blokiran.
+
+## Kako AI obrađuje slike na Galaxy S24 seriji
+Sa Galaxy S24 serijom, Samsung ističe ProVisual Engine, skup AI
+modula koji rade od momenta kadriranja do kasnijeg editovanja u
+galeriji. U fazi snimanja koriste se multi-frame tehnike, analiza gyro podataka, dedicated ISP blokovi i deep learning modeli za redukciju šuma i poboljšanje detalja, posebno pri noćnim scenama ili velikim zumovima. Nakon snimanja, dodatne AI funkcije poput Edit Suggestions i Generative Edit mogu stvarati nove piksele (generativni sadržaj), ispravljati kadriranje ili dopunjavati pozadinu, pri čemu se u EXIF/metapodacima i kroz vizuelni watermark označava da je generativni AI korišćen.
+
+Samsung se pozicionira tako da veći dio AI obrade slika,
+prepoznavanja scena i optimizacije radi lokalno na uređaju, u okviru sistema za koji tvrdi da je zaštićen Knox platformom i dodatnim sigurnosnim mehanizmima. Za novije Galaxy AI funkcije, korisnici imaju mogućnost da u Advanced Intelligence podešavanjima ograniče ili isključe online obradu podataka, što smanjuje slanje slika ili njihovih reprezentacija na servere radi obrade. Ipak, sama činjenica da sistem automatski kreira dodatne kopije i generiše sadržaj znači **da u slučaju pune memorije, softverskog buga ili nepravilnog čišćenja keša može doći do gubitka podataka, korupcije fajlova ili prisilnih resetovanja, što predstavlja direktan sigurnosni
+rizik za korisničke podatke.**
+
+Dakle da remiziramo, glavni praktični rizik AI optimizacije slika na Samsung uređajima nije u klasičnoj krađi podataka, već u nepredvidivom trošenju memorije i resursa koje korisnik ne vidi jasno kroz interfejs. Ako privremeni fajlovi i keš AI obrade nekontrolisano rastu, sistem može ostati bez slobodnog prostora potrebanog za logove, ažuriranja, sistemske procese i normalan rad aplikacija, što povećava šansu za rušenje aplikacija, neuspele upise podataka i u krajnjem slučaju korupciju podataka, kako ličnih tako i sistemskih! Kao umanjenje rizika, korisnicima se preporučuje da
+isključe Scene Optimizer ili Intelligent optimization pri masovnom fotografisanju, povremeno čiste cache kamere i galerije, koriste Pro/RAW modove za kritične snimke i redovno prave bekap podataka. Što bi efektivno riješilo problem, ali ovaj postupak uopšte ne bi smio da bude obavezan, kako bi bili sigurni u zaštitu naših podataka! 
+
+### Reference
+1. [Samsung's Galaxy S24 line arrives with camera generative AI ...](https://techcrunch.com/2024/01/17/samsungs-galaxy-s24-line-arrives-with-camera-improvements-and-generative-ai-tricks/)
+2. [www.samsung.com › Home › Product Help & Support › Mobile
+Device](https://www.samsung.com/uk/support/mobile-devices/how-galaxy-cameras-combine-super-resolution-technologies-with-ai-to-produce-high-quality-images-of-the-moon/)
+3. [Enter the New Era of Mobile AI with Samsung Galaxy S24 ...](https://news.samsung.com/us/enter-new-era-of-mobile-ai-samsung-galaxy-s24-series/)
+4. [How does the Scene Optimizer improve photos?](https://www.samsung.com/latin_en/support/mobile-devices/how-does-the-scene-optimizer-improve-my-photos/)
+5. [Did you know? ft. Samsung Camera Scene Optimizer](https://www.youtube.com/watch?v=UrMS-gWkcfA)
+6. [How Samsung Galaxy Cameras Combine Super Resolution ...](https://www.samsungmobilepress.com/feature-stories/how-samsung-galaxy-cameras-combine-super-resolution-technologies-with-ai-technology-to-produce-high-quality-images-of-the-moon/)
+7. [AI picture refining is ruining photos](https://eu.community.samsung.com/t5/ai/ai-picture-refining-is-ruining-photos/td-p/9505514)
+8. [Stuck "Refining Picture" S25 Ultra - Samsung Community](https://eu.community.samsung.com/t5/galaxy-s25-series/stuck-quot-refining-picture-quot-s25-ultra/td-p/11734349)
+9. [New phone storage issue (storage nearly full?) - Samsung
+Community](https://us.community.samsung.com/t5/Galaxy-S24/New-phone-storage-issue-storage-nearly-full/td-p/2980012)
+10. [Anyone Having Issues with S24 Ultra storage?](https://www.reddit.com/r/samsung/comments/1difwzy/anyone_having_issues_with_s24_ultra_storage/)
+14. [Urgent Help Needed – 50GB Photos Suddenly Deleted ...](https://r1.community.samsung.com/t5/galaxy-s/urgent-help-needed-50gb-photos-suddenly-deleted-from-samsung-s24/td-p/36119841)
+
+
+
+
+
+
