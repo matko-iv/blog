@@ -39,16 +39,14 @@ isključe Scene Optimizer ili Intelligent optimization pri masovnom fotografisan
 
 ### Reference
 1. [Samsung's Galaxy S24 line arrives with camera generative AI ...](https://techcrunch.com/2024/01/17/samsungs-galaxy-s24-line-arrives-with-camera-improvements-and-generative-ai-tricks/)
-2. [www.samsung.com › Home › Product Help & Support › Mobile
-Device](https://www.samsung.com/uk/support/mobile-devices/how-galaxy-cameras-combine-super-resolution-technologies-with-ai-to-produce-high-quality-images-of-the-moon/)
+2. [www.samsung.com › Home › Product Help & Support](https://www.samsung.com/uk/support/mobile-devices/how-galaxy-cameras-combine-super-resolution-technologies-with-ai-to-produce-high-quality-images-of-the-moon/)
 3. [Enter the New Era of Mobile AI with Samsung Galaxy S24 ...](https://news.samsung.com/us/enter-new-era-of-mobile-ai-samsung-galaxy-s24-series/)
 4. [How does the Scene Optimizer improve photos?](https://www.samsung.com/latin_en/support/mobile-devices/how-does-the-scene-optimizer-improve-my-photos/)
 5. [Did you know? ft. Samsung Camera Scene Optimizer](https://www.youtube.com/watch?v=UrMS-gWkcfA)
 6. [How Samsung Galaxy Cameras Combine Super Resolution ...](https://www.samsungmobilepress.com/feature-stories/how-samsung-galaxy-cameras-combine-super-resolution-technologies-with-ai-technology-to-produce-high-quality-images-of-the-moon/)
 7. [AI picture refining is ruining photos](https://eu.community.samsung.com/t5/ai/ai-picture-refining-is-ruining-photos/td-p/9505514)
 8. [Stuck "Refining Picture" S25 Ultra - Samsung Community](https://eu.community.samsung.com/t5/galaxy-s25-series/stuck-quot-refining-picture-quot-s25-ultra/td-p/11734349)
-9. [New phone storage issue (storage nearly full?) - Samsung
-Community](https://us.community.samsung.com/t5/Galaxy-S24/New-phone-storage-issue-storage-nearly-full/td-p/2980012)
+9. [New phone storage issue (storage nearly full?)](https://us.community.samsung.com/t5/Galaxy-S24/New-phone-storage-issue-storage-nearly-full/td-p/2980012)
 10. [Anyone Having Issues with S24 Ultra storage?](https://www.reddit.com/r/samsung/comments/1difwzy/anyone_having_issues_with_s24_ultra_storage/)
 14. [Urgent Help Needed – 50GB Photos Suddenly Deleted ...](https://r1.community.samsung.com/t5/galaxy-s/urgent-help-needed-50gb-photos-suddenly-deleted-from-samsung-s24/td-p/36119841)
 
