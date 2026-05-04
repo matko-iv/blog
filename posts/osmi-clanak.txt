@@ -3,8 +3,8 @@ Electrolux EEM48321L mašina za suđe konstanto vukla vodu kad se uključi u str
 
 Mašina za sudove Electrolux EEM48321L (PNC 911 536 337 01, kontrolna ploča EDW-PB150 01E) je počela da konstantno vuče vodu od trenutka kad se utikač stavi u utičnicu. Bez obzira da li je program pokrenut ili je mašina u stand-by, voda je tekla non-stop. Jedini način da se zaustavi bilo je izvući kabl iz struje. Majstor koji je prvi pogledao mašinu zamijenio je dva čipa na ploči, ali problem je ostao. Na kraju sam sam pronašao kvar i popravio mašinu - zamjenom jednog SMD kondenzatora od 15 centi i jednog SMD triaka od 50 centi, plus novi Aquastop ventil. Cijela popravka oko 70€, dok bi servis naplatio 200-300€ samo za novu ploču.
 
-![EDW-PB150 ploča](8,0.jpg)
-![Oznaka na ploči](8,1.jpg)
+![EDW-PB150 ploča](posts/8,0.jpg)
+![Oznaka na ploči](posts/8,1.jpg)
 
 ## Simptom i pogrešna dijagnoza
 
@@ -19,7 +19,7 @@ Nakon istraživanja, naišao sam na poljski forum elektroda.pl gdje je ovaj kvar
 - **Triak TY3001** (Z0103MN, SOT-223 paket, pozicija S3037) - elektronski prekidač koji uključuje i isključuje 230V do solenoida
 - **Snubber kondenzator C3065** - mali SMD keramički kondenzator od 10nF/250V koji se nalazi pored triaka
 
-![TY3001 kontroliše Aquastop](8,2.jpg)
+![TY3001 kontroliše Aquastop](posts/8,2.jpg)
 
 C3065 i otpornik R3110 (47Ω) čine RC snubber krug koji je spojen paralelno sa triakom. Snubber je zaštitna komponenta - njegov posao je da apsorbuje naponske pikove koje induktivni solenoid generiše kad se ventil isključuje. Bez snubbera, ti pikovi mogu oštetiti triak.
 
@@ -45,13 +45,13 @@ Ono što sam tek kasnije naučio je da **mikro pukotina na C3065 se ne može det
 
 ## Dijelovi i alat
 
-Naručio sam sa TME.eu (dostava u Crnu Goru za 2-3 dana):
+Naručio sam sa TME.eu (dostava u Crnu Goru za 7 dana, imao sam problema na carini):
 
 - **Murata GRM31BR72J103KW01L** - keramički kondenzator 10nF/630V, SMD 1206 (zamjena za C3065, sa višim naponom radi više sigurnosne marže)
 - **Littelfuse Z0103MNT1G** - triak 600V/1A, SOT-223 (zamjena za TY3001)
 - **Weller opletka za odlemljivanje 1.5mm**
 
-Sa Okov.me sam kupio:
+U Okovu sam kupio:
 
 - **Lemilica Total 60W** - 15W koju sam imao bila je preslaba za ploču sa širokim bakarnim površinama, kalaj se nije topio ni nakon 5 minuta zagrijavanja
 - **Tinol žica** sa fluksom u jezgru
