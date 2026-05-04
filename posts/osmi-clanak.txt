@@ -1,0 +1,100 @@
+Electrolux EEM48321L mašina za suđe konstanto vukla vodu kad se uključi u struju - kako popraviti
+4. maj 2026
+
+Mašina za sudove Electrolux EEM48321L (PNC 911 536 337 01, kontrolna ploča EDW-PB150 01E) je počela da konstantno vuče vodu od trenutka kad se utikač stavi u utičnicu. Bez obzira da li je program pokrenut ili je mašina u stand-by, voda je tekla non-stop. Jedini način da se zaustavi bilo je izvući kabl iz struje. Majstor koji je prvi pogledao mašinu zamijenio je dva čipa na ploči, ali problem je ostao. Na kraju sam sam pronašao kvar i popravio mašinu - zamjenom jednog SMD kondenzatora od 15 centi i jednog SMD triaka od 50 centi, plus novi Aquastop ventil. Cijela popravka oko 70€, dok bi servis naplatio 200-300€ samo za novu ploču.
+
+![EDW-PB150 ploča](8,0.jpg)
+![Oznaka na ploči](8,1.jpg)
+
+## Simptom i pogrešna dijagnoza
+
+Klasičan opis problema: voda teče **odmah** kad se ploča priključi na struju, prije nego procesor uopšte uključi sistem. Ovo isključuje softverski kvar i ukazuje na hardversku grešku u krugu koji kontroliše elektromagnetni ventil za dotok vode (Aquastop). Aquastop sistem je dizajniran tako da bude zatvoren u mirovanju, a otvara se samo kad mikrokontroler pošalje signal triaku.
+
+Majstor je zamijenio TNY278GN (Power Integrations čip za napajanje) i CNY17-2 (optokupler za izolaciju). Problem je što su ti čipovi dio sekcije napajanja ploče - oni generišu 5V/12V za logiku. Sa krugom koji kontroliše 230V triak za ventil nemaju nikakve veze. Zato popravka nije uspjela - rješavao se pogrešan dio ploče. Test je čak uradjen sa drugim, ispravnim ventilom - voda je i dalje konstantno tekla, što potvrđuje da je kvar na ploči, a ne u ventilu.
+
+## Pravi uzrok – snubber kondenzator C3065 i triak TY3001
+
+Nakon istraživanja, naišao sam na poljski forum elektroda.pl gdje je ovaj kvar dokumentovan kao "popularna usterka" PB150/PB200 modula. Nekoliko korisnika je opisalo identične simptome, a iskusan tehničar AsReeX je riješio problem na više mašina kroz privatnu komunikaciju. Glavni osumnjičeni su bili dva elementa u krugu koji kontroliše Aquastop ventil:
+
+- **Triak TY3001** (Z0103MN, SOT-223 paket, pozicija S3037) - elektronski prekidač koji uključuje i isključuje 230V do solenoida
+- **Snubber kondenzator C3065** - mali SMD keramički kondenzator od 10nF/250V koji se nalazi pored triaka
+
+![TY3001 kontroliše Aquastop](8,2.jpg)
+
+C3065 i otpornik R3110 (47Ω) čine RC snubber krug koji je spojen paralelno sa triakom. Snubber je zaštitna komponenta - njegov posao je da apsorbuje naponske pikove koje induktivni solenoid generiše kad se ventil isključuje. Bez snubbera, ti pikovi mogu oštetiti triak.
+
+Kad C3065 propadne i postane kratak spoj (što se dešava nakon godina rada na 230V mreži, posebno blizu maksimalnog napona kondenzatora od 250V), stvara se direktan put za struju koji **zaobilazi triak potpuno**. Struja sad teče: mreža → solenoid ventila → shortovan C3065 → nazad u mrežu. Triak nema kontrolu nad strujom, mikrokontroler mu šalje "isključi se" signal ali to više nema značaja jer struja ide kroz kondenzator. Ventil je pod 230V kontinuirano, voda teče dok god je mašina priključena na struju.
+
+Dodatni problem je što kad snubber kondenzator otkaže, triak je izložen punim naponskim pikovima i također se može oštetiti vremenom. Zato je preporuka sa foruma da se zamijene **oba** elementa, što se na kraju ispostavilo tačno u mom slučaju.
+
+## Sekundarna šteta – pregorjeli plavi kabl
+
+Direktna posljedica shortovanog C3065 je termalna katastrofa na konektoru solenoidnog ventila. U normalnom radu, solenoid se pali na 60-120 sekundi po ciklusu punjenja. Sa shortovanim C3065, solenoid radi non-stop satima, danima. Plavi (neutralni) kabl na konektoru ventila bio je crn, sa naslagama čađi. To se dešava zbog termalne lavine u kontaktu: I²R zagrijavanje stvara oksid, oksid povećava otpor, veći otpor stvara još više zagrijavanja, i tako u krug dok ne dođe do mikro-iskri i karbonizacije plastike. Originalni Aquastop ventil je već bio uništen od dugotrajnog previsokog napona, pa sam morao i njega zamijeniti.
+
+## Dijagnostika multimetrom
+
+Prije naručivanja dijelova, htio sam provjeriti komponente multimetrom. Izvadio sam ploču iz mašine (nakon što sam fotografisao sve konektore prije iskopčavanja - kritičan korak da se zna šta gdje ide pri vraćanju) i testirao sve sumnjive elemente:
+
+- Sva 4 triaka (TY3001, TY3002, TY3004, TY3005) - svi pokazivali OL između MT1-MT2, što znači da nisu u kratkom spoju
+- Oba HF3FA relea (RL3001, RL3002) - OK
+- Optokupleri U2000 i U2002 (CNY17-2) - OK, LED pokazuje 1042mV, fototranzistor 640mV
+- Diode D3000 (SF 1600V), D3002, D3006 - sve OK
+- C3017 i drugi veliki elektrolitski kondenzatori - OK
+
+Ono što sam tek kasnije naučio je da **mikro pukotina na C3065 se ne može detektovati multimetrom**. Multimetar testira sa 3V, dok kondenzator propušta tek pod 230V. Tako da svi dijagnostički testovi mogu pokazati da je kondenzator ispravan, a on da pravi probleme tek pod radnim naponom. Slično, triak može testirati ispravno na multimetru, ali pokazati problem tek pod opterećenjem.
+
+## Dijelovi i alat
+
+Naručio sam sa TME.eu (dostava u Crnu Goru za 2-3 dana):
+
+- **Murata GRM31BR72J103KW01L** - keramički kondenzator 10nF/630V, SMD 1206 (zamjena za C3065, sa višim naponom radi više sigurnosne marže)
+- **Littelfuse Z0103MNT1G** - triak 600V/1A, SOT-223 (zamjena za TY3001)
+- **Weller opletka za odlemljivanje 1.5mm**
+
+Sa Okov.me sam kupio:
+
+- **Lemilica Total 60W** - 15W koju sam imao bila je preslaba za ploču sa širokim bakarnim površinama, kalaj se nije topio ni nakon 5 minuta zagrijavanja
+- **Tinol žica** sa fluksom u jezgru
+- **Kemper univerzalna pasta za lemljenje** (samo za vježbu - korozivna je za elektroniku)
+
+Kupio sam i **Temu test ploču** za vježbanje lemljenja prije nego sam dirao stvarnu ploču. Univerzalni Aquastop ventil sa cijevi sam nabavio kod lokalnog majstora.
+
+## Postupak popravke
+
+Skinuo sam ploču iz mašine i fotografisao sve konektore. Zatim sam se prvo fokusirao na C3065. Lemljenje SMD kondenzatora je trajalo par minuta - mali kondenzator, sa 60W lemilicom i opletkom skida se brzo. Tehnika koju sam koristio: nanijeti malo paste na oba kraja, dodati svjež kalaj na jedan kraj (svjež kalaj se topi na nižoj temperaturi i pomaže da se rastopi stari), zatim brzo prebacivati lemilicu lijevo-desno između dva kraja dok se oba ne rastope istovremeno, pa lagano gurnuti komponentu sa strane pinzetom.
+
+Vratio sam ploču u mašinu, pomislio "gotovo je"... ali voda je i dalje vukla. Mašina je pokazivala identične simptome. To je bio momenat kad sam shvatio da je triak takođe oštećen, vjerovatno od dugotrajnog rada bez funkcionalnog snubber kondenzatora.
+
+Drugi krug popravke je bio teži. Triak Z0103MN u SOT-223 paketu ima veliki metalni tab koji odvodi toplotu na široku bakarnu površinu na ploči. Ta površina odvlači toplotu brže nego što čak i 60W lemilica može isporučiti. Trebalo je dosta paste, dosta svježeg kalaja, i strpljenja - držati lemilicu 5-10 sekundi po pinu, koristiti opletku da se upije rastopljeni kalaj sa taba u nekoliko prolaza. Kad sam konačno skinuo stari triak, zalemio sam novi Littelfuse - pažljivo orijentisao prema markama na ploči, prvo zatinovao jedan pad, postavio komponentu, zalemio prvi pin da fiksiram, pa onda tab i ostale pinove.
+
+## Zamjena Aquastop ventila
+
+Aquastop ventil se zamjenjuje kroz donji panel mašine. Pratio sam zvanične Electrolux upute koje sam našao na njihovom UK sajtu. Treba odviti 4 PH2 zavrtnja na donjem poklopcu, 2 zavrtnja na gornjem dijelu lijevog bočnog panela, pritisnuti 3 plastične kvačice pozadi, pa skinuti lijevu bočnu stranu. Tek tada se može pristupiti unutrašnjem priključku creva i plastičnom stezaču koji ga drži.
+
+Univerzalni ventil koji sam kupio imao je drugačiji konektor od originalnog (manji Molex tip umjesto velikih faston jezičaka), pa nisam mogao direktno utaknuti. Rješenje je bilo odsjeći nove konektore i zalemiti kablove direktno - plavi sa plavim, drugi par sa drugim. Polaritet nije bitan jer je solenoid AC komponenta. Spojeve sam izolovao termo cijevčicom.
+
+## Rezultat
+
+Nakon vraćanja svega i priključivanja novog Aquastop ventila, prvi test sam uradio sa **zatvorenim ventilom za vodu na zidu**. Uključio sam mašinu u struju i pratio da li čujem rad solenoida ili pokušaj punjenja. Tišina. To je bio dokaz da je popravka uspjela - bez shortovanog kondenzatora i sa novim triakom, krug ponovo radi normalno pod kontrolom mikrokontrolera.
+
+Otvorio sam ventil, pokrenuo program. Mašina puni vodu kontrolisano, ispušta kontrolisano, sve radi kako treba.
+
+## Šta sam naučio
+
+Glavna lekcija: kad se majstor zakune da je nešto popravio a problem ostane, vrlo je vjerovatno da je popravljao pogrešan dio ploče. Forumi tipa elektroda.pl su zlato za ovakve specifične kvarove jer ljudi tamo dijele rješenja koja ne postoje nigdje drugdje na internetu.
+
+Druga lekcija: alat je važan. 15W lemilica je bila kupljena u dobroj namjeri, ali za rad na pravoj ploči sa SMD komponentama na bakarnim površinama treba minimum 60W. 10€ više za bolju lemilicu ušteđuje sate frustracije.
+
+Treća lekcija: u snubber krugu, oba elementa (kondenzator i triak) često stradaju zajedno. Kad jedan otkaže, drugi je izložen stresu i otkaže ubrzo nakon. Ako već dirate ploču, zamijenite oboje odmah - rezervni triak košta 50 centi.
+
+I četvrto: dokumentujte sve dok radite. Fotografisanje konektora prije iskopčavanja, čuvanje šablona kako su komponente bile orijentisane na ploči, beleženje koji kabl ide gdje - sve to spriječava velike probleme pri vraćanju.
+
+### Reference
+
+1. [Electrolux EEM 48321L - EDW-PB150 01E - Ciągłe pobieranie wody mimo sprawnego Aquastopu](https://www.elektroda.pl/rtvforum/topic3996660.html)
+2. [Electrolux EDW-PB150 - wartość rezystora R3129 na płycie zmywarki](https://www.elektroda.pl/rtvforum/topic4107098.html)
+3. [Electrolux EEM48321L (EDW-PB15001E) - który triak lub kondensator?](https://www.elektroda.pl/rtvforum/topic4074728.html)
+4. [Murata GRM31BR72J103KW01L - 10nF 630V SMD kondenzator](https://www.tme.eu/me/en/details/grm31br72j103kw01l/mlcc-smd-capacitors/murata/)
+5. [Littelfuse Z0103MNT1G - triak SOT-223](https://www.tme.eu/me/en/details/z0103mnt1g-lf/triacs/littelfuse/z0103mnt1g/)
+6. [Electrolux UK - How to replace the inlet hose](https://support.electrolux.co.uk/support-articles/article/dishwasher-how-to-replace-the-inlet-hose)
+7. [Electrolux EDW 1500-1510 Service Manual](https://www.manualslib.com/manual/937661/Electrolux-Edw-1500-1510.html)
