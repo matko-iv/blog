@@ -1,94 +1,128 @@
-﻿Samsung SCX-4300 – računar ga ne vidi preko USB-a i povlači dva lista uz Paper Jam 1: popravka ploče i solenoida
+Samsung SCX-4300 – računar ga ne vidi preko USB-a i povlači dva lista uz Paper Jam 1: popravka ploče i solenoida
 4. jun 2026
 
-Samsung SCX-4300 (kontrolna ploča JC92-01762H) došao je kod mene sa dva potpuno nezavisna kvara koji nemaju nikakve veze jedan s drugim. Prvi: računar uopšte nije vidio štampač preko USB-a — signalni put podataka na ploči je bio fizički uništen, pad-ovi prigušnice (choke) L4 počupani a bakarne trase prekinute. Drugi, koji se pokazao tek kad je USB proradio: štampač bi odštampao prvi list, odmah povukao DRUGI prazan i javio "Paper Jam 1" uz visoko zavijanje. Oba kvara sam riješio bez ijednog kupljenog dijela — USB tankom lakiranom žicom (~0,1 mm) kao premosnicom na R137/R138, a problem povlačenja papira komadićem izolir trake na solenoidu. Trošak dijelova: 0€. **Bitno je napomenuti da je štampač prije toga poslat u servis "Zvis Computers" Budva, koji su zamijenili sam USB port, ali neuspješno uklonili kvar. Naime, majstor je saopštio da je došlo do kratkog spoja na ploči i da se ne može popraviti.**
+Samsung SCX-4300 (kontrolna ploča JC92-01762H) došao je kod mene sa dva potpuno nezavisna kvara koji nemaju nikakve veze jedan s drugim. Prvi: računar uopšte nije vidio štampač preko USB-a — signalni put podataka na ploči je bio fizički uništen, pad-ovi prigušnice (choke) **L4** počupani a bakarne trase prekinute. Drugi, koji se pokazao tek kad je USB proradio: štampač bi odštampao prvi list, odmah povukao DRUGI prazan i javio "Paper Jam 1" uz visoko zavijanje. Oba kvara sam riješio **bez ijednog kupljenog dijela** — USB tankom lakiranom žicom (~0,1 mm) kao premosnicom na R137/R138, a problem povlačenja papira komadićem izolir trake na solenoidu. Trošak dijelova: 0€. **Bitno je napomenuti da je štampač prije toga poslat u servis "Zvis Computers" Budva, koji su zamijenili sam USB port, ali neuspješno uklonili kvar. Naime, majstor je saopštio da je došlo do kratkog spoja na ploči i da se ne može popraviti.**
 
 ![Samsung REVO SCX4200 matična ploča (desno), pored glavne naponjske ploče uređaja](posts/9,0.jpg)
- 
+
 ## Dva kvara na jednom uređaju
+
 Ovaj štampač je dobar primjer kako jedan uređaj može kriti dva odvojena kvara koji se maskiraju. Dok god računar nije vidio štampač preko USB-a, problem povlačenja papira se uopšte nije mogao ni primijetiti — nije bilo načina da se pošalje posao za štampu. Tek kad sam riješio komunikaciju, pojavio se drugi, mehanički kvar. Zato sam ih i rješavao tim redom: prvo elektronika (USB), pa tek onda mehanika (solenoid).
-Prvi kvar: uništen USB signalni put (choke L4)
+
+## Prvi kvar: uništen USB signalni put (choke L4)
+
 Simptom je bio jednostavan — Windows uopšte nije registrovao štampač kad se priključi USB kabl. Nema zvuka priključivanja, nema novog uređaja u Device Manageru, ništa. Napajanje ploče je radilo (štampač se palio i prolazio kroz inicijalizaciju normalno), pa je problem morao biti u samom USB signalnom putu, a ne u napajanju.
 
 ![Matična ploča ima veliki broj konekcija sa mehaničkim uređajima samog štampača, počevši od zupčanika, pa sve do najmanjih senzora](posts/9,3.jpg)
 
-Kad sam pogledao ploču pod lupom, vidio sam štetu oko USB-B konektora. Na ovoj ploči linije podataka USB-a (D+ i D−) ne idu direktno sa konektora na čip — prvo prolaze kroz prigušnicu (common-mode choke) L4 koja služi za potiskivanje smetnji, pa zatim kroz dva serijska otpornika R137 i R138 prije nego stignu do USB primopredajnika. Pad-ovi na koje je L4 bila zalemljena bili su počupani (otkinuti sa ploče), a trase koje su ih spajale prekinute. Dio te štete se vjerovatno proširio i mojim ranijim pokušajima — kad pad jednom popusti, lako odlazi dalje.
-Zašto se choke smije premostiti
+Kad sam pogledao ploču pod lupom, vidio sam štetu oko USB-B konektora. Na ovoj ploči linije podataka USB-a (D+ i D−) ne idu direktno sa konektora na čip — prvo prolaze kroz prigušnicu (common-mode choke) **L4** koja služi za potiskivanje smetnji, pa zatim kroz dva serijska otpornika **R137** i **R138** prije nego stignu do USB primopredajnika. Pad-ovi na koje je L4 bila zalemljena bili su počupani (otkinuti sa ploče), a trase koje su ih spajale prekinute. Dio te štete se vjerovatno proširio i mojim ranijim pokušajima — kad pad jednom popusti, lako odlazi dalje.
 
-Ključna stvar koju treba razumjeti: common-mode choke L4 nije neophodan za osnovni rad. Njegov posao je filtriranje smetnji (EMI), a ne prenos korisnog signala. Na USB Full Speed brzini, preko kratkog kabla, D+ i D− linije rade i bez te prigušnice. Znači, umjesto da pokušavam vraćati uništene pad-ove i trase L4 (što je gotovo nemoguće kad su pad-ovi otišli), rješenje je premostiti cijelu tu sekciju — povezati linije podataka direktno sa USB konektora na tačku odmah iza oštećenja.
-Popravka: lakirana žica na R137/R138
-Najbolje uporište za premosnicu su kroz-rupa (through-hole) pinovi samog USB-B konektora — oni su mehanički čvrsti, zalemljeni kroz ploču, i ne mrdaju kao SMD pad-ovi. Sa druge strane, pad-ovi otpornika R137 i R138 su tačke koje vode pravo prema čipu, iza uništene L4 sekcije. Premosnica spaja te dvije tačke i preskače oštećenje.
+### Zašto se choke smije premostiti
 
+Ključna stvar koju treba razumjeti: common-mode choke L4 **nije neophodan za osnovni rad**. Njegov posao je filtriranje smetnji (EMI), a ne prenos korisnog signala. Na USB Full Speed brzini, preko kratkog kabla, D+ i D− linije rade i bez te prigušnice. Znači, umjesto da pokušavam vraćati uništene pad-ove i trase L4 (što je gotovo nemoguće kad su pad-ovi otišli), rješenje je premostiti cijelu tu sekciju — povezati linije podataka direktno sa USB konektora na tačku odmah iza oštećenja.
 
-Koristio sam tanku lakiranu (emajliranu) žicu od oko 0,1 mm — onu vrstu koja se koristi za namotaje transformatora. Postupak sa samo lemilicom (oko 330°C, bez fena za vrući vazduh):
-    • Ostružem i pokositrim krajeve lakirane žice (lak je izolacija — mora se skinuti toplotom/struganjem da kalaj uhvati)
-    • Pokositrim odgovarajući pin USB-B konektora i pad otpornika
-    • Zalemim jedan kraj žice na pin konektora, provučem je pažljivo do pad-a otpornika, pa zalemim drugi kraj
-    • Isto ponovim za drugu liniju podataka (jedna premosnica za D+, druga za D−)
-    • Provjerim multimetrom da nema kratkog spoja između D+ i D−, ni prema masi/napajanju
+### Popravka: lakirana žica na R137/R138
+
+Najbolje uporište za premosnicu su kroz-rupa (through-hole) pinovi samog USB-B konektora — oni su mehanički čvrsti, zalemljeni kroz ploču, i ne mrdaju kao SMD pad-ovi. Sa druge strane, pad-ovi otpornika **R137** i **R138** su tačke koje vode pravo prema čipu, iza uništene L4 sekcije. Premosnica spaja te dvije tačke i preskače oštećenje.
+
+Koristio sam tanku lakiranu (emajliranu) žicu od oko **0,1 mm** — onu vrstu koja se koristi za namotaje transformatora. Postupak sa **samo lemilicom (oko 330°C, bez fena za vrući vazduh)**:
+
+- Ostružem i pokositrim krajeve lakirane žice (lak je izolacija — mora se skinuti toplotom/struganjem da kalaj uhvati)
+- Pokositrim odgovarajući pin USB-B konektora i pad otpornika
+- Zalemim jedan kraj žice na pin konektora, provučem je pažljivo do pad-a otpornika, pa zalemim drugi kraj
+- Isto ponovim za drugu liniju podataka (jedna premosnica za D+, druga za D−)
+- Provjerim multimetrom da nema kratkog spoja između D+ i D−, ni prema masi/napajanju
+
 Standardni USB-B raspored pinova je: pin 1 = VBUS (+5V), pin 2 = D−, pin 3 = D+, pin 4 = masa. Koja linija ide na R137 a koja na R138 najlakše je potvrditi multimetrom (provjera prolaznosti od pad-a otpornika prema čipu/konektoru) prije lemljenja.
+
 Bitno: dvije premosnice ne smiju dodirivati jedna drugu niti praviti kratak spoj sa okolnim trasama. Lakirana žica je idealna baš zato — tanka je, fleksibilna, a tamo gdje lak ostane neoštružen dodatno izoluje. Sa 0,1 mm žicom i finim vrhom lemilice ovo se radi precizno i bez fena.
 
 ![Pogled na gornju stranu ploče. Dvije lakirane bakarne žice povezuju se na D+ i D- šine respektivno](posts/9,1.jpg)
 
 ![Pogled na donju stranu ploče. Dvije lakirane bakarne žice kreću od pina 2 i 3 samog porta, koji je zalemljen na ploči. Ti pinovi su nosioci podataka na full-speed USB data šini](posts/9,2.jpg)
 
-Nakon ovoga, računar je odmah prepoznao štampač. USB veza popravljena.
-Drugi kvar: duplo povlačenje papira i "Paper Jam 1"
-Tek kad je USB proradio i mogao sam slati posao za štampu, izašao je drugi kvar. Štampač bi:
-    1. odštampao prvi list i skoro ga izbacio,
-    2. odmah povukao DRUGI prazan list,
-    3. javio "Paper Jam 1" uz visoko zavijanje.
-Ovo je, ispostaviće se, najdokumentovaniji kvar baš na ovom motoru — SCX-4300 dijeli motor sa SCX-4200 i cijelom porodicom (ML-1510/1710, SCX-4100/4200/4216, Xerox PE114/Phaser 3119/WC 3119...). Logika "Jam 1" je jednostavna: nakon što list aktivira feed (registracioni) senzor, izlazni senzor mora promijeniti stanje u zadatom vremenskom prozoru; ako se to ne desi — ili ako oba senzora ostanu aktivna predugo — firmware javlja zaglavljivanje. Povlačenje drugog lista dok pogon još radi je klasičan znak da se jednookretno kvačilo zahvata ne vraća u početni položaj i mašina hvata novi list.
-Engine Test Mode
-Da bih to provjerio, ušao sam u Engine Test Mode. Na SCX-4300 (identično kao SCX-4200) sekvenca je, brzo i uzastopno:
-Menu → Copies → ◄ (lijevo) → ► (desno) → Menu → ◄ (lijevo)
-Na ekranu nakratko piše "Engine Test [Diagnostic]". Start/OK ulazi u test, Menu lista, Stop izlazi. Test povlačenja je u sekciji MTR FAN SOL ETC → PickUp Test, a motor zasebno u Motor Test.
-Čudna dijagnoza: nema klika dok ne pomjerim cam
-Ovdje je bilo najzanimljivije, i zamalo me odvelo na pogrešan trag. Kad pokrenem PickUp Test iz mirovanja — ništa, nikakav klik solenoida. Ali kad pokrenem Motor Test, vidim kako se sivi valjak/bregasta (cam) okreće i stane negdje na sredini ciklusa, ne u početnom položaju. I tek tada, kad isključim Motor Test i odmah upalim PickUp Test — tek tada se čuje klik.
-To me prvo navelo da posumnjam u metalni okvir (frame) na kojem stoji ploča, koji sam ranije rastavljao i vraćao — da možda zahvat zupčanika nije dobar nakon sklapanja. Ali objašnjenje je bilo drugačije i preciznije.
-Mehanizam: jednookretno kvačilo i zalijepljeni jezičak
-Mehanizam zahvata radi ovako: kvačilo (mufta) ima jezičak/kotvu koju drži solenoid. U mirovanju jezičak sjedi u zarezu bregaste i drži je "parkiranu". Kad procesor pošalje impuls (~300 ms, 24V), solenoid povuče jezičak, kvačilo se zahvati za pogon i napravi tačno jedan okret, pa jezičak ponovo padne u zarez i zaustavi ga.
-Kad cam stane van pravog početnog položaja (kao u Motor Testu), zub brave pritiska kotvu i mehanički je blokira — solenoid je pod naponom, ali kotva fizički nema kud da mrdne, pa nema klika. Čim se cam okrene par stepeni dalje, kotva se oslobodi i klikne. To znači jednu bitnu stvar: kalem solenoida i drajver na ploči RADE — dokaz je što klikne čim je oslobođen. Problem je čisto mehanički, a ne elektronski i nije do ploče.
-Pravi uzrok kod mene: na čeonoj površini solenoida (između jezgra i kotve) nalazi se mala sunđerasta/gumena pločica čiji je posao da spriječi da se kotva magnetno zalijepi za jezgro. Ta pločica je vremenom propala i postala ljepljiva, pa se kotva (jezičak) lijepila za solenoid i nije se otpuštala čisto. Zbog toga se kvačilo nije pravilno vraćalo u home, i odatle duplo povlačenje i Jam 1.
+Nakon ovoga, računar je odmah prepoznao štampač. **USB veza popravljena.**
 
-Popravka: čišćenje i izolir traka
+## Drugi kvar: duplo povlačenje papira i "Paper Jam 1"
+
+Tek kad je USB proradio i mogao sam slati posao za štampu, izašao je drugi kvar. Štampač bi:
+
+1. odštampao prvi list i skoro ga izbacio,
+2. odmah povukao DRUGI prazan list,
+3. javio "Paper Jam 1" uz visoko zavijanje.
+
+Ovo je, ispostaviće se, najdokumentovaniji kvar baš na ovom motoru — SCX-4300 dijeli motor sa SCX-4200 i cijelom porodicom (ML-1510/1710, SCX-4100/4200/4216, Xerox PE114/Phaser 3119/WC 3119...). Logika "Jam 1" je jednostavna: nakon što list aktivira feed (registracioni) senzor, izlazni senzor mora promijeniti stanje u zadatom vremenskom prozoru; ako se to ne desi — ili ako oba senzora ostanu aktivna predugo — firmware javlja zaglavljivanje. Povlačenje drugog lista dok pogon još radi je klasičan znak da se **jednookretno kvačilo zahvata ne vraća u početni položaj** i mašina hvata novi list.
+
+### Engine Test Mode
+
+Da bih to provjerio, ušao sam u Engine Test Mode. Na SCX-4300 (identično kao SCX-4200) sekvenca je, brzo i uzastopno:
+
+**Menu → Copies → ◄ (lijevo) → ► (desno) → Menu → ◄ (lijevo)**
+
+Na ekranu nakratko piše "Engine Test [Diagnostic]". Start/OK ulazi u test, Menu lista, Stop izlazi. Test povlačenja je u sekciji **MTR FAN SOL ETC → PickUp Test**, a motor zasebno u **Motor Test**.
+
+### Čudna dijagnoza: nema klika dok ne pomjerim cam
+
+Ovdje je bilo najzanimljivije, i zamalo me odvelo na pogrešan trag. Kad pokrenem PickUp Test iz mirovanja — **ništa, nikakav klik solenoida**. Ali kad pokrenem Motor Test, vidim kako se sivi valjak/bregasta (cam) okreće i stane negdje **na sredini** ciklusa, ne u početnom položaju. I tek tada, kad isključim Motor Test i odmah upalim PickUp Test — **tek tada se čuje klik**.
+
+To me prvo navelo da posumnjam u metalni okvir (frame) na kojem stoji ploča, koji sam ranije rastavljao i vraćao — da možda zahvat zupčanika nije dobar nakon sklapanja. Ali objašnjenje je bilo drugačije i preciznije.
+
+### Mehanizam: jednookretno kvačilo i zalijepljeni jezičak
+
+Mehanizam zahvata radi ovako: kvačilo (mufta) ima jezičak/kotvu koju drži solenoid. U mirovanju jezičak sjedi u zarezu bregaste i drži je "parkiranu". Kad procesor pošalje impuls (~300 ms, 24V), solenoid povuče jezičak, kvačilo se zahvati za pogon i napravi tačno **jedan okret**, pa jezičak ponovo padne u zarez i zaustavi ga.
+
+Kad cam stane van pravog početnog položaja (kao u Motor Testu), zub brave **pritiska kotvu i mehanički je blokira** — solenoid je pod naponom, ali kotva fizički nema kud da mrdne, pa nema klika. Čim se cam okrene par stepeni dalje, kotva se oslobodi i klikne. To znači jednu bitnu stvar: **kalem solenoida i drajver na ploči RADE** — dokaz je što klikne čim je oslobođen. Problem je čisto mehanički, a ne elektronski i nije do ploče.
+
+Pravi uzrok kod mene: na čeonoj površini solenoida (između jezgra i kotve) nalazi se mala sunđerasta/gumena pločica čiji je posao da spriječi da se kotva magnetno zalijepi za jezgro. Ta pločica je vremenom propala i postala ljepljiva, pa se **kotva (jezičak) lijepila za solenoid** i nije se otpuštala čisto. Zbog toga se kvačilo nije pravilno vraćalo u home, i odatle duplo povlačenje i Jam 1.
+
+### Popravka: čišćenje i izolir traka
+
 Rješenje je jeftino koliko može biti:
-    • Skinuo sam ostatke stare ljepljive pločice
-    • Očistio i jezgro i metalnu kotvu (jezičak) od svih ostataka ljepila (IPA)
-    • Zalijepio mali komad izolir trake na čeonu površinu kao novu, nelijepljivu pločicu
+
+- Skinuo sam ostatke stare ljepljive pločice
+- Očistio i jezgro i metalnu kotvu (jezičak) od svih ostataka ljepila (IPA)
+- Zalijepio mali komad **izolir trake** na čeonu površinu kao novu, nelijepljivu pločicu
+
 Bitno: ne smije se ostaviti goli metal na metal. Površine su toliko fino brušene da i najmanji zaostali magnetizam ili tragovi masti drže kotvu i kad je solenoid bez struje — pa kuca i opet se lijepi. Komad trake daje taman onaj zazor da se kotva odvoji trenutno. (Kapton traka je trajnija od obične izolir trake, ali i obična radi dobro.)
+
 Nakon trake — klik je čist iz mirovanja, jedan okret, jedan list po komandi. Zatim sam pustio 5 strana zaredom da potvrdim da se duplo povlačenje ne vraća. Radi.
-Dijelovi i alat
-Ono što je najljepše kod ove popravke: nisam kupio nijedan dio. Oba kvara su riješena materijalom koji ionako imam na stolu.
-    • Tanka lakirana (emajlirana) žica ~0,1 mm — za USB premosnice (namotajna žica, ona za transformatore)
-    • Izolir traka (ili Kapton) — za nelijepljivu pločicu solenoida
-    • Lemilica ~330°C, fini vrh — bez fena za vrući vazduh; cijela USB popravka je urađena samo lemilicom
-    • IPA (izopropil alkohol) — za čišćenje jezgra i kotve solenoida
-    • Lupa i pinceta — obavezno za rad oko USB pad-ova
-    • Multimetar — za provjeru kratkog spoja na USB linijama nakon lemljenja
-Ako kod nekoga čišćenje i traka ne bi pomogli, zamjenski dijelovi za mehaniku su: pickup solenoid JC33-00009A (SOLENOID-HB PICK-UP, 24V), kvačilo/cam JC66-00377A / MEA UNIT-CLUTCH JC97-01788A, povratna opruga 6107-001170. Manual solenoid (za ručno uvlačenje) je JC33-00010A — ne brkati ga sa pickup-om; njegovo lijepljenje se vidi kao "štampa tek od pola stranice" iz ručnog uvlačenja.
-Rezultat
+
+## Dijelovi i alat
+
+Ono što je najljepše kod ove popravke: **nisam kupio nijedan dio.** Oba kvara su riješena materijalom koji ionako imam na stolu.
+
+- **Tanka lakirana (emajlirana) žica ~0,1 mm** — za USB premosnice (namotajna žica, ona za transformatore)
+- **Izolir traka** (ili Kapton) — za nelijepljivu pločicu solenoida
+- **Lemilica ~330°C, fini vrh** — bez fena za vrući vazduh; cijela USB popravka je urađena samo lemilicom
+- **IPA (izopropil alkohol)** — za čišćenje jezgra i kotve solenoida
+- **Lupa i pinceta** — obavezno za rad oko USB pad-ova
+- **Multimetar** — za provjeru kratkog spoja na USB linijama nakon lemljenja
+
+Ako kod nekoga čišćenje i traka ne bi pomogli, zamjenski dijelovi za mehaniku su: pickup solenoid **JC33-00009A** (SOLENOID-HB PICK-UP, 24V), kvačilo/cam **JC66-00377A** / **MEA UNIT-CLUTCH JC97-01788A**, povratna opruga **6107-001170**. Manual solenoid (za ručno uvlačenje) je **JC33-00010A** — ne brkati ga sa pickup-om; njegovo lijepljenje se vidi kao "štampa tek od pola stranice" iz ručnog uvlačenja.
+
+## Rezultat
+
 Štampač sada: računar ga odmah vidi preko USB-a, štampa normalno, i hvata tačno jedan list po komandi — bez Jam 1 i bez zavijanja. Dva kvara, dva pristupa (elektronika pa mehanika), nula kupljenih dijelova.
-Šta sam naučio
-    1. Jedan uređaj može kriti dva kvara. Dok je USB bio mrtav, mehanički problem povlačenja se uopšte nije mogao vidjeti. Riješi prvo ono što ti blokira testiranje (komunikaciju), pa onda ono što se tek tada pokaže.
-    2. Filtersku komponentu ponekad smiješ premostiti. Common-mode choke L4 nije za prenos signala nego za smetnje. Kad su mu pad-ovi i trase uništeni, premosnica tankom žicom direktno na R137/R138 vraća USB u rad. Nije "lijepo" kao originalna trasa, ali radi i izbjegava beznadežno krpljenje počupanih pad-ova.
-    3. Tanka lakirana žica i sama lemilica dovoljni su za fine premosnice. Lak služi i kao izolacija; 0,1 mm žica se lako provuče bez kratkog spoja i bez potrebe za fenom za vrući vazduh.
-    4. "Nema klika" ne znači uvijek mrtav solenoid. Ako solenoid klikne čim mehanizam pomjeriš rukom (ili Motor Testom), kalem i ploča rade — kotva je samo mehanički blokirana u home položaju. To je mehanika, ne elektronika, i nije matična ploča.
-    5. Najjeftiniji dio je često rješenje. Komad izolir trake je popravio kvar koji bi neko zamijenio kao "pickup solenoid u kvaru" ili još gore — "matična ploča". Sunđerasta pločica koja se pretvorila u ljepilo je klasika baš na ovom motoru.
-    6. Engine Test Mode je zlato za dijagnozu. Umjesto nagađanja, PickUp Test i Motor Test su mi tačno pokazali da je problem u vraćanju kvačila, a ne u senzoru ni u ploči — i uštedjeli sate skidanja pogrešnih dijelova.
+
+## Šta sam naučio
+
+1. **Jedan uređaj može kriti dva kvara.** Dok je USB bio mrtav, mehanički problem povlačenja se uopšte nije mogao vidjeti. Riješi prvo ono što ti blokira testiranje (komunikaciju), pa onda ono što se tek tada pokaže.
+2. **Filtersku komponentu ponekad smiješ premostiti.** Common-mode choke L4 nije za prenos signala nego za smetnje. Kad su mu pad-ovi i trase uništeni, premosnica tankom žicom direktno na R137/R138 vraća USB u rad. Nije "lijepo" kao originalna trasa, ali radi i izbjegava beznadežno krpljenje počupanih pad-ova.
+3. **Tanka lakirana žica i sama lemilica dovoljni su za fine premosnice.** Lak služi i kao izolacija; 0,1 mm žica se lako provuče bez kratkog spoja i bez potrebe za fenom za vrući vazduh.
+4. **"Nema klika" ne znači uvijek mrtav solenoid.** Ako solenoid klikne čim mehanizam pomjeriš rukom (ili Motor Testom), kalem i ploča rade — kotva je samo mehanički blokirana u home položaju. To je mehanika, ne elektronika, i nije matična ploča.
+5. **Najjeftiniji dio je često rješenje.** Komad izolir trake je popravio kvar koji bi neko zamijenio kao "pickup solenoid u kvaru" ili još gore — "matična ploča". Sunđerasta pločica koja se pretvorila u ljepilo je klasika baš na ovom motoru.
+6. **Engine Test Mode je zlato za dijagnozu.** Umjesto nagađanja, PickUp Test i Motor Test su mi tačno pokazali da je problem u vraćanju kvačila, a ne u senzoru ni u ploči — i uštedjeli sate skidanja pogrešnih dijelova.
 
 ![Uspješna popravka!](posts/9,4.jpg)
 
-
 ### Reference
-    1. Samsung SCX4200 - Вопрос знатокам м-ма протяжки из лотка (mehanizam kvačila, startcopy.su tema 24723)
-    2. Samsung SCX-4200 - Трещит муфта подачи, не крутится механизм подачи (kvačilo se ne vraća u home, startcopy.su tema 26753)
-    3. Samsung SCX-4200 - не работает соленоид узла захвата бумаги / nedostaje zupčanik pod pločom (startcopy.su tema 33026)
-    4. iFixit - Picks up a second sheet of paper and jams (ML2510, popravka trakom na solenoidu)
-    5. Samsung SCX-4300 Service Manual (overchip.net) - SCX-4300 upućuje na SCX-4200
-    6. Samsung SCX-4200 Service Manual (printertec.com.br) - §4.1 Engine Test Mode, §3.3.13 Paper Jam, §5 rastavljanje
-    7. Ремонт Samsung SCX-4200/4220/4100 Xerox 3119 - ne zahvata papir (complace.ru)
-    8. Samsung SCX-4200 - замятие бумаги и чистка ролика захвата (tonerdrug.ru)
-    9. Samsung SCX-4300 - duplo povlačenje papira, popravka trakom na solenoidu (elektroda.pl tema 3175508)
 
+1. [Samsung SCX4200 - Вопрос знатокам м-ма протяжки из лотка (mehanizam kvačila, startcopy.su tema 24723)](http://www.startcopy.su/forum/m/24723.html)
+2. [Samsung SCX-4200 - Трещит муфта подачи, не крутится механизм подачи (kvačilo se ne vraća u home, startcopy.su tema 26753)](http://www.startcopy.su/forum/m/26753.html)
+3. [Samsung SCX-4200 - не работает соленоид узла захвата бумаги / nedostaje zupčanik pod pločom (startcopy.su tema 33026)](http://www.startcopy.su/forum/m/33026.html)
+4. [iFixit - Picks up a second sheet of paper and jams (ML2510, popravka trakom na solenoidu)](https://www.ifixit.com/Answers/View/237680/Picks+up+a+second+sheet+of+paper+and+jams)
+5. [Samsung SCX-4300 Service Manual (overchip.net) - SCX-4300 upućuje na SCX-4200](https://overchip.net/files/service/Service_SCX-4300.pdf)
+6. [Samsung SCX-4200 Service Manual (printertec.com.br) - §4.1 Engine Test Mode, §3.3.13 Paper Jam, §5 rastavljanje](https://www.printertec.com.br/arquivos_download/samsung/scx4200.pdf)
+7. [Ремонт Samsung SCX-4200/4220/4100 Xerox 3119 - ne zahvata papir (complace.ru)](https://www.complace.ru/remont-printerov-mfu/samsung-xerox/scx4200/)
+8. [Samsung SCX-4200 - замятие бумаги и чистка ролика захвата (tonerdrug.ru)](https://tonerdrug.ru/samsung-scx-4200-zamyatie-bumagi/)
+9. [Samsung SCX-4300 - duplo povlačenje papira, popravka trakom na solenoidu (elektroda.pl tema 3175508)](https://www.elektroda.pl/rtvforum/topic3175508.html)
