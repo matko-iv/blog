@@ -3,7 +3,7 @@ Zašto su vremenske prognoze za Crnu Goru toliko loše
 
 Ako živite u Budvi i ikad ste pogledali vremensku prognozu, vjerovatno ste pomislili: "Je l' ovi ljudi uopšte znaju đe je Crna Gora?" Odgovor je jedva.
 
-Crna Gora je doslovno najgori mogući scenario za vremensku prognozu. Zamislite da pravite model — imate lijepu mrežu od 25x25 km, svaka ćelija ima jednu vrijednost za temperaturu. Sad tu postoje i gradienti, pa se tehnički i unaprijedi rezolucija, na ćelije od po 20°. To se može uraditi na širim prostranstvima sa ne toliko "kompleksnom" topografskom slikom. 
+Crna Gora je doslovno najgori mogući scenario za vremensku prognozu. Zamislite da pravite model: imate lijepu mrežu od 25x25 km, svaka ćelija ima jednu vrijednost za temperaturu. Sad tu postoje i gradienti, pa se tehnički i unaprijedi rezolucija, na ćelije od po 20°. To se može uraditi na širim prostranstvima sa ne toliko "kompleksnom" topografskom slikom. 
 
 A onda dođete do Crne Gore.
 
@@ -25,10 +25,10 @@ Rješenje je zapravo banalno kada razmislite. Ako znate da ECMWF *svaki put* pre
 
 ## Šta bi zapravo trebalo
 
-Idealno bi bilo da neko napravi **regionalni model sa rezolucijom <2km** specifično za Crnu Goru. Model koji zna da Budva nije Lovćen. Model koji razumije da Boka Kotorska ima svoj mikroklimat.
+Idealno bi bilo da neko napravi **regionalni model sa rezolucijom <2km** specifično za Crnu Goru. Model koji zna da Budva nije Lovćen i da Boka Kotorska ima svoj mikroklimat.
 
-Ali to košta. I treba neko da to napravi. I da održava.
+Ali to košta, i treba neko da to napravi i održava.
 
-Do tada, imate [moju korekciju](https://matko-iv.github.io/vrijeme/forecast.html). Nije savršena, ali je bolja od originala. A to je ionako suština svega u životu.
+Do tada, imate [moju korekciju](https://matko-iv.github.io/vrijeme/forecast.html). Nije savršena, ali je bolja od originala.
 
 *Detaljni brojevi i grafici dostupni na [stranici analize](https://matko-iv.github.io/vrijeme/). Upozorenje: sadrži statistiku.*

@@ -8,9 +8,9 @@ Mašina za sudove Electrolux EEM48321L (PNC 911 536 337 01, kontrolna ploča EDW
 
 ## Simptom i pogrešna dijagnoza
 
-Klasičan opis problema: voda teče **odmah** kad se ploča priključi na struju, prije nego procesor uopšte uključi sistem. Ovo isključuje softverski kvar i ukazuje na hardversku grešku u krugu koji kontroliše elektromagnetni ventil za dotok vode (Aquastop). Aquastop sistem je dizajniran tako da bude zatvoren u mirovanju, a otvara se samo kad mikrokontroler pošalje signal triaku.
+Klasičan opis problema: voda teče **odmah** kad se ploča priključi na struju, prije nego procesor uopšte uključi sistem. Ovo isključuje softverski kvar i ukazuje na hardversku grešku u krugu koji kontroliše elektromagnetni ventil za dotok vode (Aquastop). Aquastop je u mirovanju zatvoren, a otvara se samo kad mikrokontroler pošalje signal triaku.
 
-Majstor je zamijenio TNY278GN (Power Integrations čip za napajanje) i CNY17-2 (optokupler za izolaciju). Problem je što su ti čipovi dio sekcije napajanja ploče - oni generišu 5V/12V za logiku. Sa krugom koji kontroliše 230V triak za ventil nemaju nikakve veze. Zato popravka nije uspjela - rješavao se pogrešan dio ploče. Test je čak uradjen sa drugim, ispravnim ventilom - voda je i dalje konstantno tekla, što potvrđuje da je kvar na ploči, a ne u ventilu.
+Majstor je zamijenio TNY278GN (Power Integrations čip za napajanje) i CNY17-2 (optokupler za izolaciju). Problem je što su ti čipovi dio sekcije napajanja ploče - oni generišu 5V/12V za logiku. Sa krugom koji kontroliše 230V triak za ventil nemaju nikakve veze. Zato popravka nije uspjela - rješavao se pogrešan dio ploče. Čak sam testirao sa drugim, ispravnim ventilom - voda je i dalje konstantno tekla, što potvrđuje da je kvar na ploči, a ne u ventilu.
 
 ## Pravi uzrok – snubber kondenzator C3065 i triak TY3001
 
@@ -83,7 +83,7 @@ Otvorio sam ventil, pokrenuo program. Mašina puni vodu kontrolisano, ispušta k
 
 Glavna lekcija: kad se majstor zakune da je nešto popravio a problem ostane, vrlo je vjerovatno da je popravljao pogrešan dio ploče. Forumi tipa elektroda.pl su zlato za ovakve specifične kvarove jer ljudi tamo dijele rješenja koja ne postoje nigdje drugdje na internetu.
 
-Druga lekcija: alat je važan. 15W lemilica je bila kupljena u dobroj namjeri, ali za rad na pravoj ploči sa SMD komponentama na bakarnim površinama treba minimum 60W. 10€ više za bolju lemilicu ušteđuje sate frustracije.
+Druga lekcija: alat je važan. 15W lemilicu sam kupio u dobroj namjeri, ali za rad na pravoj ploči sa SMD komponentama na bakarnim površinama treba minimum 60W. 10€ više za bolju lemilicu ušteđuje sate frustracije.
 
 Treća lekcija: u snubber krugu, oba elementa (kondenzator i triak) često stradaju zajedno. Kad jedan otkaže, drugi je izložen stresu i otkaže ubrzo nakon. Ako već dirate ploču, zamijenite oboje odmah - rezervni triak košta 50 centi.
 

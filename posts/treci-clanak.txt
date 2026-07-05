@@ -14,7 +14,6 @@ Ukratko: platforma đe možeš pronaći, rezervisati i platiti privatno parking 
 **Za vlasnike**: Imaš prazan prilaz? Dvorište? Garažu koja služi kao skladište za stvari koje ćeš "jednog dana" baciti? Objavi prostor, postavi cijenu, i počni zarađivati dok spavaš.
 
 > Prosječan vozač u Crnoj Gori godišnje izgubi **19 sati** tražeći parking i potroši **oko 100 eura** na kazne.
-Vrlo zanimljiv podatak.
 
 ## Mjesec i po dana — na šta je otišlo vrijeme
 
@@ -38,7 +37,7 @@ Plan je širiti na cijelu Crnu Goru, a možda i šire. Ko zna.
 
 ## Trenutno stanje
 
-Sajt je u **beta fazi**. Ima test parking listanog, sistem radi, ali još nisam pokrenuo pravu akviziciju korisnika. To je sljedeća faza — i vjerovatno teža od samog programiranja.
+Sajt je u **beta fazi**. Ima test parking listanog, sistem radi, ali još nisam pokrenuo pravu akviziciju korisnika. To je sljedeća faza, i vjerovatno teža od samog programiranja.
 
 Jer napraviti sajt je jedna stvar. Ubjediti ljude da stave svoj parking prostor na internet... to je posebna priča na koju se treba osvrnuti, i to prije sezone.
 

@@ -59,7 +59,7 @@ Mala, ali važna ograda: ni "ispravljena" revizija nije bila savršen lijek. NVI
 
 ## Razmjere skandala: novac, tužbe i ćutanje
 
-Brojka od 20 miliona čipova nikad nije zvanično potvrđena od strane NVIDIA-e — kompanija nije objavila tačan broj jedinica. Ali kad se zna da su **svi** G84 i G86 čipovi bili zahvaćeni, i da su ugrađivani kod gotovo svih velikih proizvođača, procjene od desetina miliona komada nisu pretjerane.
+NVIDIA nikad nije zvanično potvrdila brojku od 20 miliona čipova, niti je objavila tačan broj jedinica. Ali kad se zna da su **svi** G84 i G86 čipovi bili zahvaćeni, i da su ugrađivani kod gotovo svih velikih proizvođača, procjene od desetina miliona komada nisu pretjerane.
 
 Finansijski udar bio je ogroman i rastao je godinama:
 
@@ -104,7 +104,7 @@ Tih godina je u igri bio i prelazak na **bezolovni lem** (RoHS, 2006), koji je n
 5. **Proizvođači ćute dok god je problem unutar garantnog roka.** Bumpgate, RROD i YLOD su udžbenički primjeri kako se velika kompanija ponaša kad otkrije masovni defekt — prvo poricanje, pa prebacivanje krivice, pa tiha poravnanja. I to, naravno, samo tamo gdje sud stigne.
 6. **Forumi i nezavisni izvori su zlato.** Najveći dio tehničke istine o bumpgateu nije došao od NVIDIA-e, nego od upornih novinara i servisera koji su rastavljali čipove i objavljivali nalaze. Bez njih bi cijela priča do danas ostala "ograničena serija".
 
-Za kraj — Toshiba na mome stolu je živi dokaz da bumpgate i danas, skoro dvije decenije kasnije, i dalje stiže na radni sto. Čip čeka svoju "-751" zamjenu, a ja ću o samom postupku presađivanja (stencil, kuglice, vrući vazduh) pisati posebno kad dijelovi stignu.
+Za kraj, Toshiba na mome stolu je živi dokaz da bumpgate i danas, skoro dvije decenije kasnije, i dalje stiže na radni sto. Čip čeka svoju "-751" zamjenu, a ja ću o samom postupku presađivanja (stencil, kuglice, vrući vazduh) pisati posebno kad dijelovi stignu.
 
 ### Reference
 

@@ -19,7 +19,7 @@ Digitalizacija: čuveni proces u kojem se papirologija pretvara u PDF papirologi
 
 ## eUprava — hrabar pokušaj
 
-[eUprava](https://euprava.gov.me) je sistem koji je zamišljen da vam omogući da sve državne stvari riješite online. I zaista — neke stvari *možete* riješiti online. Recimo, možete provjeriti da li vam je istekla lična karta. A onda otići na šalter da je obnovite.
+[eUprava](https://euprava.gov.me) je sistem koji je zamišljen da vam omogući da sve državne stvari riješite online. I zaista, neke stvari *možete* riješiti online. Recimo, možete provjeriti da li vam je istekla lična karta. A onda otići na šalter da je obnovite.
 
 Sistem zahtijeva digitalnu potvrdu identiteta, koja zahtijeva poseban čitač kartica, koji zahtijeva driver koji radi samo na Windowsu 7, koji zahtijeva... da odustanete i odete na šalter.
 
@@ -42,7 +42,7 @@ Neka pravila koja važe za skoro sve:
 
 ## Zašto je ovo bitno
 
-Šalu na stranu — ovo zapravo *jeste* problem. Ljudi gube vrijeme, posao se usporava, turisti se zbunjuju, investitori odustaju. Dobra veb infrastruktura nije luksuz — to je osnova funkcionalne države. Crna Gora ima sjajne IT stručnjake. Imamo ljude koji mogu napraviti odlične sajtove i aplikacije. **Zaposlite ljude koji znaju šta rade** — nepotizammaxxing ne preporučujemo.
+Šalu na stranu, ovo zapravo *jeste* problem. Ljudi gube vrijeme, posao se usporava, turisti se zbunjuju, investitori odustaju. Dobra veb infrastruktura je temelj funkcionalne države, ne luksuz. Crna Gora ima sjajne IT stručnjake koji mogu napraviti odlične sajtove i aplikacije. **Zaposlite ljude koji znaju šta rade**, nepotizammaxxing ne preporučujemo.
 
 Ali realno, ako čitate ovo, vjerovatno niste osoba koja o tome odlučuje. Pa hajde da se samo nasmijemo i nastavimo da koristimo šaltere.
 

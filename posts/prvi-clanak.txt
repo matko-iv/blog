@@ -1,7 +1,7 @@
 Unaprijeđena vremenska prognoza za Budvu koristeći mašinsko učenje
 11. februar 2026
 
-Plan je bio jednostavan: uzeti 6 globalnih vremenskih modela, baciti ih u mašinu za učenje, i nadati se da će rezultat biti bolji. I jeste.
+Uzeo sam 6 globalnih vremenskih modela i pustio mašinsko učenje da iz njihovih grešaka izvuče tačniju prognozu za Budvu. Rezultat je bolji od bilo kog pojedinačnog modela.
 
 ## Zašto jedna prognoza nije dovoljna
 
@@ -9,7 +9,7 @@ Nijedan od 6 globalnih i kontinentalnih modela koji su dostupni široj javnosti 
 
 ## XGBoost gradient booster
 
-[XGBoost](https://xgboost.readthedocs.io/) je u suštini algoritam koji uzima podatke i pravi koeficijent koji odgovara rasponu i magnitudi greške. Dao sam mu:
+[XGBoost](https://xgboost.readthedocs.io/) je algoritam koji uzima podatke i pravi koeficijent koji odgovara rasponu i magnitudi greške. Dao sam mu:
 
 - **6 modela** kao input (i to ECMWF, GFS, ARPEGE, ICON, METEO FRANCE i ITALIAMETEO)
 - **9 parametara**: temperatura, vlažnost, vjetar, pritisak, oblačnost, padavine i još par stvari
@@ -17,16 +17,16 @@ Nijedan od 6 globalnih i kontinentalnih modela koji su dostupni široj javnosti 
 
 Rezultat: temperatura MAE od **0.97°C**. Manje od jednog stepena greške!
 
-Da stavim u perspektivu — najbolji pojedinačni model ima grešku od 1.4°C. Moj frankenstein od 6 modela je za **30% bolji**.
+Najbolji pojedinačni model ima grešku od 1.4°C. Moj frankenstein od 6 modela je za **30% bolji**.
 
 ## Stvari koje sam naučio na teži način
 
-- **Feature engineering je 80% posla** — sat u danu, mjesec, lag features...
-- **Bias correction po mjesecu i satu** — kad otkriješ da ECMWF *svaki januar* daje 2°C više, korekcija je trivijalna ali efekat ogroman. Tako za bilo koju situaciju.
+- **Feature engineering je 80% posla**: sat u danu, mjesec, lag features...
+- **Bias correction po mjesecu i satu**: kad otkriješ da ECMWF *svaki januar* daje 2°C više, korekcija je trivijalna ali efekat ogroman. Tako za bilo koju situaciju.
 
 ### Kod (za one koji vole takve stvari)
 
-Cijeli projekat će veoma brzo biti open source (frankenstein je i po izgledu koda), jer zašto ne:
+Cijeli projekat će uskoro biti open source (frankenstein je i po izgledu koda), jer zašto ne:
 
 ```python
 # Osnovna ideja pipeline-a (nije baš ovako ali skoro)
