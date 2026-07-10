@@ -60,13 +60,6 @@ Poređenje je rađeno na identičnih 96 sekvenci, identičnim metrikama. Kontrol
 
 Rezultati na +60 minuta, FSS odnos prema perzistenciji (prosjek skala 5/10/20 km) i Brier:
 
-| metoda | FSS odnos | Brier |
-|---|---|---|
-| perzistencija | 1.00 | 0.167 |
-| DGMR, najbolji kalibrisani | 1.02 | 0.105 |
-| pysteps ekstrapolacija | 1.22 | 0.125 |
-| pysteps ANVIL | 1.25 | 0.104 |
-
 ![Poređenje metoda na +60 minuta: FSS odnos prema perzistenciji i Brier skor za kišu u Budvi](posts/11,4.png)
 
 Na +90 minuta prednost pysteps metoda raste: FSS odnos dostiže 1.34 za ekstrapolaciju i 1.42 za ANVIL, uz Brier 0.135 do 0.146 naspram 0.167 za perzistenciju.
