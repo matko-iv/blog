@@ -1,0 +1,98 @@
+Nowcasting padavina nad Budvom: fine-tuning DGMR generativnog modela i poređenje sa pysteps metodama
+5. jul 2026
+
+Nowcasting je kratkoročna prognoza padavina u rasponu od nula do približno devedeset minuta. Numerički modeli prognoze na tom rasponu ne pomažu jer im asimilacija i inicijalizacija oduzmu više vremena nego što sama prognoza pokriva, pa se nowcasting oslanja na radarska mjerenja i ekstrapolaciju. Posljednjih mjeseci sam za područje Budve pokušao nešto ambicioznije od ekstrapolacije: fine-tuning generativnog modela DGMR na arhivi jednog radara. Ovaj tekst je tehnički izvještaj tog pokušaja, sa svim problemima na koje sam naišao, i sa mjerenjima koja su na kraju odlučila šta ide u produkciju.
+
+## Podaci i priprema
+
+Izvor podataka je radar Uljenje i njegova arhiva od maja 2023. do juna 2026: 310.799 ODIM HDF5 fajlova, od čega 285.193 upotrebljivih .MAX. proizvoda (kompozitna maksimalna refleksivnost, korak 5 minuta). Svaki fajl se kalibriše na Budvu: projekcija iz fajla se koristi da se nativna mreža od ~558 m resempluje na 256×256 piksela rezolucije 1 km, sa Budvom (42.2864 N, 18.8400 E) u centru. Refleksivnost se pretvara u intenzitet padavina Marshall-Palmer relacijom Z = 200 R^1.6, uz ograničenje na [0, 128] mm/h.
+
+Trening sekvenca je prozor od 22 uzastopna kadra bez prekida: 4 ulazna (20 minuta istorije) i 18 izlaznih (90 minuta budućnosti). Od 25.540 mogućih prozora sa polupreklapanjem (pomak 11 kadrova), filter zadržava svaki koji sadrži bar jedan kišni kadar, plus 5% suvih prozora kao negativne primjere za kalibraciju. Rezultat: 10.612 sekvenci, oko 30 GB u float16 formatu. Posljednjih 112 sekvenci, vremenski najnovijih, izdvojeno je iz treninga i služi isključivo za evaluaciju.
+
+![Jedna trening sekvenca: četiri ulazne slike i dio osmotrene budućnosti. Krstić označava Budvu, domen je 256×256 km](posts/11,0.png)
+
+## Generativne suparničke mreže (GAN)
+
+GAN se sastoji od dvije neuronske mreže koje se treniraju istovremeno, sa suprotstavljenim ciljevima. Generator preslikava ulaz (ovdje: protekle radarske slike plus slučajni latentni vektor) u uzorak, a diskriminator procjenjuje da li je dati uzorak stvaran ili generisan. Generator se optimizuje da diskriminator ne razlikuje njegove uzorke od stvarnih; diskriminator se optimizuje da ih razlikuje. U ravnoteži generator proizvodi uzorke čija je statistika bliska stvarnim podacima.
+
+Za prognozu je bitno jedno ograničenje koje se u praksi lako previdi. Cilj generatora je da uzorci budu realistični, ne da budu tačni na nivou pojedinačne lokacije. Realizam i pozicijska tačnost su različiti kriterijumi i, kako će se pokazati, često suprotstavljeni.
+
+## DGMR
+
+DGMR (Deep Generative Model of Rainfall) su objavili Ravuri i saradnici u Nature-u 2021. Model su trenirali na kompozitu radarske mreže Ujedinjenog Kraljevstva: 1,48 miliona sekvenci, isječci 256×256 piksela na 1 km. Generator od 98 miliona parametara prima 4 protekle slike i latentni šum, a vraća 18 budućih slika. Funkcija gubitka ima tri člana:
+
+- prostorni diskriminator ocjenjuje realističnost pojedinačnih slika;
+- vremenski diskriminator ocjenjuje konzistentnost kretanja kroz sekvencu;
+- grid-cell regularizator, ponderisana L1 razlika između prosjeka više generisanih uzoraka i stvarnog polja.
+
+![Šema DGMR modela: generator prima ulazne slike i šum, proizvodi 18 predikcija; dva diskriminatora ocjenjuju realizam, grid-cell L1 član tačnost lokacije](posts/11,1.png)
+
+Prema samom radu, diskriminatori bez grid-cell člana daju tačnost na nivou Ojlerove perzistencije, prognoze koja pretpostavlja da se posljednja osmotrena slika ne mijenja. Pozicijsku tačnost obezbjeđuje isključivo grid-cell član. Uzrok je u prirodi kriterijuma: diskriminator nagrađuje oštre slike sa spektrom stvarnog radara i kažnjava zaglađivanje, dok L1 član nagrađuje predikciju blisku uslovnom prosjeku, koji je zaglađen. Odnos težina ta dva dijela određuje ponašanje modela. Za maksimalnu pozicijsku tačnost model se trenira sa dominantnim ili isključivim grid-cell članom, što je konfiguracija korišćena u ovom radu.
+
+## Fine-tuning: problemi i rješenja
+
+Polazna tačka je PyTorch implementacija OpenClimateFix (repozitorijum skillful_nowcasting, paket dgmr 1.4.3) sa njihovim objavljenim težinama, treniranim na malom uzorku. Fine-tuning je rađen na Colab A100 GPU, batch 16, uz Monte-Carlo prosjek od 8 generisanih uzoraka po koraku. Tri problema su obilježila proces.
+
+Prvi je skala izlaza. Generator bez izlazne aktivacije je davao vrijednosti reda 10⁹ umjesto milimetara na sat, pa je trening trošio hiljade koraka na skaliranje umjesto na učenje. Softplus aktivacija na izlazu ograničava vrijednosti na nenegativan opseg i uklanja problem.
+
+Drugi je implementacija grid-cell gubitka u samoj biblioteci. Funkcija GridCellLoss sabira apsolutne razlike L1 normom umjesto da ih uprosječi, a zatim, zbog greške u prioritetu operacija, rezultat množi sa 256×256/18 umjesto da ga dijeli, pa gubitak dostiže red 10¹¹. Nezavisno od toga, ponderisanje koristi max(y+1, 24) umjesto min: suvi pikseli dobijaju težinu 24, istu kao pljusak. Formula sa max stoji i u samom Nature radu, dok DeepMind-ov objavljeni pseudokod koristi clip(y, 0, 24); rasprava o toj neusaglašenosti postoji u issue #331 njihovog repozitorijuma. Trening sa takvim gubitkom konvergira ka potiskivanju padavina. Zamjena sa ispravnom, uprosječenom i min-ponderisanom verzijom bila je preduslov za bilo kakav napredak.
+
+Treći je frekvencijski bias, odnos prognozirane i osmotrene kišne površine. Ponderisanje kišnih piksela je dvosjekli parametar: premalo vodi u potiskivanje kiše (bias ispod 1), previše u precjenjivanje površine (bias iznad 2). Rješenje je parametrizacija w = 1 + k·min(y, 24), gdje se koeficijent k podešava prema izmjerenom biasu na evaluacionom skupu, sa ciljem bias ≈ 1. Uz to je uvedeno i pravilo da se najbolji checkpoint priznaje samo ako mu je bias u opsegu [0.7, 1.4], jer FSS metrika nagrađuje precjenjivanje površine i bez tog ograničenja bira loše kalibrisane modele.
+
+## Evaluacija centrirana na Budvu
+
+Cijela evaluacija je vezana za područje koje proizvod stvarno pokriva. Metrike se računaju na centralnih 128×128 km oko Budve, na zamrznutom skupu od 96 najnovijih izdvojenih sekvenci, sa fiksiranim latentnim vektorima radi uporedivosti između evaluacija. Dvije su metrike:
+
+- FSS (Fractions Skill Score) na pragu 1 mm/h, agregiran po komponentama preko svih prozora, na skalama 1, 5, 10 i 20 km, izražen kao odnos prema perzistenciji;
+- Brier skor za događaj "bar jedan piksel ≥ 1 mm/h unutar ±8 km od Budve", gdje je vjerovatnoća modela udio ansambla od 8 uzoraka koji predviđa događaj.
+
+Rezultat fine-tuninga: DGMR na ovom skupu premašuje perzistenciju po obje metrike. Najbolji kalibrisani checkpoint postiže FSS odnos 1.02 i Brier 0.105 naspram 0.167 za perzistenciju, na horizontu +60 minuta. To je, koliko mi je poznato, netrivijalan rezultat za jedan radar i ovoliki skup podataka. Rezultat, međutim, nije stabilan: kroz nastavak treninga metrike osciluju, najbolja stanja se pojavljuju i nestaju u rasponu od po nekoliko stotina koraka, a trening iz najboljeg stanja u dva ponovljena pokušaja vodi pogoršanju. Takvo ponašanje je očekivano za model od 98 miliona parametara na 10 hiljada sekvenci: DeepMind je za stabilan rezultat koristio skup veći za dva reda veličine.
+
+## Poređenje sa pysteps metodama
+
+Za odluku o produkciji mjerodavan je direktan okršaj sa metodama koje projekat već koristi. Biblioteka pysteps radi ekstrapolaciju po optičkom toku: Lucas-Kanade algoritam procijeni polje kretanja iz uzastopnih slika, pa se posljednje osmotreno polje advektuje unaprijed. ANVIL varijanta (Pulkkinen i saradnici, 2020) dodaje autoregresivni model rasta i slabljenja padavina. Obje metode su deterministe, ne zahtijevaju trening i izvršavaju se u sekundama na procesoru.
+
+Poređenje je rađeno na identičnih 96 sekvenci, identičnim metrikama. Kontrola konzistentnosti: Brier perzistencije nezavisno izračunat u ovoj evaluaciji iznosi 0.167, do posljednje cifre jednak vrijednosti iz DGMR evaluacije.
+
+![Poređenje na +60 minuta za jednu sekvencu: osmatranje, perzistencija, pysteps ekstrapolacija i ANVIL. Krstić označava Budvu](posts/11,2.png)
+
+![Animacija: osmatranje i ANVIL prognoza kroz svih 18 koraka (5 do 90 minuta)](posts/11,3.gif)
+
+Rezultati na +60 minuta, FSS odnos prema perzistenciji (prosjek skala 5/10/20 km) i Brier:
+
+| metoda | FSS odnos | Brier |
+|---|---|---|
+| perzistencija | 1.00 | 0.167 |
+| DGMR, najbolji kalibrisani | 1.02 | 0.105 |
+| pysteps ekstrapolacija | 1.22 | 0.125 |
+| pysteps ANVIL | 1.25 | 0.104 |
+
+![Poređenje metoda na +60 minuta: FSS odnos prema perzistenciji i Brier skor za kišu u Budvi](posts/11,4.png)
+
+Na +90 minuta prednost pysteps metoda raste: FSS odnos dostiže 1.34 za ekstrapolaciju i 1.42 za ANVIL, uz Brier 0.135 do 0.146 naspram 0.167 za perzistenciju.
+
+Zaključak poređenja je jednoznačan. ANVIL postiže FSS odnos koji DGMR ni u najboljem trenutku ne dostiže, izjednačen Brier sa najboljim DGMR checkpointom, i sve to stabilno, bez treninga, bez GPU-a i bez ijednog parametra koji treba čuvati. Razlog je strukturan: na horizontu do sat vremena najveći dio ostvarive vještine jeste transport postojećih padavina, a advekcija doslovno prenosi osmotreno polje i ne može izgubiti njegovu strukturu. Generativni model mora cijelo polje rekonstruisati iz naučene reprezentacije, a prednost koju bi teorijski mogao donijeti, učenje nastanka i slabljenja ćelija, zahtijeva količinu podataka koju jedan radar ne proizvodi u tri godine.
+
+## Trenutno stanje u produkciji
+
+Produkcioni nowcasting u projektu budva-radar ostaje na pysteps biblioteci (radar/pysteps_nowcast.py): Lucas-Kanade optički tok, ANVIL za stratiformne i LINDA za konvektivne scene. DGMR ostaje eksperimentalni put (radar/dgmr_adapter.py), sa arhiviranim najboljim checkpointom. Uslov za promjenu tog statusa je rezultat dosljedno bolji od pysteps metoda na više nezavisnih vremenskih perioda, što sa postojećom količinom podataka nije izgledno. Arhiva raste oko 290 kišnih sekvenci mjesečno, pa je udvostručavanje skupa pitanje godina; realniji put je pretreniranje na evropskom OPERA kompozitu pa fine-tuning na Uljenje, ako se za tim ukaže potreba.
+
+## Zaključci
+
+1. Suparnički članovi GAN-a proizvode realizam, ne pozicijsku tačnost. U DGMR-u tačnost lokacije potiče od grid-cell L1 regularizatora; diskriminatori sami daju tačnost na nivou perzistencije.
+2. Implementaciju gubitka treba verifikovati prije treniranja. Greška u biblioteci (suma umjesto prosjeka, množenje umjesto dijeljenja, max umjesto min u ponderu) vodila je danima konvergencije u pogrešnom smjeru.
+3. Izbor metrike određuje ishod optimizacije. FSS nagrađuje precjenjivanje kišne površine, Brier ga kažnjava; selekcija najboljeg modela mora uključiti ograničenje na frekvencijski bias.
+4. Evaluacija mora mjeriti ono što proizvod isporučuje. Metrike centrirane na Budvu i događaj "kiša u Budvi" dale su drugačiju sliku od metrika preko cijelog domena.
+5. DGMR na jednom radaru može premašiti perzistenciju, i to je upotrebljiv naučni rezultat. Stabilnost tog rezultata zahtijeva red veličine više podataka nego što tri godine jedne arhive sadrže.
+6. Za konfiguraciju sa jednim radarom, advekcija ostaje najjači izbor: pysteps ANVIL premašuje i perzistenciju i najbolji DGMR, stabilno i bez troškova treniranja.
+7. Količina podataka je glavno ograničenje generativnog pristupa, ne optimizacija. Prekid treninga u pravom trenutku i čuvanje verzionisanih checkpointa važniji su od bilo kojeg hiperparametra.
+
+### Reference
+
+1. [Skilful precipitation nowcasting using deep generative models of radar — Ravuri et al., Nature 2021](https://www.nature.com/articles/s41586-021-03854-z)
+2. [openclimatefix/skillful_nowcasting — PyTorch implementacija DGMR-a](https://github.com/openclimatefix/skillful_nowcasting)
+3. [deepmind-research issue #331 — neusaglašenost max/min pondera u grid-cell gubitku](https://github.com/google-deepmind/deepmind-research/issues/331)
+4. [pysteps — biblioteka za nowcasting po optičkom toku](https://github.com/pySTEPS/pysteps)
+5. [Nowcasting of precipitation in the high-resolution Dutch radar composite — Pulkkinen et al. 2020 (ANVIL)](https://journals.ametsoc.org/view/journals/apme/59/8/jamc-d-20-0037.1.xml)
+6. [The fractions skill score for ensemble forecast verification — Necker et al., QJRMS 2024](https://rmets.onlinelibrary.wiley.com/doi/10.1002/qj.4824)
+7. [Increasing the Predictive Skill of Nowcasts — Imhoff et al., WRR 2020](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2019WR026723)
