@@ -1,5 +1,5 @@
 Nowcasting padavina nad Budvom: fine-tuning DGMR generativnog modela i poređenje sa pysteps metodama
-5. jul 2026
+10. jul 2026
 
 Nowcasting je kratkoročna prognoza padavina u rasponu od nula do približno devedeset minuta. Numerički modeli prognoze na tom rasponu ne pomažu jer im asimilacija i inicijalizacija oduzmu više vremena nego što sama prognoza pokriva, pa se nowcasting oslanja na radarska mjerenja i ekstrapolaciju. Posljednjih mjeseci sam za područje Budve pokušao nešto ambicioznije od ekstrapolacije: fine-tuning generativnog modela DGMR na arhivi jednog radara. Ovaj tekst je tehnički izvještaj tog pokušaja, sa svim problemima na koje sam naišao, i sa mjerenjima koja su na kraju odlučila šta ide u produkciju.
 
