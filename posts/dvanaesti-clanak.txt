@@ -1,0 +1,137 @@
+A Test DGMR Rainfall Nowcasting Model for Budva: What Worked, What Failed, and What Comes Next
+12. jul 2026
+
+**Status: this is a TEST model only.** I built it to answer a feasibility question: can a DGMR-style neural network learn useful short-range rainfall nowcasts from the archive of a single radar near Budva? It is not operationally ready, it has not passed a final independent evaluation, and it should not be treated as a public forecast product. Training stopped near batch 16,100 when my available compute ran out, well before the planned 30,000 batches. I intend to make another attempt by the end of summer 2026. I am aiming for a stable model in 2027, but that is a target rather than a guaranteed release date.
+
+![First image](posts/12,1.gif)
+
+## The question behind the experiment
+
+Rainfall nowcasting covers the first minutes to roughly ninety minutes ahead. At this range, much of the useful information is already present in the latest radar images: where rain exists, how it is moving, and whether its structure is growing or weakening.
+
+Classical nowcasting methods estimate motion and transport the last observed radar field forward. DGMR, introduced by Ravuri and colleagues in 2021, takes a different route. It learns a generative representation of radar evolution and can produce several plausible futures from the same recent observations.
+
+That possibility is attractive on the Montenegrin coast, where the sea, steep terrain, and small convective cells can produce rapid local changes. It is also easy to overstate. A realistic-looking rain field is not automatically in the correct place, and a model adapted from UK weights using one Adriatic radar is not equivalent to the original model trained on a large radar network. My goal was narrower: test whether transfer learning could produce measurable local skill, identify the failure modes, and learn what a serious second attempt would require.
+
+![First image](posts/12,5.gif)
+
+## Turning the Uljenje archive into training data
+
+The source archive covers May 2023 through June 2026. It contains 310,799 ODIM HDF5 files, of which 285,193 usable `.MAX.` products remained after filtering. These maximum-reflectivity products arrive at approximately five-minute intervals.
+
+For every frame, I used the projection stored in the radar file and resampled the native grid, whose spacing is about 558 metres, onto a 256×256 grid at one kilometre per pixel. Budva, at 42.2864° N and 18.8400° E, is at the centre. Reflectivity was converted to rainfall intensity with the Marshall–Palmer relation `Z = 200 R^1.6` and clipped to the range from 0 to 128 mm/h.
+
+A complete example contains 22 uninterrupted frames:
+
+- four input frames, representing twenty minutes of recent radar history;
+- eighteen target frames, covering lead times from +5 to +90 minutes.
+
+Using half-overlapping windows with a stride of eleven frames produced 25,540 possible sequences. I retained sequences containing at least one rainy frame and included five percent of dry windows as negative examples. The resulting dataset contains 10,612 sequences and occupies about 30 GB in float16 form.
+
+![First image](posts/12,4.gif)
+
+The newest 112 sequences were excluded from training. The repeated checkpoint comparison reported below used a fixed subset of 96 of those windows. That distinction matters: because I inspected this fixed subset many times while choosing checkpoints and adjusting rain weighting, it became validation data in practice. It is not a final untouched test set.
+
+## What I actually trained
+
+DGMR has a generator with roughly 98 million parameters. It receives four past radar images plus latent noise and returns eighteen future images. The original architecture also contains spatial and temporal discriminators, which encourage realistic texture and motion, and a grid-cell regularizer, which rewards positional agreement with the observed future.
+
+I started from the published OpenClimateFix PyTorch weights. The executed v2 attempt ran on a Colab NVIDIA L4 with a batch size of 16, bf16 mixed precision, and eight stochastic samples in the main run.
+
+Despite the GAN architecture, this was **not a completed adversarial fine-tuning run**. The notebook flag `FSS_ONLY=True` disabled discriminator training. The actual optimization objective was rain-weighted L1 error on the mean of the stochastic ensemble. FSS was calculated periodically to select checkpoints; it was not the differentiable training loss. That distinction is important because it limits what the experiment says about DGMR as a full generative-adversarial system.
+
+Three implementation problems dominated the work.
+
+First, the generator path I used had no suitable non-negative output activation. Early outputs could reach values near 10^9 instead of realistic rainfall rates. Adding Softplus constrained the output to non-negative values and stopped the optimizer from spending thousands of updates merely repairing numerical scale.
+
+Second, I could not safely use the installed `dgmr` 1.4.3 grid-cell loss as written. Its reduction and normalization produced a loss many orders of magnitude larger than expected, and the rainfall-weighting expression exposed a documented disagreement: the Nature text uses a maximum where the released pseudocode clips the value. DeepMind issue #331 records the same max-versus-min question. I replaced the path with an explicitly averaged loss and capped rain weighting, then verified its magnitude before continuing.
+
+Third, rain weighting strongly controlled frequency bias. Too little weight caused the model to erase rain; too much caused it to cover an unrealistically large area. I used a weight of the form `1 + k·min(y, 24)` and monitored wet-area bias when selecting checkpoints. This helped, but it also demonstrated why one score cannot decide whether a rainfall model is good.
+
+![First image](posts/12,6.png)
+
+## How I measured this test
+
+The main evaluation crop was the central 128×128 km around Budva. At +60 minutes, I tracked three complementary quantities.
+
+FSS, the Fractions Skill Score, measures neighbourhood agreement after rainfall is thresholded at 1 mm/h. I calculated it at 1, 5, 10, and 20 km scales and expressed the headline value as a **ratio to Eulerian persistence**. A ratio above 1 means improvement over leaving the last radar field in place. It is not a raw FSS value.
+
+The Brier score measured the event “at least one pixel reaches 1 mm/h within ±8 km of Budva.” DGMR probability was the fraction of ensemble members predicting that event. Lower is better.
+
+Frequency bias was the predicted wet area divided by the observed wet area. A value near 1 is preferable. FSS can improve when a model simply paints too much rain, so bias is an essential guardrail rather than a cosmetic statistic.
+
+These measurements are local and threshold-specific. They do not prove skill across Montenegro, all seasons, all rain intensities, or every lead time. Producing eighteen output frames does not mean that useful +90-minute skill has been independently validated.
+
+## The checkpoint logs show promise—and instability
+
+The most encouraging periodic result appeared near batch 15,100. The +60-minute FSS ratios were 1.32, 1.26, 1.22, and 1.17 at the 1, 5, 10, and 20 km scales. The mean over 5, 10, and 20 km was 1.216: about 21.6 percent higher than persistence on that internal calculation, not 21.6 percentage points. Rain bias was 0.88.
+
+The same checkpoint had a Brier score of 0.167, exactly equal to persistence. In other words, it showed encouraging spatial neighbourhood skill without improving the local yes-or-no rain probability.
+
+More importantly, that state did not settle into stable convergence. Between batches 14,600 and 16,100, the headline FSS ratio moved from 1.095 to 1.216, fell below persistence to roughly 0.967, and then returned to 1.171. Brier and rain bias moved just as sharply, and their best values did not occur at the same checkpoints as the best FSS.
+
+Training stopped near batch 16,100 because my compute allocation was exhausted, not because the experiment had completed. The planned 30,000-batch budget was not reached, and the final full-precision evaluation over all 112 held-out windows was never run.
+
+![Checkpoint instability from batch 14,600 to 16,100, showing the FSS ratio, Brier score, rain-frequency bias, persistence baselines, and the point where compute ran out](posts/12,2.png)
+
+This is the core reason I call the current checkpoint a test model. Selecting the best moment from repeatedly inspected validation data demonstrates feasibility, but it does not establish a repeatable model.
+
+## A separate comparison with pysteps
+
+The project also contains a separate internal comparison on the fixed 96-sequence subset, using the same +60-minute local definitions. It compares three archived DGMR checkpoints with persistence, plain pysteps extrapolation, and pysteps ANVIL. This comparison was not part of the training loop and is still an internal project benchmark rather than an independent external evaluation.
+
+The result is instructive because different DGMR checkpoints optimize different things:
+
+- the FSS-focused checkpoint at batch 15,100 reached an FSS ratio of 1.216, but its Brier score remained 0.167;
+- the more balanced checkpoint at batch 12,100 reached 1.06 FSS ratio and 0.140 Brier;
+- the detection-oriented checkpoint at batch 11,350 reached 1.02 FSS ratio and 0.125 Brier, with a wet-area bias of 1.27;
+- plain pysteps extrapolation reached 1.22 FSS ratio and 0.125 Brier;
+- pysteps ANVIL reached 1.25 FSS ratio and 0.104 Brier, with bias close to 1.
+
+ANVIL combined the spatial and event-score strengths that appeared in different DGMR checkpoints. It also ran on a CPU and required no neural training. This does not settle the broader research question of generative nowcasting, and it does not mean that pysteps defeats every modern operational model. It does mean that my locally fine-tuned DGMR has not earned a production role.
+
+![Internal +60-minute comparison of persistence, three DGMR checkpoints, pysteps extrapolation, and ANVIL using FSS ratio and Brier score](posts/12,3.png)
+
+For now, pysteps remains the dependable operational path, with optical-flow extrapolation and ANVIL or LINDA selected according to the scene. The locally fine-tuned DGMR checkpoint remains a documented experiment.
+
+## Why the evidence is still preliminary
+
+The largest limitation is scale. DeepMind trained the original model on roughly 1.5 million radar sequences. I had 10,612 from one radar, and adjacent samples are not statistically independent.
+
+The evaluation period is small and temporally concentrated. Reusing it for checkpoint selection means that even a frozen protocol can be overfit through human decisions. Eight ensemble members also provide coarse event probabilities. Radar artifacts, missing scans, the `.MAX.` product, rain-based sequence filtering, and a fixed Marshall–Palmer conversion add further uncertainty. In particular, a rain-filtered validation distribution does not represent the frequency of dry operational periods.
+
+Finally, this attempt optimized a corrected weighted-L1 objective rather than demonstrating a complete and stable DGMR training recipe. It did not validate adversarial fine-tuning, calibration, an untouched final period, or reliable +90-minute forecasts. The numbers above are feasibility measurements, not operational claims.
+
+## The v3 notebook is a plan, not a result
+
+The newest Colab notebook contains a proposed next configuration. It adds a differentiable Fractions Brier Score at the 1 mm/h threshold and a 5 km neighbourhood, an almost-fair CRPS term intended to reward useful ensemble spread, and binary cross-entropy on exceedance events. It also proposes a PI(D) controller for rain weighting, with anti-windup and a target bias near 0.9, plus per-lead isotonic regression as a post-processing experiment.
+
+Those cells were not trained or evaluated. They are hypotheses and implementation work, not evidence of better FSS, Brier score, calibration, or stability. Isotonic regression would also need a separate calibration period or cross-validation; fitting and scoring it on the same 96 windows would not support a credible calibration claim.
+
+## What comes next
+
+By the end of summer 2026, I plan to seek enough compute for another controlled run. The first objective is not a prettier forecast image. It is a reproducible experiment: fixed code and data versions, multiple random seeds, saved checkpoints, loss ablations, a dedicated calibration period, and a final chronological test period that remains untouched until every training decision is complete.
+
+I will compare the next model with persistence, pysteps extrapolation, ANVIL, and LINDA under identical local definitions. I also want full lead-time curves instead of one +60-minute headline, plus separate analysis for stratiform and convective scenes.
+
+I am targeting 2027 for a stable model if the evidence supports continuing. “Stable” should mean that useful skill survives different seeds and independent weather periods, frequency bias remains controlled, probability forecasts behave sensibly, and the model consistently improves on the simpler baselines it would replace. If those gates are not met, the correct result is to keep DGMR experimental.
+
+## Lessons from this test
+
+1. A feasibility result is not a forecast product. Beating persistence on a repeatedly inspected validation set is encouraging, but operational readiness requires independent and repeatable evidence.
+2. Verify the loss before paying for training. A normalization or weighting error can dominate every later hyperparameter decision.
+3. Never select by FSS alone. FSS, Brier score, and frequency bias reveal different failure modes and must be read together.
+4. Compare against a strong simple baseline early. For one-hour transport, optical-flow advection has a structural advantage that a generative model must earn back.
+5. A repeatedly inspected holdout becomes validation data. A new chronological test period is required for the next credible result.
+6. Save checkpoints frequently. With unstable training and limited compute, the best state may exist briefly and then disappear.
+7. Stability is a result, not a label. The 2027 target depends on reproducibility, independent verification, and controlled behaviour—not on completing a fixed number of batches.
+
+### References
+
+1. [Skilful precipitation nowcasting using deep generative models of radar — Ravuri et al., Nature 2021](https://www.nature.com/articles/s41586-021-03854-z)
+2. [OpenClimateFix skillful_nowcasting — PyTorch DGMR implementation](https://github.com/openclimatefix/skillful_nowcasting)
+3. [DeepMind Research issue #331 — grid-cell loss weighting discussion](https://github.com/google-deepmind/deepmind-research/issues/331)
+4. [pysteps — open-source precipitation nowcasting library](https://github.com/pySTEPS/pysteps)
+5. [ANVIL nowcast documentation and method reference](https://pysteps.readthedocs.io/en/stable/generated/pysteps.nowcasts.anvil.forecast.html)
+6. [Pysteps: an open-source Python library for probabilistic precipitation nowcasting](https://gmd.copernicus.org/articles/12/4185/2019/)
+7. [The Fractions Skill Score for ensemble forecast verification — Necker et al., 2024](https://rmets.onlinelibrary.wiley.com/doi/10.1002/qj.4824)
