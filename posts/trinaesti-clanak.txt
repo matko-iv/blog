@@ -1,0 +1,146 @@
+Project Milosevic: First Screenshots of a PSX-Style Belgrade, and the Plan Behind Them
+25. jul 2026
+
+**Status: this is a blockout, not a game.** There is no story loop, no dialogue system, no inventory, and no NPC in the build. What exists is one walkable block of central Belgrade at 320×180, textured in a deliberately low-resolution style, with a first-person controller and collision. I am publishing it now because the spatial and visual questions are answered, and everything after this point is content and research work that will take the rest of 2026 and beyond.
+
+![The Kralja Milana corridor in the running Godot build, at the actual 320×180 internal resolution](posts/13,1.png)
+
+## What the game is supposed to be
+
+A detective game set in Belgrade in March and April 1999, during the NATO bombing of Yugoslavia. You play Andrej, an inspector who gets removed from his job in the second week of the campaign and keeps working the case anyway, without a badge, in a city under blackout.
+
+The tone comes from a test scene I wrote to check whether the idea holds up on the page. Scene 12 is a two-hander in a chief's office: taped windows, no electricity, a closed folder on the desk that turns out to be Andrej's own file. Nobody says the real thing out loud. The chief does not accuse him, does not clear him, and does not know who gave the order, because he genuinely does not know. A siren starts outside at the end and neither man reacts.
+
+That scene sets the constraint for everything I build. The environment has to support investigation and uncomfortable waiting. It must not turn the bombing into an action set piece.
+
+Two narrative rules are already fixed. Andrej speaks ijekavica because he is Montenegrin, everyone in Belgrade around him speaks ekavica, and the game never comments on it. And the finale, a fragment of which I have drafted, cuts off before the strike on RTS on 23 April. Sixteen people died there that night. The text does not name them, does not use them, and does not show the explosion.
+
+## Choosing a test area
+
+I traced one polygon over a satellite view and treated it as the whole world for this pass: Slavija, Manjež, the Kralja Milana and Nemanjina corridor, and the edge of the General Staff complex.
+
+![The traced test polygon over present-day Belgrade. Everything outside the red line was deleted from the build](posts/13,2.png)
+
+The polygon covers about 0.292 km², with roughly ±15 m of tracing accuracy. Small enough to finish, dense enough to be a real place. Slavija gives an open square, Manjež gives a park with sightlines, and Nemanjina gives a long street with a tram line down the middle.
+
+Everything is anchored at 44.804517° N, 20.4641545° E. One Blender unit is one metre, +X is east, Godot's −Z is north. That convention is written into the pipeline documentation because a single quiet rescale later would break every historical measurement I make against period photographs.
+
+## From OpenStreetMap to a walkable block
+
+The geometry starts as present-day OpenStreetMap data, imported through Blosm 2.7.27 into Blender 4.5.12 LTS.
+
+The build script then projects my traced WGS84 polygon into Blosm's local metre space and cuts. It removed 382 buildings and kept 227. It clipped 386 road, path, and rail centerlines exactly at the boundary rather than deleting anything that crossed it, then dropped the 42 fragments left with nothing inside. Vegetation, platforms, and profile helpers get the same treatment.
+
+Surviving OSM tags then choose materials instead of everything collapsing into one grey surface. Roads, sidewalks, footpaths, tram beds, and park ground each read their own tags and get their own texture family. Lane dashes and crosswalk bars are separate geometry laid over the finished road: 480 dashes and 44 crossings.
+
+The whole thing exports as one GLB with embedded textures and the original OSM metadata attached. The current build is 135 objects, 23,490 vertices, and 19,824 triangles. Godot imports it as 134 visible meshes across 199 material surfaces, with 63 static bodies and 64 collision shapes.
+
+Named buildings stay as individual nodes. Anonymous geometry gets joined by style. That split matters for what comes next: I need to be able to delete the Hilton without touching the block it sits on.
+
+## Why it looks like this
+
+The prototype renders at a 320×180 internal viewport, scaled up with integer scaling only. Textures use nearest filtering with no mipmaps. Lighting is vertex-only with Lambert forced over Burley, specular disabled, and depth fog closing off the far end of every street.
+
+The vertex shader snaps clip-space positions to the low-resolution pixel grid at 65 percent strength, which produces the wobble you get on original PlayStation hardware from its lack of subpixel precision. At full strength it reads as a bug. At zero it reads as a modern game pretending to be old.
+
+The style is not only nostalgia. A 1999 Belgrade at photographic fidelity would demand a level of documented detail I cannot source for every facade on Kralja Milana, and it would invite the player to read the environment as a reconstruction. At 320×180 with 64-colour textures, the environment reads as a drawing of a place. That is closer to what it honestly is.
+
+Texture budget is enforced by an automated check: power-of-two only, nothing larger than 256×256.
+
+## Where the textures come from
+
+The facade, roof, street, park, tram, tree, bench, storefront, and blank propaganda sheets were generated with OpenAI's built-in image generator, then downsampled locally to 256×256 atlases and 64×64 repeatable tiles. Repeating ground and roof tiles get a deterministic opposite-edge blend so their seams meet. The tree sheet keeps binary transparency. Every prompt and the role of each supplied reference image is recorded in the source folder.
+
+Not everything is generated. Rails, overhead wire, road markings, lamps, benches, and the fountain are hand-authored low-poly geometry with solid materials.
+
+All Cyrillic lettering is Blender mesh text converted before export, never painted into a texture. An image generator will happily produce ДУНАВ ОСИГУРАЊЕ as ДУНАВ ОСИГУРАЊЕ one run and something misspelled the next. Mesh text cannot drift.
+
+Buildings pull from 24 paired facade and roof variants. The tiles repeat by metres, 10.5 × 12 m on facades and 6 × 6 m on roofs, so a wide building no longer stretches a single image across its whole front. Ground surfaces have eight asphalt variants, twelve sidewalk variants, four tram beds, and four grass variants. The build carries 88 materials and 36 named surface styles.
+
+## Manjež
+
+The park is the most finished part of the blockout and the best test of whether the style holds up in open space.
+
+![Manjež at 320×180, with branching paths and crossed-billboard trees](posts/13,3.png)
+
+It is rebuilt from OSM way 23786061 at its exact polygon, 26,969 m², with 26 clipped path sequences. There are 36 trees, each one drawn as three crossed planes using one of eight alpha-masked 64×128 sprites. Twelve benches, six lamps, one fountain. Bench wood and metal each have four finishes so the same bench mesh does not repeat visibly down a path.
+
+![Bench and tree detail. Four wood finishes and four metal finishes keep the repetition from reading](posts/13,4.png)
+
+The trees use alpha scissoring rather than blending, render double-sided, and cast no billboard shadows. Those three settings are checked automatically on every build, because losing any one of them makes the park look wrong in a way that is hard to diagnose by eye.
+
+## Trams
+
+OSM gave 23 active tram centerlines inside the polygon, plus 8 proposed and 3 razed ways that the build deliberately throws away.
+
+![Nemanjina with paired rails at one metre gauge and overhead wire](posts/13,5.png)
+
+Each centerline becomes paired rails at the source's one metre gauge, split into 264 track segments, with bed geometry underneath, overhead wire at 5.55 m, and 48 support poles. Railway platforms become paved surfaces.
+
+Excluding proposed and razed rail is not the same as being correct for 1999. A line that is active today may not have existed then, and one that was torn up since could have run right through this block. That is a research task, not a build setting.
+
+## Signage that is honestly fake
+
+Two pieces of the build are placeholders and I want to be clear about which.
+
+![The СЛАВИЈА rooftop letters and the banner beneath them, both fictional placements](posts/13,6.png)
+
+The rooftop СЛАВИЈА letters and the banner reading НИКО НИЈЕ ЗАБОРАВЉЕН. sit on building 393207693 as separate non-colliding nodes. They come from a supplied reference image, not from a dated source. Neither the building choice nor the wording is presented as an authenticated April 1999 fact. They stay as separate nodes so I can move, replace, date-gate, or delete them without rebuilding collision.
+
+The twelve storefronts are the same story. The reference photograph I worked from is visibly dated 5 May 1993. It gives a plausible period vocabulary of dusty glass, recessed doors, painted metal frames, and small Cyrillic fascia signs, but it establishes no address in 1999.
+
+![ДУНАВ ОСИГУРАЊЕ in the running build. The company predates 1999; this location does not](posts/13,7.png)
+
+Every storefront module is tagged `1999_company_location_unverified` in the build report and attached to a specific building and road OSM id. Dunav's own company history confirms the name and its institutional predecessors long predate 1999, which supports the sign existing somewhere in Belgrade and says nothing about this corner. Generic categories like АПОТЕКА, ТРАФИКА, and ФОТО get moved or replaced only after address-level research.
+
+## What is deliberately wrong right now
+
+OpenStreetMap describes the city as it is in 2026. The build report lists what it caught:
+
+- Moxy Belgrade and Хилтон Београд, both present-day hotels standing on sites that had something else in 1999;
+- the Народна банка Србије building, whose OSM `start_date` is 2006;
+- two pieces of geometry tagged as the ruins of the General Staff complex from the 1999 bombing.
+
+That last one is the sharpest problem in the whole project. The ruins exist in OSM because they exist in Belgrade. But the game needs the building intact in March 1999 and needs a specific damage state on the dates it was actually struck, and present-day ruin geometry describes neither. It describes twenty-seven years of weather and partial demolition on top of the damage.
+
+So the rule is that the raw OSM import is never a historical authority. It is a survey of the ground I am building on.
+
+## How the rest gets made
+
+The pipeline keeps four stages separate: the raw Blosm import, the textured Blender source, the exported runtime GLB, and the Godot wrapper scene. Historical corrections go into the second stage or later. The raw geospatial import stays clean, so I can re-import the city without destroying a month of hand-authored 1999 work.
+
+Validation runs headless. One Godot script checks the imported scene for the player, static bodies, collision shapes, all required park and signage and tram and road-marking nodes, all 24 facade and roof variants, nearest filtering, tree alpha behaviour, texture limits, the absence of proposed rails, and the mesh and surface budgets. It either passes or it names what broke. A second script captures the 320×180 views you see in this post from the actual running world, not from Blender.
+
+The next stage is dated variants rather than permanent edits to the base map:
+
+1. `1999-03-pre-bombing`, the intact city before the campaign.
+2. `1999-04-06-early-bombing`, the date of Scene 12: blackout, taped windows, thinned traffic, improvised civil-defence detail.
+3. Strike-specific variants only for the places the script actually visits.
+
+Every historical change gets a source citation and a confidence level recorded next to it. Where I cannot source something, it stays tagged unverified in the build report and I say so, the way the storefronts are tagged now.
+
+## What I plan to build before the end of 2026
+
+The environment work continues, but the interesting problems now are on the game side.
+
+The verb set is three actions: PRIHVATI, PRITISNI, PREDOČI DOKAZ. Accept, press, produce evidence. Scene 12 is the moment they stop working. PREDOČI DOKAZ is locked because Andrej has nothing to produce, and PRITISNI spends the chief's patience instead of Andrej's, with the same outcome no matter how much of it you burn. The first time a player finds that their verbs do not function is the point of the scene.
+
+There is a counter called DOSIJE that rises across the whole game. The player watches it climb without being told exactly what it measures. It is the folder on the desk in Scene 12, and it is Andrej's file, not the suspect's. If you played carefully, the chief says it is thin and the scene runs shorter and colder. If you played hard, he does not open it because he does not need to.
+
+Between now and the end of the year I want:
+
+- the first-person controller replaced by something that supports examining objects and standing still, since the current one exists only to prove collision works;
+- a full-resolution UI layer over the 320×180 world, because dossier text at 320×180 is unreadable and I will not scale the world up to fix a font problem;
+- period vehicles and street props as separate reusable kits rather than geometry baked into the city mesh;
+- the `1999-03-pre-bombing` variant with the post-1999 buildings actually removed and the General Staff reconstructed to its intact state;
+- Scene 12 playable end to end in the office interior, which does not exist yet.
+
+Interiors are the largest missing piece. Nothing in this build has a door you can open.
+
+I am not putting a release date on any of it. Generating and texturing this blockout was fast; the research pass on the same block will not be, and the parts I care most about getting right are the parts that cannot be rushed. Expect more updates through the rest of 2026, including the ones where something did not work.
+
+## One constraint that will not move
+
+Real victims do not become collectibles, set dressing, or shock imagery. Fictional characters and locations stay carefully separated from documented people and events. The RTS makeup artist in the finale fragment is invented and stays nameless.
+
+Andrej is at Aberdareva that night because he came for a document that would clear him. That is why he dies there. The scandal killed him and the bomb killed him and the game never separates which came first. If any environment detail I build makes that harder to feel, the detail goes.
