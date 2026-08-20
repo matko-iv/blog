@@ -1,33 +1,33 @@
 Project Milosevic: First Screenshots of a PSX-Style Belgrade
 25. jul 2026
 
-What exists is one walkable block of central Belgrade at 320×180, textured in a deliberately low-resolution style, with a first-person controller and collision. I am posting it because the look is settled and everything after this is research work that will run through the rest of 2026.
+One walkable block of central Belgrade runs at 320×180, textured low, with a first-person controller and collision that holds. I am posting now because the look is settled. Everything after this is research, and the research runs through the rest of 2026.
 
 ![The Kralja Milana corridor in the running Godot build, at the actual 320×180 internal resolution](posts/13,1.png)
 
 ## What it is meant to be
 
-A detective game set in Belgrade in March and April 1999, during the NATO bombing of Yugoslavia. You play Andrej, an inspector removed from his job in the second week of the campaign, who keeps working the case anyway without a badge, in a city under blackout.
+A detective game set in Belgrade in March and April 1999, during the NATO bombing of Yugoslavia. You play Andrej, an inspector who loses his job in the second week of the campaign and keeps working the case without a badge, in a city under blackout.
 
-I wrote one test scene to check whether the idea holds up on the page. It is a two-hander in a chief's office: taped windows, no electricity, a closed folder on the desk that turns out to be Andrej's own file. Nobody says the real thing out loud. A siren starts outside at the end and neither man reacts.
+I wrote one test scene to see whether the idea survives contact with a page. Two men in a chief's office: taped windows, no electricity, a closed folder on the desk that turns out to hold Andrej's own file. Neither of them says the real thing out loud. A siren starts outside at the end, and neither man looks up.
 
-That sets the rule for the environment. It has to support investigation and uncomfortable waiting. It must not turn the bombing into an action set piece.
+That scene sets the rule for the environment. It has to carry investigation and uncomfortable waiting, and it must never turn the bombing into an action set piece.
 
 ## The test area
 
-I traced one polygon over a satellite view and treated it as the whole world: Slavija, Manjež, the Kralja Milana and Nemanjina corridor, and the edge of the General Staff complex.
+I traced one polygon over a satellite view and threw away everything outside it: Slavija, Manjež, the Kralja Milana and Nemanjina corridor, the edge of the General Staff complex.
 
 ![The traced test polygon. Everything outside the red line was deleted from the build](posts/13,2.png)
 
-Roughly 0.29 km². Small enough to finish, dense enough to feel like a real place. Slavija gives an open square, Manjež a park with sightlines, Nemanjina a long street with a tram line down the middle.
+That comes to 0.29 km². Small enough that I can finish it, dense enough to read as a real place. Slavija gives me an open square, Manjež a park with sightlines, Nemanjina a long street with a tram line down the middle.
 
-The geometry comes from present-day OpenStreetMap, imported into Blender, cropped to the polygon, textured, and exported to Godot as a single scene.
+The geometry starts as present-day OpenStreetMap. Blender imports it, crops it to the polygon, textures it, and exports one scene to Godot.
 
 ## Why it looks like this
 
-The game renders at a 320×180 internal viewport with integer scaling, nearest-filtered textures, vertex lighting, and depth fog closing off the far end of every street. The vertex shader snaps positions to the low-resolution grid, which produces the wobble original PlayStation hardware had.
+The game renders into a 320×180 viewport and scales it up by whole numbers. Textures use nearest filtering, lighting is per-vertex, and depth fog closes off the far end of every street. The vertex shader snaps positions onto the low-resolution grid, which brings back the wobble PlayStation hardware had.
 
-The style is not only nostalgia. A photographic 1999 Belgrade would need documented detail I cannot source for every facade on Kralja Milana, and it would invite you to read the environment as a reconstruction. At this resolution it reads as a drawing of a place, which is closer to what it honestly is.
+Nostalgia is part of it. The rest is honesty about sourcing. A photographic 1999 Belgrade would need documented detail I cannot find for every facade on Kralja Milana, and it would ask you to read the environment as a reconstruction. At 320×180 the city reads as a drawing of a place, which is what it is.
 
 ![Manjež in the running build](posts/13,3.png)
 
@@ -37,30 +37,30 @@ The style is not only nostalgia. A photographic 1999 Belgrade would need documen
 
 ## What is fake on purpose
 
-Two things in these screenshots are placeholders, and I would rather say so than let them pass.
+Two things in these screenshots are placeholders. I would rather name them than let them slide past.
 
 ![The СЛАВИЈА rooftop letters and the banner beneath them](posts/13,6.png)
 
-The rooftop lettering and the banner come from a reference image, not a dated source. Neither the building choice nor the wording is presented as an authenticated April 1999 fact.
+The rooftop lettering and the banner come from a reference image with no date on it. I am not presenting the building choice or the wording as an authenticated April 1999 fact.
 
 ![ДУНАВ ОСИГУРАЊЕ in the running build](posts/13,7.png)
 
-The storefronts are the same. The photograph I worked from is visibly dated 1993. It gives a plausible period vocabulary, and it establishes no address in 1999. Every shopfront is tagged as unverified in the build report.
+The storefronts have the same problem. My photograph carries a 1993 date. It gives me a plausible period vocabulary and it establishes no address in 1999. Every shopfront carries an "unverified" tag in the build report.
 
-More broadly, OpenStreetMap describes the city as it is in 2026. The build still contains hotels that were not there, a bank built in 2006, and the present-day ruins of the General Staff. That last one is the sharpest problem: the game needs the building intact in March 1999 and damaged later, and twenty-seven years of weather on a ruin describes neither state.
+OpenStreetMap describes the city of 2026. The build still holds hotels that were not there in 1999, a bank finished in 2006, and the present-day ruins of the General Staff. The ruins are the sharp problem. I need that building intact in March 1999 and damaged later, and twenty-seven years of weather on a ruin gives me neither state.
 
-The raw import is a survey of the ground I am building on. It is not a historical authority, and I have kept the pipeline split so I can correct the city without regenerating it from scratch.
+So I treat the raw import as a survey of the ground I am building on rather than as a historical authority. The pipeline stays split, which lets me correct the city without regenerating it.
 
 ## What comes next
 
-Dated variants rather than permanent edits: the intact city before the campaign first, then early April with the blackout and taped windows, then specific locations only where the script actually goes.
+Dated variants instead of permanent edits. The intact city first, then early April with the blackout and the taped windows, then single locations where the script actually goes.
 
-On the game side, the pieces I want before the end of the year are a controller built for examining things instead of proving collision works, a readable UI layer over the tiny world viewport, period vehicles and props as reusable kits, and the office scene playable end to end. Interiors are the largest missing piece. Nothing here has a door you can open.
+Before the end of the year I want four things: a controller built for examining things rather than for proving collision works, a readable UI over a viewport this small, period vehicles and props as reusable kits, and the office scene playable start to finish. Interiors are the biggest hole. Nothing here has a door you can open.
 
-No release date. Generating this blockout was fast; researching the same block will not be. Expect more updates through the rest of 2026, including the ones where something did not work.
+No release date. Generating this blockout was fast. Researching the same block will not be. Expect more updates through the rest of 2026, including the ones where something did not work.
 
 ## One constraint that will not move
 
-Real victims do not become collectibles, set dressing, or shock imagery. The game ends the night of 23 April at the RTS building, and it cuts off before the strike. Sixteen people died there. The text does not name them and does not use them.
+Real victims do not become collectibles, set dressing, or shock imagery. The game ends on the night of 23 April at the RTS building, and it cuts before the strike. Sixteen people died there. The text does not name them and does not use them.
 
-Andrej is there because he came for a document that would clear him. That is why he dies. The scandal killed him and the bomb killed him and the game never separates which came first. If any detail I build makes that harder to feel, the detail goes.
+Andrej is there because he came for a document that would clear him, and that is why he dies. The scandal killed him and the bomb killed him, and the game never separates which came first. Any detail that makes that harder to feel comes out.

@@ -1,0 +1,99 @@
+Getting Andrej Into a Yugo: three weeks on one interaction
+20. avgust 2026
+
+Since the last post I built one thing. Andrej walks up to a parked Zastava Koral, opens the driver's door, gets in, and drives off. He can also get out again. That took three weeks, and almost none of it went where I expected.
+
+![Entering the car in the prototype scene](posts/14,1.gif)
+
+The internal resolution moved from 320×180 to 480×270 along the way. The old one could not show a hand finding a door handle, and this whole month turned out to be about hands finding things.
+
+## The car arrived shut
+
+`jugo_v3_textured.glb` is a Tripo reconstruction of a Koral. It comes in as one solid car: 61 objects, no moving parts, doors painted on. Before anyone gets in, the doors have to be cut out of the shell.
+
+My first cut took the largest object on the flank, swung it, and left a grey cabin liner hanging in the empty doorway. Tripo does not model a car as a car. The outer paint, the liner behind it and the window surround arrive as three unrelated objects that happen to line up in space. The mirror is two more, the handle a sixth, and nothing marks any of them as belonging together.
+
+So the script stopped naming parts and started classifying them. A *skin* is any object with faces both inside the door outline and outside it. Those get bisected and split. A *carried* part sits wholly inside the outline and outboard of the flank, and comes along untouched. Testing the whole bounding box rather than the centre means a part straddling the shut line never gets silently torn in half; it fails to qualify, and the log says so.
+
+![The cut doors, before textures](posts/14,2.png)
+
+That rule picks up the paint, the liner, the window surround, the mirror head, the mirror mount and the handle on each side, and leaves the seats, the dashboard and the floor pan where they are. It also survives the next Tripo generation, which renumbers every object.
+
+The scale is worth stating because everything else is measured against it. The shell scales by 3.50, a Koral's length. Wheel centres then land 2.19 m apart against the real car's 2.15 m wheelbase, so the proportions are the car's rather than my approximation of one.
+
+![The runtime car with both front doors open](posts/14,3.png)
+
+## Godot retargets the character, and it has to do it twice
+
+Andrej is a Tripo mesh on a Mixamo rig. Godot's own `BoneMap` and `SkeletonProfileHumanoid` do the retargeting, which replaced an earlier attempt to merge clips in Blender.
+
+One mistake there cost me a day. The retarget has to be applied to both sides, the character rig *and* every clip, because what it does is express both in the same rest pose. I applied it to the clips only. Their tracks addressed `%GeneralSkeleton:Hips`; the character kept `mixamorig_Hips` under a plain `Skeleton3D`. All 29 tracks in all 25 clips resolved to nothing.
+
+Nothing about that state looks broken from outside. The `AnimationPlayer` held every clip, `is_playing()` returned true, the playback position advanced. Andrej stood still. I now have two checks that refuse to pass on a skeleton that never moves.
+
+![Six frames of the retargeted walk](posts/14,4.png)
+
+## The travel belongs to the animation
+
+The two Mixamo takes are `Entering Car` at 165 frames and `Exiting Car` at 175, both 30 fps, both carrying about 1.9 m of planar hip travel. That travel is the performance. Runtime code must not bend a generic clip through a chain of waypoints and hope it lands.
+
+I lost most of a week to a script that deleted it. `fit_clip_to_cabin.py` re-exported both GLBs in a form whose Hips translation Godot imports as a single key: 1.91 m of travel in, zero out. The pelvis then sat frozen at the seat for the whole take. The entry never walked up to the car. It stood inside the bodywork and mimed the whole thing, and every fault I chased downstream was the runtime trying to replace motion that was not there.
+
+Both GLBs are reverted. `probe_clip_tracks.gd` prints the imported Hips track and now runs as a guard.
+
+The same fact bites in a stranger place. At the last frame of a take the actor root and the body are 1.9 m apart, because the root is where the clip started and the skin is where it finished. Every marker and the walk controller's own position bookkeeping assume those two are one point. Rebasing onto a seat mark without reconciling them throws him the width of the whole performance.
+
+## The door follows his hand
+
+I wanted the door swung by the gesture rather than by a timeline, so `door_gesture.gd` reads two signals off the character every frame: how far his driving hand is from his hips, and how far it is from the shut door's handle.
+
+Neither take was authored for this car. The entry hand never gets nearer than 0.34 m to the handle, the exit passes at 0.20 m. Reach alone finds nothing either: the widest reach in the first half of the entry is him leaning into the cabin at 2.80 s, a second and a half after the hand that opened the door had already come down.
+
+The finder is still in the code, and it is still the thing to run against a new take, but I stopped trusting its output. It put the entry's opening sweep at frames 15 to 28 when it is 35 to 60, and had the exit shutting at 132 when his hand arrives at 110. Where a hand meets a door is something one pass of the footage settles. No signal I read off the skeleton has matched it yet, so the windows are watched, written down, and checked in.
+
+Inside a window the door is paced by how far his hand has travelled so far as a fraction of how far it travels over the whole window. Distance travelled, not displacement: shutting from inside, he reaches out to the handle and pulls it back in, and the door is under his hand for both halves of that.
+
+Between the windows the door holds, and the hold is the point. A door slaved to his arm the whole way shuts itself the moment he withdraws that arm to climb out. That put the exit's door home at 2.30 s for a hand that does not come back to it until 4.37, and had him walk out through a shut door for two seconds.
+
+## Three backstops that had become drivers
+
+Once the schedule was right the door still lagged behind him, and all three causes were the same mistake.
+
+The rate limit sat at 150 deg/s. His opening sweep is 66 degrees in 13 frames, which is 152. A limit meant to catch a hand jumping after it lets go was driving the door through the entire gesture. It now sits at 300, clear of anything he asks for.
+
+The follow was a first-order lag at 0.18, which settles about 23 degrees behind a sweep of that speed. At 0.55 it holds inside 8 and still trails him.
+
+His reach read raw at 30 fps asked for 8.7 degrees in one frame. Averaging over two frames either side, inside each sweep only, leaves the travel and the corners at the stops untouched.
+
+Worst gap between where the door is and where his arm asks it to be, over the two gestures: 27.0 and 30.6 degrees before, 5.9 and 6.4 after. `check_car_door.gd` fails over 8.
+
+## He was sitting above the cushion
+
+The takes drop the pelvis 0.140 m into the seat, from 0.964 m standing to 0.824. Sitting down is a drop of about 0.45, and a Koral's cushion top is 0.502 m. Mixamo authored that take for a vehicle with a seat at truck height. Played straight, Andrej finishes 0.223 m above the cushion with his head joint 0.051 m through the roof rail.
+
+`seat_drop.gd` corrects the pose as it is drawn. The pelvis comes down 0.22 m, faded in by how seated he already is, which is read off the hip's own height. The same two numbers therefore fit both the entry and the exit with nothing told to either. Each leg is re-solved by the cosine rule to hold the foot exactly where the take put it, so the feet stay planted and the knees take up the difference. Nothing above the hips is touched.
+
+| | hip | head under the roof | soles |
+| --- | ---: | ---: | ---: |
+| before | 0.825 m | -0.051 m | 0.326 m |
+| after | 0.605 m | +0.169 m | 0.326 m |
+
+One trap for anyone writing a check against a `SkeletonModifier3D`: what it writes is not what `get_bone_global_pose()` reports afterwards. The renderer sees the corrected pose and a reader outside the modification phase sees the animation's. Both of my checks switch the modifier off and call `_process_modification()` by hand, so they measure what is drawn.
+
+![Getting back out](posts/14,5.gif)
+
+## What three weeks of this taught me
+
+Measure clearance against skin, not joints. The shoulder joint sits deep inside him and the deltoid is a hand's width further out. Joint-to-leaf measurement called 0.11 m a pass while his shoulder was through the window frame.
+
+Watch the footage before believing a signal derived from it. Every automatic window my code found was wrong, and every one I found by eye held.
+
+When a fix stops working, check whether the thing it is fixing still exists. I spent days tuning a runtime that was compensating for 1.9 m of travel an exporter had thrown away.
+
+The old version faded to black and teleported him between two markers. There is no fade left, and a validator now fails if a fade rectangle ever comes back.
+
+## Next
+
+Interiors are still the biggest hole, and they were the biggest hole in July. Andrej can now get into a car and drive it down Nemanjina, and he still cannot open the door of a building. That is the next block of work, along with the examine-and-inspect controller the game actually needs.
+
+The office scene from the last post is still unplayable. I would like that to change before the end of the year.
