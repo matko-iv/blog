@@ -1,75 +1,86 @@
-Korekcija popravlja temperaturu i vjetar, a kvari kišu
+What a weather correction can and cannot learn
 13. septembar 2026
 
-U februaru sam napisao da je korigovana prognoza za Budvu tačnija od bilo kog pojedinačnog modela. To je bila tvrdnja zasnovana na unakrsnoj validaciji, dakle na podacima koje je model već vidio. Sada imam nešto bolje. U git istoriji ovog projekta stoji 645 snimaka prognoze objavljenih između 1. juna i 18. avgusta 2026, svaki sa vremenom nastanka i sa korigovanom i sirovom vrijednošću jedno uz drugo. Te prognoze su objavljene prije nego što se vrijeme desilo, pa poređenje sa osmotrenim ne može imati curenje podataka iz treninga.
+In February I wrote that my corrected forecast for Budva was more accurate than any single global model. That claim rested on cross-validation, which is to say on data the model had already seen. This summer I was able to check it properly, and the answer splits cleanly in two. On temperature and wind the claim holds and the margin is larger than I expected. On rain it is false, and not by a little: the corrected output I publish was worse this summer than every global model it corrects, and worse than its own uncorrected input.
 
-Rezultat je podijeljen, i podjela nije slučajna. Na temperaturi i vjetru korekcija radi dobro. Na kiši radi gore od svakog globalnog modela koji koriguje, uključujući i sopstveni ulaz prije korekcije. Razlika između te dvije vrste greške objašnjava skoro sve ostalo u ovom tekstu.
+I want to set out both halves, because the reason they differ is more interesting than either result on its own, and because it says something about where machine learning helps in the physical sciences and where it quietly does damage.
 
-## Šta je korekcija uradila
+## How I checked
 
-Na 645 objavljenih prognoza, greška temperature je 1,071 °C za prva dvadeset četiri sata i 1,082 °C za drugi dan. Sirova prognoza, prije korekcije, imala je 1,406 i 1,455 °C. To je smanjenje od dvadeset četiri odnosno dvadeset šest odsto, i praktično se ne pogoršava sa rokom.
+The pipeline commits its output to git every five hours. That turns out to matter more than anything I deliberately built for evaluation. Sitting in the repository history are 645 snapshots of the forecast published between 1 June and 18 August 2026, each stamped with the time it was generated, and each carrying the corrected value and the raw pre-correction value side by side.
 
-Vjetar je bolji od toga. Sirova prognoza imala je grešku od 1,01 m/s, korigovana 0,31 m/s, i taj odnos je isti za oba dana. Korekcija skida oko sedamdeset odsto greške vjetra.
+Those forecasts were published before the weather happened. No amount of care in constructing a validation split gives you that property; the archive has it by construction. I had been planning to retrain on pre-June data to get an honest out-of-sample number, and it turned out I did not need to. The evidence had been accumulating in git for months.
 
-Radi poređenja, na istom ljetu najbolji pojedinačni model za temperaturu bio je UKMO_SEAMLESS sa 1,500 °C, a najgori ICON_SEAMLESS sa 2,185 °C. Običan prosjek devet različitih modela dao je 1,309 °C. Prosjek je, dakle, pobijedio svaki pojedinačni model i prije ikakvog učenja, što znači da jedan dio koristi ovdje ne dolazi od modela nego od toga što greške različitih modela idu u suprotnim smjerovima.
+## What the correction did well
 
-## Zašto je vjetar lakši
+Across the 645 published forecasts, corrected temperature error was 1.071 °C for the first twenty-four hours and 1.082 °C for the second day, against 1.406 and 1.455 °C for the raw forecast. That is a reduction of twenty-four and twenty-six percent, and it barely degrades with lead time.
 
-Ovog ljeta svih deset modela precijenilo je vjetar, bez ijednog izuzetka, sa odstupanjem od +0,14 m/s kod ECMWF_IFS025 do +1,58 m/s kod DMI_SEAMLESS.
+Wind is better still. Raw error was 1.01 m/s, corrected 0.31 m/s, and the ratio is identical on both days. The correction removes roughly seventy percent of the error.
 
-Kada svi modeli griješe u istom smjeru i približno isto iz dana u dan, to nije šum nego pristrasnost. Razlog je poznat: mreža velikog modela je pregruba da vidi da je stanica u zavjetrini, pa preko nje prevlači režim otvorenog mora. Ta greška se ponavlja, ima predznak, i zavisi od veličina koje model daje u ulazu, kao što su doba dana, smjer vjetra i gradijent pritiska. Model sa stablima odlučivanja upravo to uči dobro.
+For context, the best single global model for temperature this summer was UKMO_SEAMLESS at 1.500 °C and the worst was ICON_SEAMLESS at 2.185 °C. A plain average of nine distinct models gave 1.309 °C, beating every individual model before any learning at all. Some of what looks like machine learning here is really just the cancellation of independent errors.
 
-Sedamdeset odsto smanjenja greške vjetra nije znak da je moj model pametan. Znak je da je greška bila sistematska.
+## Why wind is the easy case
 
-## Kiša: moj izlaz naspram globalnih modela
+Every one of the ten models overpredicted wind this summer, without exception, with biases from +0.14 m/s for ECMWF_IFS025 to +1.58 m/s for DMI_SEAMLESS.
 
-Od 1836 uporedivih sati, kiša od bar 0,2 mm/h padala je u 114. Evo kako je prošao moj objavljeni izlaz naspram svakog globalnog modela na istim satima i istom pragu, onom koji sajt koristi da sat proglasi kišnim.
+When every model errs in the same direction by roughly the same amount day after day, that is not noise but bias. The cause is known and physical: the grid of a global model is far too coarse to resolve that the station sits in the lee of terrain, so it paints the open-sea wind regime across it. The error repeats, it has a sign, and it varies with quantities the model does supply: time of day, wind direction, pressure gradient. A gradient-boosted tree learns that kind of structure extremely well.
 
-ECMWF_IFS025 pogodio je 54 kišna sata, promašio 60, lažno najavio 84. CSI 0,273.
-Moj sirovi blend, prije korekcije: 39 pogodaka, 75 promašaja, 38 lažnih. CSI 0,257.
-UKMO_SEAMLESS: 33, 81, 39. CSI 0,216. Zatim GFS, ECMWF_IFS, ICON, DMI, ITALIAMETEO, ARPEGE i KNMI, od 0,213 do 0,134.
-Moj korigovani izlaz, onaj koji stranica prikazuje: 12 pogodaka, 102 promašaja, 11 lažnih. CSI 0,096.
+Seventy percent error reduction is not evidence that my model is clever. It is evidence that the error was systematic. Those are different claims, and conflating them is how people end up believing machine learning has solved a problem it has merely tidied.
 
-Moj sirovi blend je drugi u grupi. Moj korigovani izlaz je posljednji, iza svakog pojedinačnog globalnog modela. Korekcija, dakle, ne popravlja kišu nego je kvari, i to za faktor blizu tri.
+## Why rain is the hard case
 
-Količine to potvrđuju jasnije od tabele. Tog ljeta na stanici je izmjereno 396,7 mm. Sirovi blend je prognozirao 117,2 mm. Korigovani izlaz je prognozirao 31,4 mm, dakle osam odsto onoga što je stvarno palo, sa najvećim satnim iznosom od 3,90 mm naspram osmotrenih 28,19 mm.
+Of 1836 comparable hours, rain of at least 0.2 mm/h fell in 114. Here is how the published output compares with each global model over the same hours at the same threshold, the one the site itself uses to call an hour wet.
 
-Vjerovatnoća kiše ponaša se isto. Kroz cijelo ljeto nije prešla 58,5 odsto, prag od trideset odsto pređen je četiri puta, a prag od pedeset odsto dva puta.
+ECMWF_IFS025 caught 54 wet hours, missed 60, and falsely called 84, for a critical success index of 0.273. My own raw blend caught 39, missed 75, falsely called 38, for 0.257, which would place it second in the field. Then UKMO at 0.216, GFS at 0.213, and the rest down to KNMI at 0.134. My corrected output, the numbers the site actually displays, caught 12, missed 102, and falsely called 11. Critical success index 0.096. Last, behind every model it is meant to improve on.
 
-## Zašto se to dešava
+Rainfall totals make the failure plainer than any skill score. The station measured 396.7 mm over the summer. The raw blend forecast 117.2 mm. The corrected output forecast 31.4 mm, eight percent of what actually fell, with a maximum hourly value of 3.90 mm against an observed maximum of 28.19 mm. The probability of precipitation never exceeded 58.5 percent all summer and crossed fifty percent twice.
 
-Razlog nije u podešavanju nego u tome šta model uči. Kiša je nula u devedeset četiri odsto sati. Model koji minimizuje kvadratnu grešku na takvoj promjenljivoj najbrže smanjuje grešku tako što skoro uvijek predviđa blizu nule, jer ga svaki promašeni pljusak košta jednom, a svaka lažna uzbuna košta na mnogo više sati. Naučio je da ćuti.
+The honest summary is that a visitor wanting to know about rain would have done better this summer reading raw ECMWF than reading my site. That is not true of temperature or wind. It is true of rain.
 
-To je ista stvar koja temperaturu i vjetar čini boljim. Kod njih greška ima predznak koji se ponavlja, pa glađenje pomaže. Kod kiše glađenje uklanja upravo signal. Mreža velikog modela ionako ne vidi ćeliju koja nastane nad morem i traje četrdeset minuta, a korekcija ono malo signala što prođe dodatno prigušuje.
+## The mechanism, and why I had it wrong
 
-Iz toga slijedi nešto što nijesam očekivao kada sam počeo da računam: za kišu bi korisnik ovog ljeta bio bolje prošao da je gledao sirovi ECMWF nego moju stranicu. To ne važi za temperaturu ni za vjetar, gdje je korekcija jasno bolja, ali za kišu važi i nema smisla to zaobilaziti.
+My first explanation was that the regression minimises squared error, which rewards predicting near zero on a variable that is zero ninety-four percent of the time. I published that. Then I read my own code and found it is worse than that.
 
-## Vrijeme početka
+The default objective in the tuning path is not squared error but `reg:quantileerror` with alpha 0.5, which is median regression. Precipitation falls through to that default. And the conditional median of a variable that is zero in ninety-four percent of hours is zero almost everywhere. Median regression does not merely lean toward zero the way squared error does; on a target this sparse it is close to being a machine for producing zero. The model was not badly tuned. It was asked, precisely and repeatedly, for the middle of a distribution whose middle is nothing.
 
-Jedan dio sistema kišu detektuje znatno bolje od sirovih modela: model koji procjenjuje hoće li uopšte biti kišnog događaja. On hvata devedeset dva odsto događaja, uz lažnu uzbunu u trideset odsto slučajeva.
+What makes this worth writing down is that the same smoothing is why temperature and wind improved. Pulling a prediction toward the conditional centre is exactly right when the error is a repeatable offset. It is exactly wrong when the quantity is rare, bounded below by zero, and heavy-tailed above. One loss function, two opposite outcomes, decided entirely by the shape of the target.
 
-Taj isti model, mjeren po trenutku početka, ima medijalnu grešku od osam sati. Unutar jednog sata od stvarnog početka padne 9,7 odsto najava, unutar tri sata 27 odsto.
+And there is a deeper limit underneath the statistical one. A convective cell that forms over the Adriatic and dissipates in forty minutes covers a few square kilometres. It is not in the input at all. Not mispredicted, absent. Correction can move a number the model produced. It cannot manufacture an event the model never saw. That is a difference in kind, and no quantity of training data removes it.
 
-Te dvije brojke opisuju isti model i nijesu u protivrječnosti. Pitanje hoće li u utorak biti kiše i pitanje hoće li pasti u deset ili u šest nijesu isti zadatak, i drugi je bitno teži. Za nekoga ko planira dan korisno je uglavnom ovo drugo, a izvještaj ih do sada nije razdvajao.
+## What this says about machine learning and weather
 
-## Greške u ulazima
+There is a real and useful debate about learned weather models such as GraphCast, Pangu-Weather and AIFS, several of which now match or beat traditional numerical prediction on standard headline scores at global scale. It would be easy to read my temperature and wind results as a small local instance of the same trend. I think that reading is wrong, and the rain result is why.
 
-Dvije stvari koje sam našao računajući ovo, i obje su kod mene, ne kod modela.
+What I am doing is not forecasting. It is bias correction on top of forecasts produced by physics. The atmosphere's evolution is computed by models that solve fluid equations on a grid; I learn the residual between what those models say about one point and what a station at that point measures. That is a genuinely different task, and its ceiling is set by something outside my control: whatever the physics did not resolve is simply not available to me, at any model size.
 
-ARPEGE_EUROPE i METEOFRANCE ovog ljeta daju bajt-identične vrijednosti. To je isti izvor koji ulazi dvaput i u prosjeku dobija dvostruki glas. Izmjerio sam koliko to košta: kada se duplikat izbaci, greška prosjeka padne sa 1,322 na 1,309 °C. Praktično ništa, ali broj modela kojim se projekat opisuje nije bio tačan.
+The global learned models face a related problem from a different direction. They are trained largely on reanalysis, which is itself smoothed, and several of them are known to underpredict extremes for a reason that rhymes with mine: training objectives that reward being close on average produce fields that are too smooth at the tail. My precipitation head is that failure in miniature, on one point, with a loss function I chose myself.
 
-BOM_ACCESS, GEM_GLOBAL i ICON_D2 nemaju nijedan sat podataka poslije februara. Mjesecima su navedeni kao izvori, a ovog ljeta nijesu doprinijeli ničemu. Koliko je to koštalo nijesam mjerio i ne tvrdim ništa o tome.
+The practical lesson I draw is narrow but firm. Machine learning is very good at removing the parts of a physical model's error that are structural and repeatable, which in practice means terrain, coastline, and local exposure. It is poor at restoring information that was discarded before it arrived. The first is worth a great deal and I now have numbers for it. The second is not a tuning problem, and treating it as one produces exactly what I produced: a confident, well-calibrated-looking forecast of almost no rain in a summer that had 397 mm of it.
 
-## Šta dalje
+## What I will do about rain
 
-Prvo, prestati korigovati kišu dok se ne popravi. Sirovi blend je ovog ljeta bio skoro tri puta bolji od korigovanog izlaza, pa je puštanje sirove vrijednosti trenutno bolja prognoza od onoga što stranica sada objavljuje. To je jednostavna izmjena i radim je prvu.
+Five things, in the order I intend to do them.
 
-Drugo, ako korekcija kiše ostane, mora prestati da se uči na kvadratnoj grešci. Za promjenljivu koja je nula u devedeset četiri odsto slučajeva to nagrađuje ćutanje. Postoje funkcije gubitka koje ne nagrađuju, i onset model koji već radi bolje pokazuje da signal postoji.
+Stop correcting precipitation immediately. The raw blend scored 0.257 against the corrected 0.096, so publishing the uncorrected value is, today, a substantially better forecast than what the site currently shows. This is a small change and it should not wait for the rest.
 
-Treće, razdvojiti dvije tvrdnje koje izvještaj sada spaja. Rečenica da se očekuje kiša nosi tačnost od devedeset dva odsto na nivou dana i znatno manju na nivou sata, a trenutno zvuči jednako sigurno u oba slučaja.
+Separate occurrence from amount. The tooling for this already exists in the repository and is already working: the rain-onset classifier is trained with focal loss, and it detects ninety-two percent of rain events with a thirty percent false alarm rate — far better than any raw model. The mistake was architectural rather than mathematical. A classifier decides whether it rains; a regressor, conditioned on rain occurring, decides how much. My pipeline has the first and uses a median regressor for both jobs, which lets the second overrule the first into silence.
 
-Četvrto, ukloniti duplikat i vratiti ili izbaciti tri mrtva izvora.
+Change the loss on the amount head. Once it only sees wet hours the target is no longer zero-inflated, but it is still heavy-tailed, so a high quantile is a more honest thing to publish than a median. The quantile machinery is already in the code; it needs to be pointed at alpha 0.75 or 0.9 for precipitation rather than 0.5.
 
-Peto, ovakvu evaluaciju raditi iz arhive objavljenih prognoza u redovnom ritmu. Skripta koja je izvukla 645 snimaka iz gita ide uz ovaj tekst i može se pokrenuti kad god.
+Verify probabilistically, not categorically. Critical success index over a hard 0.2 mm threshold is the wrong instrument for a quantity this rare. Brier score and reliability diagrams say whether a stated seventy percent means seventy percent, which is the only claim a probability makes. I should also use neighbourhood verification: a cell that hits three kilometres from the station is a forecast that was nearly right, and hour-by-point scoring calls it a double failure — one miss and one false alarm.
 
-Satna tačnost ljetnje konvekcije na ovoj lokaciji vjerovatno ima gornju granicu koju ni bolji model neće mnogo pomjeriti, jer ćelija koja ne uđe u ulazni signal ne može izaći na izlazu. Ali granica nije tamo gdje sam mislio da jeste. Sirovi blend je ovog ljeta bio trostruko bolji od onoga što sam objavljivao, što znači da prvi dio popravke ne traži bolje podatke nego uklanjanje štete koju sam sam dodao.
+Lean on the radar for the first hours. I maintain a separate nowcasting project for exactly this window, and its physics is different: it extrapolates what is already there instead of predicting what will form. It cannot help at twelve hours, but for the first ninety minutes it observes precisely the cells the global models never resolve.
+
+## On open-sourcing
+
+The repository has been public for some time, which I had been treating as the same thing as open source. It is not. There is no licence file, and under default copyright that means nobody may legally use, modify, or redistribute any of it. Everyone can read it and nobody can build on it, which is close to the worst of both arrangements.
+
+I intend to fix this, and the reason is directly connected to everything above. This evaluation was possible because the outputs were archived and comparable. A single station in Budva is a sample of one. The interesting question is not whether this pipeline works here, but whether the pattern holds — whether correction of a coarse global model buys large gains on systematic variables and loses on convective precipitation at other coastal sites with similar geography. I cannot answer that alone and I do not need to.
+
+Three things need doing before that is real. A licence, so the permission is explicit. Separation of the code from the Weather Underground data, whose redistribution is not mine to grant. And documentation of the evaluation path specifically, because the pipeline is the less useful half. If somebody takes only the archive-and-score scripts and runs them against their own station, that is a better outcome than a fork of the whole thing.
+
+## Closing
+
+I would rather publish this than not, and the reason is not principle so much as arithmetic. I have been running a rain forecast all summer that was worse than the free models it was built on, and I did not know, because I had never scored it against them. The data to find out had been in git the entire time.
+
+The correction works. It works for a specific and explicable reason, on a specific class of error, and I can now say by how much. Where it does not work, it does not fail quietly in the direction of caution. It fails confidently in the direction of a dry summer that was not dry. That asymmetry is the part worth carrying forward, and it is why the first item on the list is to turn something off rather than to build something new.
