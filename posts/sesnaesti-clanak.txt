@@ -1,0 +1,48 @@
+Status Update Q4 2026
+1. november 2026
+
+Dear visitors, 
+
+I wish to update you on all of my projects I am working on, as it's been a moment since the last time I posted here.
+
+## ML Forecast Pipeline
+First of all, the ML Forecasting Pipeline has seen limited improvements. A lot of the progress was made with the corrected rain signal. It now works by blending the verdicts of all the public weather models that we've been using, so 10 of them, from the Open-Meteo API interface. There've been 2 versions so far. The second version improves on how big of an error the classifier can handle, which are now windows of +/- 6 hours tops. Because of this it gets better on the CSI (Critical Success Index) scale. Improvements have been observed for all forecast windows, same day improvement of +0.019 points, next day +0.024 points. The rain onset moment is no longer calculated by a separate model, it's just the first wet hour after three dry hours, so the onset and hourly forecast can't disperse.
+
+All these things accrue to improving the False Alarm Rate, from a whopping 45% (every second hour) to about 10%. The specific thing I should focus on next is getting the 30-60% PoP chance hours to be more certain. A 30% chance, by today's model, can bring rain, while a 60% chance can still be dry. My ultimate goal is getting rid of the PoP chance that is visible to users, as it is very much misleading to a lot of people. The model will just tell you whether it will rain or not, which is a long ways to go still, in terms of making that happen.
+
+I should be clear on that 45%, as it's counted on rain onsets, meaning the times the site said rain would start and it didn't. The false alarms for single hours barely moved, from 42.2% to 41.9% for the same day. For now, any rain hour under 60% gets a dimmed icon and the label "moguća" (possible) on the hourly cards, because before that a 47% hour looked exactly the same as a 90% one.
+
+PoP or Probability of Precipitation is a number from 0 to 1, often shown in percentage value from 0% to 100%, whose goal is to explain the chance of having rain in a selected location. The problem comes **how** that number is generated. Different sites, agencies and people use different methods of expressing PoP. It is a misconception that people believe, that the PoP is just the chance of having rain in their chosen location. So for a 50% PoP there is a one in a half chance that it will rain. That is often not the case.
+One universal method, which is common in a lot of places, including popular apps The Weather Network and WU Underground (this is the place we got the historical station data by the way), is using a multiplication of two different percentages. So a 40% PoP means that 80% of the area will have rain and that the rain certainty is 50%, or vice versa. Although this method brings more accurate chances for rain, especially in geographically challenging areas, it may bring confusion to some people, and my ultimate goal is getting rid of this metric to the masses, while it stays internally, for meteorologists and hobbyists alike.
+
+I also owe you a correction from my September post. I wrote that the summer had 114 wet hours and 396.7 mm of rain, but the evaluation was reading the station's daily running total, so every dry hour after a shower got counted as wet. The real numbers were 23 wet hours and 48.8 mm. That also means ECMWF wasn't the best model like I wrote, KNMI was, with a CSI of 0.233. My published rain still came last with 0.095, so that part of the post holds. The cause was different though. Only ICON-2I could call rain and XGBoost couldn't add or remove a single wet hour, which is the setup the new classifier replaced on 27 September.
+
+On a lighter note, in October I also made the [Radar Sandbox](https://matko-iv.github.io/vrijeme/radar-sandbox/), a playable weather radar and map simulator. You paint rain, drop supercells and place fronts on real terrain, then step the time forward and watch the radar and satellite maps change.
+
+## Project Milosevic
+It's been a minute since this project has seen any changes. It's mostly because I haven't had enough time to devote to it, but I still intend to devote time to the project.
+
+The last commits are from August, when I got Andrej into the Yugo. Interiors are still the biggest hole and the office scene still isn't playable.
+
+One interesting thing I've seen is [Godot PSX renderer-engine](https://github.com/wyvernbw/godot-psxlike) by fellow contributor **wyvernbw** or Calin P, which caught my eye. There's a detailed and informative article on the said contributor's blog, which you can access [here](https://calinp.eu/blog/psx-type-rendering). The ultimate goal is creating a graphics engine faithful enough to the PSX era graphics. This specific aesthetic has seen a substantial increase in use in a lot of newer Steam games.
+
+It's a set of shaders for Godot 4 and up, and on top of vertex snapping it does affine texture mapping (the warping textures on PS1 games) and the PS1 dither. My own shader only does vertex snapping, nearest filtering and per-vertex lighting, so there's a lot to learn from it.
+
+I'll post more about this soon!
+
+## Roleplay Nations 2: Web
+My third and final active project is the continuation of the Roleplay Nations universe. The first iteration of RPN was a Discord text-game, and my goal since years ago is bringing it to a more interactive medium, ultimately Steam but right now it's live on the world web.
+
+You can play it at [play.roleplay-nations.xyz](https://play.roleplay-nations.xyz). Since 13 September it runs on its own server instead of my laptop.
+
+The biggest visual change is the map, which I rebuilt from scratch in October. It's now painted from aerial photos into square tiles at true scale, and towns get their streets and buildings planned by rules. At night the street lamps light up the real ground, and cars and trains drive around on the roads and rails. Since 31 October the server repaints the tiles that change, so I don't have to bake the map on my laptop anymore.
+
+The other big one is the war overhaul, which started from a proposal the players wrote in October and finished going live on 30 October. The main goal was that every war can end. Every hex now has a value from 1 to 17, and a side capitulates once the enemy occupies 75% of its starting value. What you win also scales with what you fought for, instead of a flat 10 hexes. On top of that there are formations with commanders, morale, 6 new units, doctrines and recon. Players also proposed nukes, and that's a no from me.
+
+The economy needed fixing too, as tourism was making about 95% of all the money in the game. Now repeat copies of an attraction earn less, tourism bonuses have a cap and bigger nations pay bigger bills. All of that phased in over 14 days to avoid a shock, and it finished on 31 October.
+
+Alliances also got ranks with their own permissions, invite only joining, and a member vote when a leader disappears for more than a week. Seeing allied buildings, alliance benefits and chat are next on my list.
+
+---
+
+That's it for now. Thanks for reading!

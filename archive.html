@@ -148,6 +148,7 @@
 
 <script>
 const POSTS = [
+	'sesnaesti-clanak.txt',
 	'cetrnaesti-clanak.txt',
 	'trinaesti-clanak.txt',
 	'dvanaesti-clanak.txt',
@@ -167,7 +168,7 @@ const POSTS = [
 function parseDate(dateStr) {
     const months = {
         'januar':0,'februar':1,'mart':2,'april':3,'maj':4,'jun':5,
-        'jul':6,'avgust':7,'septembar':8,'oktobar':9,'novembar':10,'decembar':11
+        'jul':6,'avgust':7,'septembar':8,'oktobar':9,'novembar':10,'november':10,'decembar':11
     };
     const parts = dateStr.replace(/\./g,'').split(/\s+/);
     const day = parseInt(parts[0]);
