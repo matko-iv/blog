@@ -1,0 +1,41 @@
+A personal essay about Artificial Intelligence
+1 November 2026
+
+Please note that this essay was written almost one month ago, and things mentioned in the article might not be true anymore.
+---
+I first started using AI, or to be more precise, Large Language Models, as the term 'AI' is a bit vague, since 2023. I was amazed at what it does, even if it was incorrect in answering most of my queries. I used these models to help me with one of my first, and at the time biggest projects. The coding abilities of these models were not up to par, but at a sample rate of 10 queries, the models were able to correctly answer my queries and implement breaking changes to my code that functioned on production code on at least 3 of them. I say models, as I had been using models from multiple companies, including models like GPT-4 and Claude 2. 
+
+As time progressed we have seen near-exponential growth rate of intelligence for the whole frontier. This has raised concerns on safety of these models, specifically because people and researchers alike have posed a very important question: What if this kind of intelligence is used in malicious ways?
+
+And they're right - the most recent models are able to carry out targeted attacks on organizations, agencies, sites and other. It's not just that they are able, these models have proved it: recent attacks on [Hugging Face](https://openai.com/index/hugging-face-incident-and-the-road-ahead/), [Australian Medicare Agency](https://edition.cnn.com/2026/09/23/business/australia-openai-agent-hack-intl-hnk), and a [ton of other documented attacks](https://en.wikipedia.org/wiki/2026_cyberattacks_by_rogue_OpenAI_agents). 
+
+How does this happen? Alignment is a big part of new model training. This part of the training proces includes making the model refuse any queries with possible malicious intent. Human reviewers rank different model-generated responses from best to worst. A separate "reward model" is trained to predict these human  ratings, and the main language model is fine-tuned, using reinforcement learning, to maximize its score from the reward model.
+So, you solve the problem of malicious use of agents by just aligning the model? **No**. The top organizations that build these models do these things, but who's to say an independent individual or organization has to. And this is where the problem arises. There are a number of models that are available to a significant amount of people, that are not "aligned". There are limited to none safeguards and guardrails that stop the model from answering malicious queries. 
+
+These non-protected models are also nearing the frontier in intelligence. Even though many of these organizations making these models do not have the resource capacity to build them fast, they can skip the hard part of training the base models and distill already existing ones. This enables them to keep most of the intelligence of the frontier while removing the guardrails in the process. Of course, it's not that simple in practice. 
+
+I honestly hope that these same models end up helping the defenders more than the attackers. A model that can find a hole in a system can find it for the people running that system first, and they have the source code and the logs, while an attacker has to guess. Fuzzers already work like that, they find bugs for both sides, and projects like Chrome and Linux run them around the clock. It's also a good sign that after these attacks OpenAI paused reinforcement learning training on its newest models for two weeks, which shows a lab can still stop when something goes wrong. The next few years will probably be rough, but I think we come out of them with safer software than we have today, because even a small project like mine can now afford a security reviewer.
+
+The whole concept of the Transformer is fascinating to me. Before 2017, most language models read a sentence one word at a time and had trouble holding on to what came earlier. [Attention Is All You Need](https://arxiv.org/abs/1706.03762) dropped that and let every word look at every other word at once.
+
+Every word gets three vectors: a query \(Q\) (what it's looking for), a key \(K\) (what it offers) and a value \(V\) (what it passes on). The model compares the queries to the keys, turns the scores into weights with a softmax, and mixes the values by those weights, where \(d_k\) is the length of a key vector:
+
+$$\mathrm{Attention} = \mathrm{softmax}\left(\frac{Q K^{\top}}{\sqrt{d_k}}\right) V$$
+
+That one line sits inside every model I've mentioned here, and you can even watch it work. I ran the classic example through [BERT](https://arxiv.org/abs/1810.04605), an early Transformer, and looked at where the word "it" puts its attention. Change the last word of the sentence and "it" moves from the animal to the street:
+
+![Attention from the word it in BERT, for the sentence ending in tired and the sentence ending in wide](posts/17,1.png)
+
+Nobody wrote that rule, it comes out of training. I should be clear that the effect is small though, as most of the attention goes to punctuation, and a smaller translation model I tried got this sentence wrong.
+
+I use Claude Opus 5 today for most tasks, and although it has some trouble with user interaction, specifically explaining things in a concise and understandable manner, which is a Reinforcement Learning problem I have been talking about in this article. AI has become a part of my life, in studying with me in academic courses, bringing study concepts closer to me, and also in helping me build projects, including the [ML Forecast Pipeline](https://matko-iv.github.io/vrijeme/) project. 
+
+I also care about the environmental impact of all this, but I don't know exactly what to think of it, because the data conflicts. For a while the number everyone quoted was 3 Wh for a ChatGPT query. [Epoch AI](https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use) then put it closer to 0.3 Wh, [Sam Altman](https://blog.samaltman.com/the-gentle-singularity) said 0.34 Wh and [Google](https://arxiv.org/abs/2508.15734) reported 0.24 Wh for a median Gemini prompt, though those last two come from the companies themselves. Water is even messier. [One paper](https://arxiv.org/abs/2304.03271) says a 500 ml bottle per 10 to 50 responses, while Google says 0.26 ml per prompt, but the paper also counts the water at power plants and Google only counts its own data centers.
+
+A prompt also isn't the same as a coding session, which is a long chain of calls. [Simon Couch](https://www.simonpcouch.com/blog/2026-01-20-cc-impact/) estimated a median of 41 Wh for a Claude Code session, and [Zeke Hausfather](https://www.theclimatebrink.com/p/the-real-energy-use-of-agentic-ai) got about 600 Wh for much bigger sessions.
+
+![Published energy estimates in watt-hours, from 0.24 for one prompt to 600 for one coding session](posts/17,2.png)
+
+The totals are clearer. The [IEA](https://www.iea.org/reports/energy-and-ai/executive-summary) put data centers at 415 TWh in 2024, about 1.5% of the world's electricity, expects around 945 TWh by 2030, and says demand [grew 17% in 2025](https://www.iea.org/news/data-centre-electricity-use-surged-in-2025-even-with-tightening-bottlenecks-driving-a-scramble-for-solutions). Microsoft's emissions [rose 25% in a year](https://www.esgdive.com/news/microsofts-data-center-expansion-drove-25-emissions-spike-2025-environmental-sustainability-report/825082/), partly from new data centers and partly from dropping some renewable energy certificates. So one prompt keeps getting cheaper while the total keeps growing, and I can't tell you which of those should matter more. I use these tools every day and I care about this, and for now that's as far as I've gotten.
+
+Thank you for reading and see you soon.
