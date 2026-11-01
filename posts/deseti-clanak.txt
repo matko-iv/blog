@@ -1,120 +1,120 @@
-Čuveni "bumpgate" skandal: Kako je NVIDIA proizvela 20 miliona defektnih čipova
-23. jun 2026
+The famous "bumpgate" scandal: How NVIDIA made 20 million defective chips
+23 June 2026
 
-Ako vam je laptop, desktop računar ili pak konzola PlayStation 3 ili Xbox 360, koji su proizvedeni negdje između 2007. i 2009. crkli tako što je slika prvo počela da se raspada (artefakti, šarene linije, "snijeg" i kvadratići preko ekrana) a onda jednog dana ekran ostao potpuno crn iako se mašina i dalje pali i ventilator vrti, velika je šansa da niste imali peh, nego **defektan čip**. I to ne bilo kakav: u pitanju je jedan od najvećih hardverskih skandala u istoriji potrošačke elektronike, poznat pod nadimkom **"bumpgate"**. Po procjenama koje su kružile tih godina, NVIDIA je u periodu 2006–2008. isporučila oko **20 miliona** grafičkih čipova i čipsetova sa ugrađenom manom koja ih je, nakon dvije do tri godine sasvim normalnog rada, gotovo sigurno ubijala. Trenutno radim na mašini koja ima upravo ovu manu — Toshiba Satellite X200 sa GeForce 8700M GT karticom, čiji je G84 (proizvedena u 27-oj sedmici 2007. godine) čip udžbenički bumpgate kandidat. Učinilo mi se zato dobrim trenutkom da objasnim šta se zapravo desilo, jer je priča mračnija i tehnički zanimljivija nego što na prvi pogled izgleda.
+If your laptop, desktop or PlayStation 3 or Xbox 360 console made somewhere between 2007 and 2009 died by having the picture fall apart first (artifacts, colored lines, "snow" and squares across the screen) and then one day the screen stayed completely black even though the machine still turned on and the fan spun, there's a good chance you didn't have bad luck, but a **defective chip**. And not just any chip: this is one of the biggest hardware scandals in the history of consumer electronics, known by the nickname **"bumpgate"**. According to estimates circulating at the time, NVIDIA shipped about **20 million** graphics chips and chipsets between 2006 and 2008 with a built-in flaw that, after two to three years of perfectly normal operation, almost certainly killed them. I'm currently working on a machine with exactly this flaw — a Toshiba Satellite X200 with a GeForce 8700M GT card, whose G84 chip (made in week 27 of 2007) is a textbook bumpgate candidate. So it seemed like a good moment to explain what actually happened, because the story is darker and more technically interesting than it looks at first glance.
 
-![GeForce 8700M GT na MXM kartici iz Toshibe — G84 čip u sredini je klasičan bumpgate primjerak](posts/10,0.jpg)
+![GeForce 8700M GT on an MXM card from the Toshiba — the G84 chip in the middle is a classic bumpgate specimen](posts/10,0.jpg)
 
-## Šta je uopšte "bumpgate"
+## What is "bumpgate" anyway
 
-Naziv dolazi od engleske riječi *bump* — sitnih loptica lema koje iznutra povezuju silicijumsku pločicu (die) sa podlogom čipa (substrate). Skandal je dobio ime kad se shvatilo da baš te loptice pucaju. Ali da bismo razumjeli zašto, prvo treba vidjeti kako se kvar manifestuje, jer je upravo obrazac kvara ono što ga čini tako podmuklim.
+The name comes from the English word *bump* — the tiny solder balls that connect the silicon die to the chip's substrate from the inside. The scandal got its name when it became clear that those very balls were cracking. But to understand why, we first need to see how the fault shows up, because the pattern of failure is exactly what makes it so insidious.
 
-Tipičan scenario izgleda ovako: čip radi besprijekorno godinu, dvije, ponekad tri. Onda se pojave prvi simptomi. Povremeni artefakti na ekranu, kratkotrajno zamrzavanje slike, "garbage" pikseli. Kako vrijeme prolazi, kvar se pogoršava: slika je sve gora, dok na kraju ne dođe do potpunog otkaza. Crni ekran, nema slike, iako se sve ostalo (napajanje, ventilator, disk) i dalje pokreće. Kod nekih je to bio postepen proces, kod drugih iznenadna smrt.
+A typical scenario looks like this: the chip works flawlessly for a year, two, sometimes three. Then the first symptoms appear. Occasional artifacts on the screen, brief picture freezes, "garbage" pixels. As time passes the fault gets worse: the picture keeps deteriorating, until it ends in complete failure. A black screen, no picture, while everything else (power, fan, disk) still runs. For some it was a gradual process, for others a sudden death.
 
-Svaki G84 čip iz tog perioda nosi istu manu — pitanje je samo kad će se ispoljiti, a to zavisi gotovo isključivo od toga koliko se čip grijao tokom života. Zato su laptopovi sa lošim hlađenjem crkavali za godinu dana, a oni bolje hlađeni trajali i po četiri-pet. Prvi javni glasovi o problemu pojavili su se tek u septembru 2008, iako su čipovi proizvođeni od 2006. jednostavno je trebalo vremena da masovno počnu da otkazuju i da se obrazac primijeti.
+Every G84 chip from that period carries the same flaw — the only question is when it will show, and that depends almost entirely on how hot the chip ran during its life. That's why poorly cooled laptops died within a year, while better cooled ones lasted four or five. The first public voices about the problem only appeared in September 2008, even though the chips had been in production since 2006; it simply took time for them to start failing en masse and for the pattern to be noticed.
 
-## Anatomija čipa: die, bumps, podloga i ono spolja
+## Anatomy of a chip: die, bumps, substrate and what's on the outside
 
-Da bi sljedeći dio imao smisla, moramo razdvojiti dvije stvari koje se u praksi stalno brkaju.
+For the next part to make sense, we have to separate two things that constantly get mixed up in practice.
 
-Moderni grafički čip je tzv. **flip-chip** sklop. Silicijumska pločica (die) se ne lemi žicama na podlogu, nego se na njenu donju stranu nanese više stotina, pa i preko hiljadu sitnih loptica lema — to su **bumps**. Pločica se zatim okrene naopako (otud "flip") i tim lopticama spusti i zalemi direktno na keramičku ili organsku podlogu (substrate). Prostor između pločice i podloge se zatim popuni epoksidnom smolom — **underfill** — koja štiti loptice od vlage i prljavštine, ali, što je još bitnije, mehanički ih ojačava i preuzima dio naprezanja na sebe.
+A modern graphics chip is a so-called **flip-chip** assembly. The silicon die isn't wire-bonded to the substrate; instead several hundred, even over a thousand, tiny solder balls are placed on its underside — those are the **bumps**. The die is then turned upside down (hence "flip") and lowered on those balls and soldered directly to a ceramic or organic substrate. The space between the die and the substrate is then filled with epoxy resin — **underfill** — which protects the balls from moisture and dirt but, more importantly, reinforces them mechanically and takes part of the stress on itself.
 
-Tek ispod te podloge, na donjoj strani cijelog čipa, nalaze se BGA loptice (balls) tj. one veće, vidljive, koje povezuju gotov čip sa matičnom pločom laptopa.
+Only below that substrate, on the underside of the whole chip, are the BGA balls, the larger, visible ones that connect the finished chip to the laptop's motherboard.
 
-Evo zašto je ova razlika presudna: **bumpgate je kvar onih unutrašnjih loptica (bumps) između pločice i podloge, a NE spoljašnjih BGA loptica.**
+Here's why this difference is crucial: **bumpgate is a failure of the inner balls (bumps) between the die and the substrate, and NOT of the outer BGA balls.**
 
-![Pojednostavljen presjek flip-chip čipa: gore die, ispod njega red bumps loptica uronjenih u underfill, pa podloga, pa BGA loptice prema matičnoj ploči. Bumpgate puca u gornjem redu, ne u donjem](posts/10,1.jpg)
+![Simplified cross-section of a flip-chip: the die on top, below it a row of bumps embedded in underfill, then the substrate, then the BGA balls towards the motherboard. Bumpgate cracks in the top row, not the bottom one](posts/10,1.jpg)
 
-## Pravi uzrok: pogrešna kombinacija materijala
+## The real cause: the wrong combination of materials
 
-Sama NVIDIA je, kad je konačno morala da prizna problem, upotrijebila maglovitu formulaciju **"weak die/packaging material set"**, odnosno "slab sklop materijala pločice i kućišta". Prevedeno sa korporativnog na čovječji jezik, to otprilike znači: *"zabrljali smo i leguru i ljepilo, ali ćemo to upakovati u četiri učene engleske riječi da zvuči kao viša matematika, a ne kao običan kvar."* Iza te eufemističke fraze krije se kombinacija nekoliko loših odluka koje su se sabrale u katastrofu.
+NVIDIA itself, when it finally had to admit the problem, used the vague wording **"weak die/packaging material set"**. Translated from corporate to human, that roughly means: *"we messed up both the alloy and the glue, but we'll wrap it in four learned English words so it sounds like higher mathematics and not an ordinary defect."* Behind that euphemistic phrase hides a combination of several bad decisions that added up to a disaster.
 
-Prvi sastojak su same loptice. NVIDIA je za bumps koristila leguru sa visokim sadržajem olova (high-lead), dok su kontaktne površine na podlozi bile od eutektičkog kalaja. Takav "kompozitni" spoj (high-lead loptica na eutektičkoj površini) mehanički je slabiji i osjetljiviji na zamor materijala od čistog eutektičkog spoja. Ovdje vrijedi razbiti čestu zabludu: mnogi su bumpgate odmah pripisali bezolovnom lemu i RoHS direktivi koja ga je nametnula 2006. Istina je suprotna i suptilnija. Loptice su upravo bile olovne, a problem je bio u toj nesrećnoj kombinaciji legura i u onome što slijedi.
+The first ingredient is the balls themselves. For the bumps NVIDIA used a high-lead alloy, while the contact surfaces on the substrate were eutectic tin. Such a "composite" joint (a high-lead ball on a eutectic surface) is mechanically weaker and more sensitive to material fatigue than a pure eutectic joint. A common misconception is worth breaking here: many people immediately blamed bumpgate on lead-free solder and the RoHS directive that imposed it in 2006. The truth is the opposite and more subtle. The balls were in fact leaded, and the problem was in that unfortunate combination of alloys and in what follows.
 
-Drugi sastojak je underfill. NVIDIA je koristila materijal oznake Namics 8439-1, čije mehaničke osobine (krutost i temperatura omekšavanja, tzv. Tg) nisu odgovarale onome što su ti vrući čipovi tražili. Umjesto da lopticama pruži dovoljno mehaničke podrške i "rasterećenja" pri širenju, underfill ih je ostavljao izložene.
+The second ingredient is the underfill. NVIDIA used a material labeled Namics 8439-1, whose mechanical properties (stiffness and softening temperature, the so-called Tg) didn't match what those hot chips demanded. Instead of giving the balls enough mechanical support and "relief" during expansion, the underfill left them exposed.
 
-Treći i presudni sastojak je toplota. G84 pločice imale su izražene vruće tačke (hotspots), a laptop kao kućište ne dozvoljava luksuz velikog hladnjaka. Svaki put kad se čip ugrije pa ohladi — a to se dešava na svako paljenje, gašenje, opterećenje u igri — materijali se šire i skupljaju različitom brzinom (različit koeficijent termalnog širenja pločice, loptica i podloge). To naprezanje, ponovljeno hiljadama puta kroz termalne cikluse, polako stvara i širi mikro-pukotine u lopticama dok one konačno ne izgube kontakt.
+The third and decisive ingredient is heat. G84 dies had pronounced hotspots, and a laptop as an enclosure doesn't allow the luxury of a big heatsink. Every time a chip heats up and cools down — which happens with every power on, power off and gaming load — the materials expand and contract at different rates (the die, the balls and the substrate have different coefficients of thermal expansion). That stress, repeated thousands of times through thermal cycles, slowly creates and spreads micro-cracks in the balls until they finally lose contact.
 
-## Zašto reflow i reball samo privremeno pomažu (a često i ne pomažu)
+## Why reflow and reball only help temporarily (and often don't help)
 
-Ovo je dio koji svaki serviser mora da razumije, jer je oko njega najviše zablude i protraćenog novca.
+This is the part every repair technician has to understand, because it's surrounded by the most misconceptions and wasted money.
 
-**Reflow** je postupak u kojem se cijeli čip zagrije do temperature topljenja lema. Toplota nakratko omekša i "preseli" napukle unutrašnje loptice nazad u kontakt, pa čip ponovo proradi. Zvuči kao popravka — ali nije. Korijen problema (loša legura, loš underfill, vruće tačke) ostaje netaknut, pa loptice ponovo pucaju, najčešće za par sedmica do par mjeseci. Svaki sljedeći reflow drži sve kraće, jer se materijal sve više degradira. Zato je svako ko je reflowao Xbox 360, PS3 ili neki od ovih laptopa primijetio da kvar uvijek "iskoči" ponovo.
+**Reflow** is a procedure in which the whole chip is heated to the melting temperature of solder. The heat briefly softens the cracked inner balls and "moves" them back into contact, so the chip works again. It sounds like a repair — but it isn't. The root of the problem (bad alloy, bad underfill, hotspots) stays untouched, so the balls crack again, most often within a couple of weeks to a couple of months. Each following reflow lasts shorter and shorter, because the material keeps degrading. That's why everyone who reflowed an Xbox 360, PS3 or one of these laptops noticed that the fault always "pops up" again.
 
-**Reball** je ozbiljniji zahvat: čip se skine, sa njega se uklone stare **BGA loptice**, nanesu nove i čip se ponovo zalemi na ploču. Problem? Reball mijenja **spoljašnje** loptice — a one kod bumpgatea najčešće uopšte nisu pokvarene. Pravi kvar je u **unutrašnjim** bumps lopticama, do kojih reball uopšte ne dolazi. Ono malo poboljšanja koje reball ipak donese dolazi samo otud što proces zagrijavanja čipa, kao usputni efekat, ujedno odradi i reflow tih unutrašnjih loptica. Drugim riječima reballujete pogrešne loptice, a popravak koji dobijete je zapravo slučajni reflow onih pravih. Privremeno.
+**Reball** is a more serious procedure: the chip is removed, its old **BGA balls** are stripped, new ones are applied and the chip is soldered back onto the board. The problem? A reball replaces the **outer** balls — and with bumpgate those are usually not faulty at all. The real fault is in the **inner** bumps, which a reball never reaches. The little improvement a reball does bring comes only from the fact that heating the chip, as a side effect, also reflows those inner balls. In other words, you reball the wrong balls, and the repair you get is actually an accidental reflow of the right ones. Temporarily.
 
-Iz svega ovoga slijedi neugodan zaključak: jedino trajno rješenje je zamjena čipa ispravljenom revizijom. Sve ostalo je kupovina vremena.
+All of this leads to an unpleasant conclusion: the only permanent solution is replacing the chip with a fixed revision. Everything else is buying time.
 
-## Kako prepoznati ispravljenu reviziju
+## How to recognize a fixed revision
 
-NVIDIA je tokom ljeta 2008. počela da proizvodi popravljene verzije čipova — prvenstveno tako što je underfill **Namics 8439-1 zamijenila Hitachijevim materijalom 3730**, koji je lopticama davao mnogo bolju mehaničku podršku. Srećom po nas koji ovo popravljamo, ispravne revizije se mogu prepoznati golim okom i po oznaci:
+During the summer of 2008 NVIDIA began producing fixed versions of the chips — mainly by **replacing the Namics 8439-1 underfill with Hitachi's 3730 material**, which gave the balls much better mechanical support. Luckily for those of us repairing these, the good revisions can be recognized with the naked eye and by their marking:
 
-- **Boja underfilla.** Defektni čipovi imaju **taman (crn) underfill** po obodu pločice; ispravljeni imaju **bijel/svijetao** underfill. Ovo je najbrži vizuelni test.
-- **Datecode.** Ispravne revizije nose datum proizvodnje **nakon 0830** (30. sedmica 2008. godine) — mada treba biti oprezan, jer su neki defektni primjerci proizvođeni i nešto poslije tog datuma.
-- **Neparna cifra u oznaci.** Najpouzdaniji znak: NVIDIA je ispravljene verzije često označavala **neparnom umjesto parne cifre** na kraju broja modela. Klasičan primjer je G84-603-A2 (ispravan) naspram G84-602-A2 (defektan). Za moj konkretan slučaj — 8700M GT — to je tačno razlika između **G84-750-A2 (defektan)** i **G84-751-A2 (ispravljen)**, i upravo zato za Toshibu tražim primjerak sa "-751" oznakom, bijelim underfillom i datumom iz 2009–2010.
+- **Underfill color.** Defective chips have **dark (black) underfill** around the edge of the die; fixed ones have **white/light** underfill. This is the quickest visual test.
+- **Datecode.** Good revisions carry a production date **after 0830** (week 30 of 2008) — though you should be careful, because some defective units were produced a bit after that date as well.
+- **Odd digit in the marking.** The most reliable sign: NVIDIA often marked fixed versions with an **odd instead of an even digit** at the end of the model number. A classic example is G84-603-A2 (good) versus G84-602-A2 (defective). For my specific case — the 8700M GT — that's exactly the difference between **G84-750-A2 (defective)** and **G84-751-A2 (fixed)**, and that's why for the Toshiba I'm looking for a unit with the "-751" marking, white underfill and a date from 2009–2010.
 
-Mala, ali važna ograda: ni "ispravljena" revizija nije bila savršen lijek. NVIDIA je zamijenila underfill, ali **leguru samih loptica nije mijenjala** sve do generacije Fermi (GF100). Drugim riječima, popravili su ono lakše (ljepilo), a teži dio posla (leguru) ostavili za neki bolji dan — vala, baš po onoj staroj narodnoj mudrosti da se posao prvo zdušno započne, pa onda lijepo odmori dok ne prođe i sama potreba za njim. A da ironija bude potpuna, kad su konačno i tu leguru sredili na Fermiju, neke kartice (GTX 470/480) vratile su se na isti onaj loš underfill — pa su jednom rukom popravljali ono što su drugom upravo kvarili. Zato i ispravne revizije, ako ih držite na visokoj temperaturi, žive duže ali ne i vječno — i hlađenje je i dalje presudno.
+A small but important caveat: even the "fixed" revision wasn't a perfect cure. NVIDIA replaced the underfill, but **it didn't change the alloy of the balls themselves** until the Fermi generation (GF100). In other words, they fixed the easier thing (the glue) and left the harder part of the job (the alloy) for some better day — truly in the spirit of that old folk wisdom that a job should first be started with enthusiasm, and then one should rest nicely until the need for it passes on its own. And for the irony to be complete, when they finally sorted out that alloy on Fermi, some cards (GTX 470/480) went back to that same bad underfill — so they were fixing with one hand what they had just broken with the other. That's why even good revisions, if you keep them at high temperatures, live longer but not forever — and cooling is still decisive.
 
-![Poređenje: lijevo defektan čip sa tamnim underfillom po obodu, desno ispravljena revizija sa bijelim underfillom i datecode-om nakon 0830](posts/10,2.jpg)
+![Comparison: on the left a defective chip with dark underfill around the edge, on the right a fixed revision with white underfill and a datecode after 0830](posts/10,2.jpg)
 
-## Razmjere skandala: novac, tužbe i ćutanje
+## The scale of the scandal: money, lawsuits and silence
 
-NVIDIA nikad nije zvanično potvrdila brojku od 20 miliona čipova, niti je objavila tačan broj jedinica. Ali kad se zna da su **svi** G84 i G86 čipovi bili zahvaćeni, i da su ugrađivani kod gotovo svih velikih proizvođača, procjene od desetina miliona komada nisu pretjerane.
+NVIDIA never officially confirmed the figure of 20 million chips, nor did it publish an exact number of units. But knowing that **all** G84 and G86 chips were affected, and that they were used by almost every major manufacturer, estimates of tens of millions of units aren't exaggerated.
 
-Finansijski udar bio je ogroman i rastao je godinama:
+The financial hit was huge and grew for years:
 
-- U julu 2008. NVIDIA je u prijavi američkoj komisiji za hartije od vrijednosti (SEC) navela rezervaciju od **150 do 200 miliona dolara** za garancije, popravke i zamjene.
-- Akcija kompanije pala je oko **25%** kad je vijest izašla.
-- Konačan, kumulativni trošak na kraju je narastao na **475,9 miliona dolara** — više nego dvostruko od prvobitne procjene, jer su otkazi stizali sa sve više modela koje NVIDIA isprva nije ni smatrala rizičnim.
+- In July 2008 NVIDIA stated in a filing with the US Securities and Exchange Commission (SEC) a reserve of **150 to 200 million dollars** for warranties, repairs and replacements.
+- The company's stock fell about **25%** when the news came out.
+- The final, cumulative cost ended up at **475.9 million dollars** — more than double the initial estimate, because failures kept coming from more and more models that NVIDIA at first didn't even consider at risk.
 
-Uslijedile su i tužbe. Vlasnici laptopa marki **HP, Dell i Apple** udružili su kolektivne tužbe (class action). Poravnanje je podrazumijevalo fond od oko **2 miliona dolara** za naknadu troškova popravki, plus oko **13 miliona** advokatskih troškova koje je NVIDIA preuzela — uz, naravno, standardnu formulaciju da "ne priznaje nikakvu krivicu". Proizvođači su produžavali garancije na pogođene modele, a neki (Dell, HP) su u međuvremenu izbacivali BIOS zakrpe koje su tjerale ventilator da se vrti češće — što jeste odgađalo smrt čipa, ali po cijenu bučnijeg rada i kraćeg trajanja baterije.
+Lawsuits followed. Owners of **HP, Dell and Apple** laptops joined class action lawsuits. The settlement included a fund of about **2 million dollars** to reimburse repair costs, plus about **13 million** in attorney fees that NVIDIA took on — with, of course, the standard wording that it "admits no wrongdoing". Manufacturers extended warranties on the affected models, and some (Dell, HP) meanwhile released BIOS patches that forced the fan to spin more often — which did delay the chip's death, but at the cost of noisier operation and shorter battery life.
 
-Lista pogođenih uređaja je duga i poznata: Apple **MacBook Pro 15" i 17"** (8600M GT, 2007–2008), Dell **XPS M1330 i M1530**, **Inspiron** i **Latitude** serije, HP **Pavilion dv2000/dv6000/dv9000**, razni **Acer Aspire**, **Sony VAIO**, pojedini **Lenovo** i **Fujitsu Siemens** modeli, **Asus**... Praktično cijela jedna generacija laptopa srednje klase.
+The list of affected devices is long and well known: Apple **MacBook Pro 15" and 17"** (8600M GT, 2007–2008), Dell **XPS M1330 and M1530**, the **Inspiron** and **Latitude** series, HP **Pavilion dv2000/dv6000/dv9000**, various **Acer Aspire**, **Sony VAIO**, certain **Lenovo** and **Fujitsu Siemens** models, **Asus**... Practically a whole generation of mid-range laptops.
 
-A možda najgori — i, priznaćemo, najzabavniji — dio cijele priče bio je način na koji se NVIDIA ponijela. Umjesto jednostavnog "pogriješili smo, evo rješenja", kompanija je odigrala kompletan repertoar kriznog menadžmenta: prvo ćutanje, pa poricanje, pa prebacivanje krivice. A krivicu je, kako su mjeseci prolazili, svaljivala redom na svakoga osim na sebe — prvo na HP (njihova serija, njihov problem), zatim na dobavljače materijala, pa na proizvođače laptopa (loše su hladili čip), i na kraju, u prijavi SEC-u, blago i na same korisnike. Da, na korisnike. Otprilike po logici da bi vam taj defektni čip radio besprijekorno da ga niste imali tu nezgodnu naviku da palite i koristite računar.
+And perhaps the worst — and, let's admit it, the most entertaining — part of the whole story was the way NVIDIA behaved. Instead of a simple "we made a mistake, here's the solution", the company played the complete crisis management repertoire: first silence, then denial, then shifting the blame. And as the months went by, it dumped the blame on everyone in turn except itself — first on HP (their batch, their problem), then on material suppliers, then on laptop manufacturers (they cooled the chip badly), and finally, in the SEC filing, mildly on the customers themselves. Yes, on the customers. Roughly along the logic that this defective chip would have worked flawlessly for you if you hadn't had that inconvenient habit of turning on and using your computer.
 
-Da je NVIDIA tih godina imala svoje **zapovijesti kriznog menadžmenta**, uklesane u mermer pred ulazom u sjedište, glasile bi otprilike ovako:
+If NVIDIA had had its own **commandments of crisis management** in those years, carved in marble at the entrance to its headquarters, they would have read something like this:
 
-1. Ne priznaj ništa što možeš prećutati.
-2. Ne ćuti o onome što možeš svaliti na dobavljača.
-3. Ako baš moraš priznati, priznaj na engleskom — i to u četiri riječi koje niko živ ne razumije.
-4. Popravljaj tiho, a kuni se glasno da nije ni bilo šta za popravku.
-5. Produži garanciju taman toliko da kvar iskoči dan pošto ona istekne.
-6. Krivac je uvijek onaj sljedeći u lancu — dobavljač, sklapač, kupac, vlažnost vazduha. Samo ne ti.
+1. Admit nothing you can keep quiet about.
+2. Don't keep quiet about what you can dump on a supplier.
+3. If you really must admit it, admit it in English — and in four words no living soul understands.
+4. Repair quietly, and swear loudly there was nothing to repair.
+5. Extend the warranty just enough for the fault to pop up the day after it expires.
+6. The guilty party is always the next one in the chain — supplier, assembler, customer, air humidity. Just not you.
 
-Šala na stranu (a iskreno, jedva da je šala), uglavnom se tako i odigralo. Priča o "ograničenoj seriji" držala se uporno, iako su nezavisni izvori — prije svih novinar Charlie Demerjian i sajt SemiAccurate — uz pomoć elektronskog mikroskopa pokazivali da su zahvaćeni baš **svi** čipovi te porodice. Najslikovitiji dokaz bio je niz **"Product Change Notice"** dokumenata kojima je NVIDIA tiho mijenjala underfill na G86, G92 i ostalima, dok je u tim istim dokumentima sa kamenim licem stajalo da se izmjena radi "radi poboljšanja robusnosti kućišta" — nikako, ne daj bože, zbog nekakvog kvara. Ispada da su mijenjali savršeno ispravne čipove, eto tek tako, iz čiste ljubavi prema preinakama.
+Jokes aside (and honestly, it's barely a joke), that's mostly how it played out. The "limited batch" story was held onto stubbornly, even though independent sources — above all the journalist Charlie Demerjian and the site SemiAccurate — used an electron microscope to show that **all** chips of that family were affected. The most vivid proof was a series of **"Product Change Notice"** documents with which NVIDIA quietly changed the underfill on the G86, G92 and others, while those same documents stated with a straight face that the change was made "to improve package robustness" — not at all, God forbid, because of some kind of defect. It turns out they were changing perfectly good chips, just like that, out of pure love of modification.
 
-I tu dolazimo do detalja koji posebno grije srce nama sa ovih prostora: pomenuto poravnanje važilo je za kupce u Sjedinjenim Državama. Vlasnici istih tih laptopa u Evropi — uključujući, recimo, jednog majstora u Crnoj Gori sa Toshibom punom G84 čipa na radnom stolu — dobili su tačno ono što Crnogorac, po sopstvenoj mitologiji, najdostojanstvenije umije da primi: ništa. Ali ništa s ponosom. Dok su Amerikanci slali laptope na besplatnu zamjenu, mi smo s ove strane okeana mahali za avionom — pa, eto, sami uzeli lemilicu u ruke. Što, ako ćemo pošteno, i nije baš najgori mogući ishod.
+And here we come to a detail that especially warms the hearts of us from this part of the world: the settlement mentioned above applied to buyers in the United States. Owners of those same laptops in Europe — including, say, one repairman in Montenegro with a Toshiba full of G84 chips on his workbench — got exactly what a Montenegrin, according to his own mythology, knows how to receive with the most dignity: nothing. But nothing with pride. While Americans sent their laptops in for free replacement, we on this side of the ocean waved at the plane — and then, well, picked up the soldering iron ourselves. Which, to be fair, isn't exactly the worst possible outcome.
 
-## Šira slika: Xbox 360, PS3 i era bezolovnog lema
+## The bigger picture: Xbox 360, PS3 and the lead-free solder era
 
-Bumpgate nije bio izolovan incident, nego najpoznatiji predstavnik čitave epidemije BGA otkaza s kraja 2000-ih. Iz istog perioda i iste klase problema su:
+Bumpgate wasn't an isolated incident, but the best known representative of a whole epidemic of BGA failures from the late 2000s. From the same period and the same class of problems are:
 
-- **Xbox 360 "Red Ring of Death"** gdje je ATI/TSMC grafički čip stradao na vrlo sličan način (Microsoft to nikad nije do kraja tehnički objasnio, ali je produžio garancije na tri godine i potrošio milijarde).
-- **PlayStation 3 "fat" YLOD (Yellow Light of Death)** gdje RSX Reality Synthesizer grafički čip (baziran na NVIDIA arhitekturi) puca po istom principu. Sa PS3 reballom sam se i sam dosta bavio ranije, pa mi je cijela ova priča vrlo bliska iz prve ruke.
+- **Xbox 360 "Red Ring of Death"**, where the ATI/TSMC graphics chip died in a very similar way (Microsoft never fully explained it technically, but it extended warranties to three years and spent billions).
+- **PlayStation 3 "fat" YLOD (Yellow Light of Death)**, where the RSX Reality Synthesizer graphics chip (based on NVIDIA architecture) cracks on the same principle. I've done quite a bit of PS3 reballing myself in the past, so this whole story is very familiar to me first-hand.
 
-Tih godina je u igri bio i prelazak na **bezolovni lem** (RoHS, 2006), koji je nesumnjivo zakomplikovao stvari — bezolovne legure se tope na višoj temperaturi i krtije su. Ali, kao što sam već naglasio, kod samog bumpgatea loptice su bile olovne; bezolovni lem je dio šireg konteksta epohe, a ne direktan krivac baš za ovaj kvar. Ono što povezuje sve ove slučajeve jeste isti obrazac: vrući čip + nedovoljno hlađenje + ponavljani termalni ciklusi = zamor i pucanje BGA/bump spojeva.
+Those years also brought the switch to **lead-free solder** (RoHS, 2006), which undoubtedly complicated things — lead-free alloys melt at a higher temperature and are more brittle. But, as I already stressed, in bumpgate itself the balls were leaded; lead-free solder is part of the wider context of the era, and not a direct culprit for this particular fault. What connects all these cases is the same pattern: a hot chip + insufficient cooling + repeated thermal cycles = fatigue and cracking of BGA/bump joints.
 
-## Zaključci
+## Conclusions
 
-1. **Defekt u materijalu se ne vidi odmah.** Ovi čipovi su radili godinama prije nego što su počeli da otkazuju. Najopasnije mane su upravo one koje se ispolje tek nakon hiljada radnih ciklusa, kad je garancija odavno istekla.
-2. **Reflow nije trajna popravka, a reball često ne dira pravi problem.** Kod bumpgatea pucaju unutrašnje (die-na-podlogu) loptice, a ne spoljašnje BGA. Reflow ih nakratko preseli nazad, reball mijenja pogrešne loptice — oboje je kupovina vremena.
-3. **Jedino trajno rješenje je zamjena čipa ispravljenom revizijom** — bijeli underfill, datecode nakon 0830, neparna cifra u oznaci (kod mene: G84-751 umjesto G84-750).
-4. **Hlađenje je presudno.** Čip koji nikad ne pređe 55–60°C može da poživi vrlo dugo čak i ako je defektan. Pola popravke je dobra pasta, čist hladnjak i ventilator koji radi.
-5. **Proizvođači ćute dok god je problem unutar garantnog roka.** Bumpgate, RROD i YLOD su udžbenički primjeri kako se velika kompanija ponaša kad otkrije masovni defekt — prvo poricanje, pa prebacivanje krivice, pa tiha poravnanja. I to, naravno, samo tamo gdje sud stigne.
-6. **Forumi i nezavisni izvori su zlato.** Najveći dio tehničke istine o bumpgateu nije došao od NVIDIA-e, nego od upornih novinara i servisera koji su rastavljali čipove i objavljivali nalaze. Bez njih bi cijela priča do danas ostala "ograničena serija".
+1. **A material defect isn't visible right away.** These chips worked for years before they started to fail. The most dangerous flaws are exactly the ones that only show after thousands of working cycles, long after the warranty has expired.
+2. **Reflow isn't a permanent repair, and reball often doesn't touch the real problem.** In bumpgate the inner (die-to-substrate) balls crack, not the outer BGA ones. Reflow briefly moves them back, reball replaces the wrong balls — both are buying time.
+3. **The only permanent solution is replacing the chip with a fixed revision** — white underfill, datecode after 0830, odd digit in the marking (in my case: G84-751 instead of G84-750).
+4. **Cooling is decisive.** A chip that never goes above 55–60°C can live a very long time even if it's defective. Half the repair is good paste, a clean heatsink and a working fan.
+5. **Manufacturers stay silent for as long as the problem is within the warranty period.** Bumpgate, RROD and YLOD are textbook examples of how a big company behaves when it discovers a mass defect — first denial, then shifting the blame, then quiet settlements. And of course, only where the courts can reach.
+6. **Forums and independent sources are gold.** Most of the technical truth about bumpgate didn't come from NVIDIA, but from persistent journalists and repair technicians who took chips apart and published their findings. Without them the whole story would still be a "limited batch" today.
 
-Za kraj, Toshiba na mome stolu je živi dokaz da bumpgate i danas, skoro dvije decenije kasnije, i dalje stiže na radni sto. Čip čeka svoju "-751" zamjenu, a ja ću o samom postupku presađivanja (stencil, kuglice, vrući vazduh) pisati posebno kad dijelovi stignu.
+To close, the Toshiba on my desk is living proof that bumpgate, almost two decades later, still arrives on the workbench. The chip is waiting for its "-751" replacement, and I'll write about the transplant procedure itself (stencil, balls, hot air) separately when the parts arrive.
 
-### Reference
+### References
 
-1. [Why Nvidia's Chips are Defective – SemiAccurate (Charlie Demerjian, originalna analiza uzroka)](https://semiaccurate.com/2010/07/11/why-nvidias-chips-are-defective/)
-2. [Nvidia backpedals on GF100/GTX480 underfill – SemiAccurate (Namics 8439-1 vs Hitachi 3730, high-lead vs eutektik)](https://semiaccurate.com/2010/07/12/nvidia-backpedals-gf100gtx480-underfill/)
-3. [NVidia bumpgate – Badcaps (arhiva: bijeli underfill, datecode 0830, neparna cifra, lista pogođenih čipova)](https://www.badcaps.net/forum/troubleshooting-hardware-devices-and-electronics-theory/troubleshooting-laptops-tablets-and-mobile-devices/83833-nvidia-bumpgate)
-4. [NV bumpgate lead-free solder debacle – VOGONS (underfill, Tg, mehanizam otkaza)](https://www.vogons.org/viewtopic.php?f=46&t=44126)
-5. [Nvidia's GPU failures: A case for prognostics and health management – ScienceDirect (akademska analiza, "weak die/packaging material set")](https://www.sciencedirect.com/science/article/abs/pii/S0026271411005105)
-6. [NVIDIA Corp Form 10-Q FY2010 – SEC (kumulativni trošak od 475,9 miliona dolara)](https://www.sec.gov/Archives/edgar/data/0001045810/000104581010000029/q211form10q.htm)
-7. [All NVIDIA 8400M / 8600M chips faulty? – Engadget (originalni izvještaj da su svi G84/G86 zahvaćeni)](https://engadget.com/2008/07/10/all-nvidia-8400m-8600m-chips-faulty)
-8. [Nvidia GPU Settlement Covers Apple, Dell, and HP – Tom's Hardware (poravnanje, lista modela)](https://www.tomshardware.com/news/gpu-failure-g84-g86-settlement,11400.html)
-9. [GeForce 8 series – Wikipedia (pregled pogođenih modela i serija)](https://en.wikipedia.org/wiki/GeForce_8_series)
-10. [GPU reflow guide – VAIO Library (zašto reflow/reball samo privremeno pomažu, unutrašnje bumps loptice)](https://vaiolibrary.com/GPU_reflow_guide)
+1. [Why Nvidia's Chips are Defective – SemiAccurate (Charlie Demerjian, the original analysis of the cause)](https://semiaccurate.com/2010/07/11/why-nvidias-chips-are-defective/)
+2. [Nvidia backpedals on GF100/GTX480 underfill – SemiAccurate (Namics 8439-1 vs Hitachi 3730, high-lead vs eutectic)](https://semiaccurate.com/2010/07/12/nvidia-backpedals-gf100gtx480-underfill/)
+3. [NVidia bumpgate – Badcaps (archive: white underfill, datecode 0830, odd digit, list of affected chips)](https://www.badcaps.net/forum/troubleshooting-hardware-devices-and-electronics-theory/troubleshooting-laptops-tablets-and-mobile-devices/83833-nvidia-bumpgate)
+4. [NV bumpgate lead-free solder debacle – VOGONS (underfill, Tg, failure mechanism)](https://www.vogons.org/viewtopic.php?f=46&t=44126)
+5. [Nvidia's GPU failures: A case for prognostics and health management – ScienceDirect (academic analysis, "weak die/packaging material set")](https://www.sciencedirect.com/science/article/abs/pii/S0026271411005105)
+6. [NVIDIA Corp Form 10-Q FY2010 – SEC (cumulative cost of 475.9 million dollars)](https://www.sec.gov/Archives/edgar/data/0001045810/000104581010000029/q211form10q.htm)
+7. [All NVIDIA 8400M / 8600M chips faulty? – Engadget (the original report that all G84/G86 were affected)](https://engadget.com/2008/07/10/all-nvidia-8400m-8600m-chips-faulty)
+8. [Nvidia GPU Settlement Covers Apple, Dell, and HP – Tom's Hardware (settlement, list of models)](https://www.tomshardware.com/news/gpu-failure-g84-g86-settlement,11400.html)
+9. [GeForce 8 series – Wikipedia (overview of affected models and series)](https://en.wikipedia.org/wiki/GeForce_8_series)
+10. [GPU reflow guide – VAIO Library (why reflow/reball only help temporarily, inner bumps)](https://vaiolibrary.com/GPU_reflow_guide)

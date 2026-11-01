@@ -1,41 +1,41 @@
-Unaprijeđena vremenska prognoza za Budvu koristeći mašinsko učenje
-11. februar 2026
+Improved weather forecast for Budva using machine learning
+11 February 2026
 
-Uzeo sam 6 globalnih vremenskih modela i pustio mašinsko učenje da iz njihovih grešaka izvuče tačniju prognozu za Budvu. Rezultat je bolji od bilo kog pojedinačnog modela.
+I took 6 global weather models and let machine learning extract a more accurate forecast for Budva from their errors. The result is better than any single model.
 
-## Zašto jedna prognoza nije dovoljna
+## Why one forecast isn't enough
 
-Nijedan od 6 globalnih i kontinentalnih modela koji su dostupni široj javnosti (pa i meni) ne može biti najbolji za sve. Ali kad ih staviš zajedno i pustiš mašinu da uči iz njihovih grešaka, moguće je napraviti mnogo manju grešku.
+None of the 6 global and continental models available to the general public (myself included) can be the best at everything. But when you put them together and let a machine learn from their errors, you can get a much smaller error.
 
 ## XGBoost gradient booster
 
-[XGBoost](https://xgboost.readthedocs.io/) je algoritam koji uzima podatke i pravi koeficijent koji odgovara rasponu i magnitudi greške. Dao sam mu:
+[XGBoost](https://xgboost.readthedocs.io/) is an algorithm that takes data and produces a coefficient matching the range and magnitude of the error. I gave it:
 
-- **6 modela** kao input (i to ECMWF, GFS, ARPEGE, ICON, METEO FRANCE i ITALIAMETEO)
-- **9 parametara**: temperatura, vlažnost, vjetar, pritisak, oblačnost, padavine i još par stvari
-- **~3 godine podataka** sa lokalne Weather Underground stanice u Budvi sa svim gore navedenim parametrima + solarna radijacija
+- **6 models** as input (ECMWF, GFS, ARPEGE, ICON, METEO FRANCE and ITALIAMETEO)
+- **9 parameters**: temperature, humidity, wind, pressure, cloud cover, precipitation and a couple more
+- **~3 years of data** from a local Weather Underground station in Budva with all the parameters above + solar radiation
 
-Rezultat: temperatura MAE od **0.97°C**. Manje od jednog stepena greške!
+Result: a temperature MAE of **0.97°C**. Less than one degree of error!
 
-Najbolji pojedinačni model ima grešku od 1.4°C. Moj frankenstein od 6 modela je za **30% bolji**.
+The best single model has an error of 1.4°C. My frankenstein of 6 models is **30% better**.
 
-## Stvari koje sam naučio na teži način
+## Things I learned the hard way
 
-- **Feature engineering je 80% posla**: sat u danu, mjesec, lag features...
-- **Bias correction po mjesecu i satu**: kad otkriješ da ECMWF *svaki januar* daje 2°C više, korekcija je trivijalna ali efekat ogroman. Tako za bilo koju situaciju.
+- **Feature engineering is 80% of the work**: hour of the day, month, lag features...
+- **Bias correction by month and hour**: when you discover that ECMWF reads 2°C too high *every January*, the correction is trivial but the effect is huge. The same goes for any other situation.
 
-### Kod (za one koji vole takve stvari)
+### The code (for those who like that sort of thing)
 
-Cijeli projekat će uskoro biti open source (frankenstein je i po izgledu koda), jer zašto ne:
+The whole project will be open source soon (the code is a frankenstein too), because why not:
 
 ```python
-# Osnovna ideja pipeline-a (nije baš ovako ali skoro)
+# The basic idea of the pipeline (not exactly like this, but close)
 for model in MODELS:
     raw_forecast = fetch_from_open_meteo(model)
     corrected = xgboost_model.predict(raw_forecast)
-    # Mašina kaže kako korigovati
+    # The machine says how to correct it
 ```
 
-Pogledajte [live prognozu](https://matko-iv.github.io/vrijeme/forecast.html) ili [GitHub repo](https://github.com/matko-iv/vrijeme).
+Check out the [live forecast](https://matko-iv.github.io/vrijeme/forecast.html) or the [GitHub repo](https://github.com/matko-iv/vrijeme).
 
-*Prognoza se ažurira svakog sata. Ako griješi, krivite modele, ne mene. Ja sam samo posrednik.*
+*The forecast updates every hour. If it's wrong, blame the models, not me. I'm just the middleman.*

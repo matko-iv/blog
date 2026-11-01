@@ -1,5 +1,5 @@
 A Test DGMR Rainfall Nowcasting Model for Budva: What Worked, What Failed, and What Comes Next
-12. jul 2026
+12 July 2026
 
 **Status: this is a TEST model only.** I built it to answer a feasibility question: can a DGMR-style neural network learn useful short-range rainfall nowcasts from the archive of a single radar near Budva? It is not operationally ready, it has not passed a final independent evaluation, and it should not be treated as a public forecast product. Training stopped near batch 16,100 when my available compute ran out, well before the planned 30,000 batches. I intend to make another attempt by the end of summer 2026. I am aiming for a stable model in 2027, but that is a target rather than a guaranteed release date.
 

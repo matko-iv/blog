@@ -1,5 +1,5 @@
 Status Update Q4 2026
-1. november 2026
+1 November 2026
 
 Dear visitors, 
 
@@ -8,12 +8,34 @@ I wish to update you on all of my projects I am working on, as it's been a momen
 ## ML Forecast Pipeline
 First of all, the ML Forecasting Pipeline has seen limited improvements. A lot of the progress was made with the corrected rain signal. It now works by blending the verdicts of all the public weather models that we've been using, so 10 of them, from the Open-Meteo API interface. There've been 2 versions so far. The second version improves on how big of an error the classifier can handle, which are now windows of +/- 6 hours tops. Because of this it gets better on the CSI (Critical Success Index) scale. Improvements have been observed for all forecast windows, same day improvement of +0.019 points, next day +0.024 points. The rain onset moment is no longer calculated by a separate model, it's just the first wet hour after three dry hours, so the onset and hourly forecast can't disperse.
 
+The CSI only counts the cases where rain was forecast or observed, so the many easy dry hours can't inflate it:
+
+$$\mathrm{CSI} = \frac{\text{hits}}{\text{hits} + \text{misses} + \text{false alarms}}$$
+
+The wider windows work by taking, for each model \(m\), the highest rain value \(P\) within \(k\) hours of the hour \(t\), for \(k\) of 1, 2, 3 and 6. A model that has the shower 5 hours off still gets seen:
+
+$$W^{(m)}_k(t) = \max_{|i| \le k} P^{(m)}_{t+i}$$
+
+The onset then comes directly from the hourly decision \(y_t\), which is 1 for a wet hour and 0 for a dry one:
+
+$$t_{\text{onset}} = \min \{\, t : y_t = 1,\ y_{t-1} = y_{t-2} = y_{t-3} = 0 \,\}$$
+
 All these things accrue to improving the False Alarm Rate, from a whopping 45% (every second hour) to about 10%. The specific thing I should focus on next is getting the 30-60% PoP chance hours to be more certain. A 30% chance, by today's model, can bring rain, while a 60% chance can still be dry. My ultimate goal is getting rid of the PoP chance that is visible to users, as it is very much misleading to a lot of people. The model will just tell you whether it will rain or not, which is a long ways to go still, in terms of making that happen.
 
 I should be clear on that 45%, as it's counted on rain onsets, meaning the times the site said rain would start and it didn't. The false alarms for single hours barely moved, from 42.2% to 41.9% for the same day. For now, any rain hour under 60% gets a dimmed icon and the label "moguća" (possible) on the hourly cards, because before that a 47% hour looked exactly the same as a 90% one.
 
+The PoP for tomorrow also gets corrected, because the classifier comes out too low on forecasts a day old. Hours it put at 20-30% rained 48% of the time, so the site maps its probability \(p\) to \(p'\), where \(\operatorname{logit}(p) = \ln \frac{p}{1 - p}\):
+
+$$\operatorname{logit}(p') = 0.657 + 0.790 \, \operatorname{logit}(p)$$
+
+So a raw 25% becomes about 45%.
+
 PoP or Probability of Precipitation is a number from 0 to 1, often shown in percentage value from 0% to 100%, whose goal is to explain the chance of having rain in a selected location. The problem comes **how** that number is generated. Different sites, agencies and people use different methods of expressing PoP. It is a misconception that people believe, that the PoP is just the chance of having rain in their chosen location. So for a 50% PoP there is a one in a half chance that it will rain. That is often not the case.
 One universal method, which is common in a lot of places, including popular apps The Weather Network and WU Underground (this is the place we got the historical station data by the way), is using a multiplication of two different percentages. So a 40% PoP means that 80% of the area will have rain and that the rain certainty is 50%, or vice versa. Although this method brings more accurate chances for rain, especially in geographically challenging areas, it may bring confusion to some people, and my ultimate goal is getting rid of this metric to the masses, while it stays internally, for meteorologists and hobbyists alike.
+
+As a formula, with \(C\) as the rain certainty and \(A\) as the share of the area:
+
+$$\mathrm{PoP} = C \times A = 0.5 \times 0.8 = 0.4$$
 
 I also owe you a correction from my September post. I wrote that the summer had 114 wet hours and 396.7 mm of rain, but the evaluation was reading the station's daily running total, so every dry hour after a shower got counted as wet. The real numbers were 23 wet hours and 48.8 mm. That also means ECMWF wasn't the best model like I wrote, KNMI was, with a CSI of 0.233. My published rain still came last with 0.095, so that part of the post holds. The cause was different though. Only ICON-2I could call rain and XGBoost couldn't add or remove a single wet hour, which is the setup the new classifier replaced on 27 September.
 
@@ -27,6 +49,28 @@ The last commits are from August, when I got Andrej into the Yugo. Interiors are
 One interesting thing I've seen is [Godot PSX renderer-engine](https://github.com/wyvernbw/godot-psxlike) by fellow contributor **wyvernbw** or Calin P, which caught my eye. There's a detailed and informative article on the said contributor's blog, which you can access [here](https://calinp.eu/blog/psx-type-rendering). The ultimate goal is creating a graphics engine faithful enough to the PSX era graphics. This specific aesthetic has seen a substantial increase in use in a lot of newer Steam games.
 
 It's a set of shaders for Godot 4 and up, and on top of vertex snapping it does affine texture mapping (the warping textures on PS1 games) and the PS1 dither. My own shader only does vertex snapping, nearest filtering and per-vertex lighting, so there's a lot to learn from it.
+
+Vertex snapping locks each vertex to the pixel grid. For a clip space position \(\mathbf{p}\) with depth \(w\) and a viewport of size \(\mathbf{r}\), per axis:
+
+$$\mathbf{p}' = \frac{\lfloor \mathbf{r} \, \mathbf{p} / w \rfloor}{\mathbf{r}} \, w$$
+
+Mine uses the same idea, blended in at 65% strength.
+
+Textures are where the PS1 really differs. Between two vertices at screen position \(t\), a modern GPU interpolates a texture coordinate \(u\) with perspective correction:
+
+$$u_{\text{persp}}(t) = \frac{(1-t)\,\frac{u_0}{w_0} + t\,\frac{u_1}{w_1}}{(1-t)\,\frac{1}{w_0} + t\,\frac{1}{w_1}}$$
+
+The PS1 never divides by \(w\), so it interpolates straight across the screen, and that's what makes textures warp:
+
+$$u_{\text{affine}}(t) = (1-t)\,u_0 + t\,u_1$$
+
+The shader gets there by multiplying UV by \(w\) in the vertex function and dividing by the interpolated \(w\) in the fragment function, which cancels the GPU's correction.
+
+Colors go down to 5 bits per channel, with a 4x4 dither value added first, picked by the pixel position \((x, y)\):
+
+$$c' = \frac{\left\lfloor 31 \left( c + \frac{D_{y \bmod 4,\, x \bmod 4}}{255} \right) \right\rfloor}{31}$$
+
+$$D = \begin{pmatrix} -4 & 0 & -3 & 1 \\ 2 & -2 & 3 & -1 \\ -3 & 1 & -4 & 0 \\ 3 & -1 & 2 & -2 \end{pmatrix}$$
 
 I'll post more about this soon!
 

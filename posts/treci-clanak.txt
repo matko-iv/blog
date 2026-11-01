@@ -1,50 +1,50 @@
-Kako sam mjesec i po pravio sajt za parkiranje (i zašto)
-1. februar 2026
+How I spent a month and a half building a parking website (and why)
+1 February 2026
 
-Meni je trebalo **mjesec i po dana**. I to radnog, ne kalendarskog. I ne, nije samo landing page...
+It took me **a month and a half**. Working time, not calendar time. And no, it's not just a landing page...
 
 [Parkiranje.me](https://parkiranje.me).
 
-## Šta je uopšte Parkiranje.me?
+## What is Parkiranje.me anyway?
 
-Ukratko: platforma đe možeš pronaći, rezervisati i platiti privatno parking mjesto u Crnoj Gori. Airbnb za parking, ako hoćete.
+In short: a platform where you can find, book and pay for a private parking spot in Montenegro. Airbnb for parking, if you like.
 
-**Za vozače**: Uneseš lokaciju, izabereš datum, vidiš šta je dostupno, platiš online, dobiješ potvrdu. Gotovo. Nema krugova oko bloka, nema "e je l' ima mjesta", nema onih kazni od 30-40 eura jer si parkirao đe ne smiješ.
+**For drivers**: You enter a location, pick a date, see what's available, pay online, get a confirmation. Done. No circling the block, no "hey, is there a spot", none of those 30-40 euro fines because you parked where you shouldn't.
 
-**Za vlasnike**: Imaš prazan prilaz? Dvorište? Garažu koja služi kao skladište za stvari koje ćeš "jednog dana" baciti? Objavi prostor, postavi cijenu, i počni zarađivati dok spavaš.
+**For owners**: Got an empty driveway? A yard? A garage serving as storage for things you'll throw out "one day"? List the space, set a price, and start earning while you sleep.
 
-> Prosječan vozač u Crnoj Gori godišnje izgubi **19 sati** tražeći parking i potroši **oko 100 eura** na kazne.
+> The average driver in Montenegro loses **19 hours** a year looking for parking and spends **around 100 euros** on fines.
 
-## Mjesec i po dana — na šta je otišlo vrijeme
+## A month and a half — where the time went
 
-Krenuo sam optimistično. "Ma dva vikenda i gotovo."
+I started out optimistic. "Two weekends and it's done."
 
-### Sedmica 1-2: Osnova
-Mapa, pretraga po lokaciji, kartice parking mjesta. Osnovna autentifikacija. Izgleda lako kad se napiše u jednoj rečenici, ali mapa koja radi kako treba na mobilnom... to je posebna vrsta pakla. SUPABASE! Nemojte mi spominjati SUPABASE! Možda najgora konfiguracija za PostgreSQL, ali sada kada sam ga napravio ne mijenjam...
+### Weeks 1-2: The basics
+Map, location search, parking spot cards. Basic authentication. It looks easy written in one sentence, but a map that works properly on mobile... that's a special kind of hell. SUPABASE! Don't even mention SUPABASE to me! Maybe the worst configuration for PostgreSQL, but now that I've built it I'm not changing it...
 
-### Sedmica 3: Rezervacije
-Sistem za rezervacije — izaberi datum, izaberi vrijeme, provjeri dostupnost, kreiraj rezervaciju. Zvuči jednostavno. Nije. Timezone problemi, overlapping rezervacije, edge case-ovi koji te bude u 3 ujutro.
+### Week 3: Bookings
+The booking system — pick a date, pick a time, check availability, create a booking. Sounds simple. It isn't. Timezone problems, overlapping bookings, edge cases that wake you up at 3 in the morning.
 
-### Sedmica 4: Plaćanja
-Online plaćanja. Jer naravno da ne može samo "daj mi keš kad dođeš." Trebalo je integrisati payment gateway, napraviti da radi, testirati sa pravim karticama.
+### Week 4: Payments
+Online payments. Because of course it can't just be "give me cash when you get here." I had to integrate a payment gateway, make it work, and test it with real cards.
 
-### Sedmica 5-6: Sve ostalo
-Dashboard za vlasnike. Notifikacije. FAQ. Privacy policy (kopija s interneta, neću lagati). Responsive dizajn za mobile. Testiranje. Bagovi. Još bagova. "Kako ovo radi na produkciji a ne radi lokalno" momenti.
+### Weeks 5-6: Everything else
+A dashboard for owners. Notifications. FAQ. Privacy policy (copied off the internet, I won't lie). Responsive design for mobile. Testing. Bugs. More bugs. "How does this work in production but not locally" moments.
 
-I na kraju deploy, domena, SSL, i da se pomolim ateističkom bogu da sve radi.
+And finally the deploy, the domain, SSL, and a prayer to the atheist god that everything works.
 
-Plan je širiti na cijelu Crnu Goru, a možda i šire. Ko zna.
+The plan is to expand across all of Montenegro, and maybe further. Who knows.
 
-## Trenutno stanje
+## Current state
 
-Sajt je u **beta fazi**. Ima test parking listanog, sistem radi, ali još nisam pokrenuo pravu akviziciju korisnika. To je sljedeća faza, i vjerovatno teža od samog programiranja.
+The site is in **beta**. It has a test parking listing and the system works, but I haven't started real user acquisition yet. That's the next phase, and probably harder than the programming itself.
 
-Jer napraviti sajt je jedna stvar. Ubjediti ljude da stave svoj parking prostor na internet... to je posebna priča na koju se treba osvrnuti, i to prije sezone.
+Because building a site is one thing. Convincing people to put their parking space on the internet... that's a separate story that needs attention, and before the season.
 
-Ako imate prazan parking prostor i hoćete da zaradite — [registrujte se](https://parkiranje.me/register). Ako tražite parking — [istražite mapu](https://parkiranje.me/explore).
+If you have an empty parking space and want to earn — [sign up](https://parkiranje.me/register). If you're looking for parking — [explore the map](https://parkiranje.me/explore).
 
-Ili jednostavno posjetite [parkiranje.me](https://parkiranje.me) i recite mi šta mislite.
+Or just visit [parkiranje.me](https://parkiranje.me) and tell me what you think.
 
-## Parkiranje.me - najbolje parkiranje.me u Crnoj Gori!!!
+## Parkiranje.me - the best parkiranje.me in Montenegro!!!
 
-*Da, ovo je bestidna reklama za sopstveni sajt na sopstvenom blogu. Ko će da mi reklamira ako neću ja.*
+*Yes, this is a shameless ad for my own site on my own blog. Who's going to advertise me if I won't.*

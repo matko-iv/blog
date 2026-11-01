@@ -1,5 +1,5 @@
 What a weather correction can and cannot learn
-13. septembar 2026
+13 September 2026
 
 In February I wrote that my corrected forecast for Budva was more accurate than any single global model. That claim rested on cross-validation, which is to say on data the model had already seen. This summer I was able to check it properly, and the answer splits cleanly in two. On temperature and wind the claim holds and the margin is larger than I expected. On rain it is false, and not by a little: the corrected output I publish was worse this summer than every global model it corrects, and worse than its own uncorrected input.
 

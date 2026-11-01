@@ -1,49 +1,49 @@
-Vodič kroz veb infrastrukturu državnih organa Crne Gore
-4. februar 2026
+A guide to the web infrastructure of Montenegro's government bodies
+4 February 2026
 
-**Upozorenje**: Ovaj članak sadrži potencijalno traumatične opise državnih sajtova. Ako želite da ostanete normalni, možda bolje ne čitati dalje...
+**Warning**: This article contains potentially traumatic descriptions of government websites. If you want to stay sane, maybe don't read any further...
 
-## Dobrodošli u digitalni vik
+## Welcome to the digital scream
 
-Crna Gora je mala država puna korupcije i kokaina sa ambicijama da se pridruži EU. Imamo predivnu prirodu, fantastičnu hranu, i veb infrastrukturu koja izgleda kao da ju je neko napravio dok je imao nekoliko vrsti droga u svom krvotoku.
+Montenegro is a small country full of corruption and cocaine with ambitions to join the EU. We have beautiful nature, fantastic food, and web infrastructure that looks like it was built by someone with several kinds of drugs in their bloodstream.
 
-Hajde da prošetamo digitalnim pejzažom naše voljene države.
+Let's take a walk through the digital landscape of our beloved country.
 
-## Gov.me — portal koji ponekad radi
+## Gov.me — the portal that sometimes works
 
-Centralni portal [gov.me](https://www.gov.me) je, da budemo fer, vizuelno prihvatljiv. Čak i funkcioniše. Većinu vremena. Osim kad ne funkcioniše. Što je obično tačno kad vam treba.
+The central portal [gov.me](https://www.gov.me) is, to be fair, visually acceptable. It even works. Most of the time. Except when it doesn't. Which is usually exactly when you need it.
 
-Ali probajte naći nešto konkretno. Recimo, informaciju o tome kako registrovati vozilo. Imate 47 kategorija, 12 podkategorija, 6 linkova koji vode na isti PDF iz 2019. godine.
+But try finding something specific. Say, information on how to register a vehicle. You get 47 categories, 12 subcategories and 6 links leading to the same PDF from 2019.
 
-Digitalizacija: čuveni proces u kojem se papirologija pretvara u PDF papirologiju.
+Digitalization: the famous process of turning paperwork into PDF paperwork.
 
-## eUprava — hrabar pokušaj
+## eUprava — a brave attempt
 
-[eUprava](https://euprava.gov.me) je sistem koji je zamišljen da vam omogući da sve državne stvari riješite online. I zaista, neke stvari *možete* riješiti online. Recimo, možete provjeriti da li vam je istekla lična karta. A onda otići na šalter da je obnovite.
+[eUprava](https://euprava.gov.me) is a system meant to let you handle all your government business online. And indeed, some things you *can* handle online. For example, you can check whether your ID card has expired. And then go to the counter to renew it.
 
-Sistem zahtijeva digitalnu potvrdu identiteta, koja zahtijeva poseban čitač kartica, koji zahtijeva driver koji radi samo na Windowsu 7, koji zahtijeva... da odustanete i odete na šalter.
+The system requires a digital proof of identity, which requires a special card reader, which requires a driver that only works on Windows 7, which requires... that you give up and go to the counter.
 
-Moj omiljeni detalj: određeni broj državnih sajtova godinama nije imao HTTPS. U 2024. godini. Znači, kada pristupate sajtu koji čuva vaše lične podatke, veza nije bila šifrovana. **E viva!!!!** Za one koji ne znaju šta to znači: zamislite da šaljete pismo sa ličnim podacima, ali umjesto koverte koristite razglednicu. I poštar čita. I komšija čita. I svi čitaju.
+My favorite detail: a number of government sites went years without HTTPS. In 2024. So when you accessed a site holding your personal data, the connection wasn't encrypted. **E viva!!!!** For those who don't know what that means: imagine sending a letter with your personal data, but instead of an envelope you use a postcard. And the postman reads it. And the neighbor reads it. And everyone reads it.
 
-Bar su imali animaciju na loading screen-u. Bomba!!
+At least they had an animation on the loading screen. Awesome!!
 
-## Sajt opštine [insert bilo koja opština]
+## The website of the municipality of [insert any municipality]
 
-Svaka crnogorska opština ima svoj sajt. I svaki od tih sajtova izgleda kao da ga je radio nečiji bratanac koji "zna kompjutere". 
+Every Montenegrin municipality has its own website. And every one of those sites looks like it was made by somebody's nephew who "knows computers".
 
-## "A što ima od čkole!?"
-## "Neka je on živ i zdrav!"
+## "What's the use of school!?"
+## "As long as he's alive and well!"
 
-Neka pravila koja važe za skoro sve:
+Some rules that apply to almost all of them:
 
-1. **Vijesti sa naslovne strane su iz 2022.** — ali sajt tehnički radi, tako da... uspjeh?
-2. **Kontakt stranica** ima telefon koji ne zvoni i email koji niko ne čita
-3. **PDF-ovi** su skenirani papiri, zakošeni pod uglom od 7°, sa rezolucijom koja jedva prikazuje tekst. Ali imaju pečat! Skenirani pečat se računa
+1. **The front page news is from 2022.** — but the site technically works, so... success?
+2. **The contact page** has a phone that doesn't ring and an email nobody reads
+3. **PDFs** are scanned papers, skewed at a 7° angle, at a resolution that barely shows the text. But they have a stamp! A scanned stamp counts
 
-## Zašto je ovo bitno
+## Why this matters
 
-Šalu na stranu, ovo zapravo *jeste* problem. Ljudi gube vrijeme, posao se usporava, turisti se zbunjuju, investitori odustaju. Dobra veb infrastruktura je temelj funkcionalne države, ne luksuz. Crna Gora ima sjajne IT stručnjake koji mogu napraviti odlične sajtove i aplikacije. **Zaposlite ljude koji znaju šta rade**, nepotizammaxxing ne preporučujemo.
+Jokes aside, this actually *is* a problem. People lose time, work slows down, tourists get confused, investors give up. Good web infrastructure is the foundation of a functioning state, not a luxury. Montenegro has great IT professionals who can build excellent sites and apps. **Hire people who know what they're doing**, we do not recommend nepotismmaxxing.
 
-Ali realno, ako čitate ovo, vjerovatno niste osoba koja o tome odlučuje. Pa hajde da se samo nasmijemo i nastavimo da koristimo šaltere.
+But realistically, if you're reading this, you're probably not the person who decides. So let's just have a laugh and keep using the counters.
 
-*Autor ne snosi odgovornost za eventualne traume nastale posjetom navedenih sajtova*
+*The author accepts no responsibility for any trauma caused by visiting the sites mentioned*

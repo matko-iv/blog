@@ -1,5 +1,5 @@
 Project Milosevic: First Screenshots of a PSX-Style Belgrade
-25. jul 2026
+25 July 2026
 
 One walkable block of central Belgrade runs at 320×180, textured low, with a first-person controller and collision that holds. I am posting now because the look is settled. Everything after this is research, and the research runs through the rest of 2026.
 

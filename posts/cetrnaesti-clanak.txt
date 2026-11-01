@@ -1,5 +1,5 @@
 Getting Andrej Into a Yugo: three weeks on one interaction
-20. avgust 2026
+20 August 2026
 
 Since the last post I built one thing. Andrej walks up to a parked Zastava Koral, opens the driver's door, gets in, and drives off. He can also get out again. That took three weeks, and almost none of it went where I expected.
 

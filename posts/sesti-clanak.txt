@@ -1,18 +1,18 @@
-Ozbiljan sigurnosni rizik za vaše podatke na Samsung telefonima
-25. februar 2026
+A serious security risk for your data on Samsung phones
+25 February 2026
 
-Nedavno mi se desio ozbiljan problem sa Samsung S24+ telefonom koji me koštao factory reseta i sati vraćanja podataka, pa sam odlučio da podijelim iskustvo.
+I recently had a serious problem with a Samsung S24+ that cost me a factory reset and hours of restoring data, so I decided to share the experience.
 
-Slikao sam veliki broj fotografija za jedan projekat — trebale su mi slike u cilju konsruisanja 3D scene toga što je slikano, što znači stotine slika u kratkom roku (preko 150 slika). Samsung S24+, a i svi noviji telefoni sa UI7+, ima funkciju koja se zove "Refining Picture", AI optimizacija koja obrađuje svaku sliku nakon snimanja. Ona je počevši od UI 7.0 automatski uključena na maksimum doprinos.
+I took a large number of photos for a project — I needed them to construct a 3D scene of what was being photographed, which meant hundreds of photos in a short time (over 150). The Samsung S24+, like all newer phones with UI7+, has a feature called "Refining Picture", an AI optimization that processes every photo after it's taken. Starting from UI 7.0 it's automatically turned on at maximum strength.
 
-Nakon nekog vremena, telefon mi je javio da je memorija puna. Kad sam provjerio, kamera aplikacija (dakle ne Galerija, gdje su slike, nego aplikacija "Camera") je zauzimala oko 90GB prostora. Cijela preostala memorija telefona bila je zauzeta privremenim fajlovima koje je AI generisao obrađujući slike. Sistem praktično nije mogao ništa da upisuje, aplikacije su crash-ovale, a ja nisam znao što se dešava još.
+After a while the phone told me the memory was full. When I checked, the camera app (so not the Gallery, where the photos are, but the "Camera" app) was taking up about 90GB of space. All of the phone's remaining memory was taken up by temporary files the AI generated while processing the photos. The system practically couldn't write anything, apps were crashing, and I still didn't know what was going on.
 
-Pokušao sam da očistim cache, prvo iz UI-a, pa sam palio telefon iz Recovery mode-a, da čitav cache partition izbrišem, pa sam ga prikačio na kompjuter sa Android Build Tools i probao da pronađem tih 90GB, ali u data glavnom folderu ih nije bilo, pa jedino mjesto gdje su ti gigabajti mogli biti je `root`, a igranje sa root-om bi moglo samo pogoršati situaciju.
+I tried clearing the cache, first from the UI, then I booted the phone into Recovery mode to wipe the whole cache partition, then I connected it to a computer with Android Build Tools and tried to find those 90GB, but they weren't in the main data folder, so the only place those gigabytes could be was `root`, and playing around with root could only make things worse.
 
-Nije ovo samo moj problem. Na Samsung zajednici i Redditu ima hrpa korisnika sa S23 Ultra, S24 Ultra i S25 Ultra koji prijavljuju identično. Slike zaglavljene u "Refining" stanju po 15+ sati, kamera aplikacija koja jede prostor bez ikakvog upozorenja.
+This isn't just my problem. On the Samsung community and Reddit there are loads of users with the S23 Ultra, S24 Ultra and S25 Ultra reporting the same thing. Photos stuck in the "Refining" state for 15+ hours, a camera app eating up storage without any warning.
 
-Najgore od svega je što ne postoji nikakav limit. Aplikacija može da uzme koliko god hoće prostora i sistem te ne upozori na vrijeme. To je bezbezbjednosni rizik jer puna memorija može da dovede i do korupcije podataka, ne samo do sporog telefona. Srećom, meni je telefon uspio prepoznati priključen kompjuter pa sam mogao odmah da Backup-ujem podatke. Ali nekome drugome možda i ne bi to uradio.
+Worst of all, there's no limit whatsoever. The app can take as much space as it wants and the system doesn't warn you in time. That's a security risk, because full memory can also lead to data corruption, not just a slow phone. Luckily, my phone still managed to recognize the connected computer, so I could back up my data right away. But for someone else it might not have done that.
 
-Ako slikate puno odjednom, isključite Scene Optimizer i Refining Picture u podešavanjima kamere prije nego što počnete. Ili koristite Pro Mode koji snima RAW bez ikakve AI obrade. Naučio sam na težak način.
+If you're taking a lot of photos at once, turn off Scene Optimizer and Refining Picture in the camera settings before you start. Or use Pro Mode, which shoots RAW without any AI processing. I learned this the hard way.
 
-Ozbiljan propust Samsunga. AI je mogao kompromitovati moje podatke.
+A serious failure by Samsung. AI could have compromised my data.
