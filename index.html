@@ -20,64 +20,33 @@
             font-size: 18px;
             line-height: 1.6;
             color: #24292e;
-            background: #ffffff;
-            max-width: 680px;
+            background: #f3f5f8;
+            max-width: 720px;
             margin: 0 auto;
-            padding: 60px 20px;
+            padding: 48px 20px;
         }
 
-        h1 {
-            font-size: 40px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            line-height: 1.25;
-            color: #24292e;
-        }
-
-        h2 {
-            font-size: 30px;
-            font-weight: 600;
-            margin-top: 50px;
-            margin-bottom: 18px;
-            line-height: 1.25;
-            color: #24292e;
-        }
-
-        h3 {
-            font-size: 22px;
-            font-weight: 600;
-            margin-top: 35px;
-            margin-bottom: 14px;
-            color: #24292e;
-        }
-
-        p {
-            margin-bottom: 18px;
-            color: #24292e;
-        }
-
-        a {
-            color: #0366d6;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
+        h1 { font-size: 40px; font-weight: 600; margin-bottom: 12px; line-height: 1.25; color: #24292e; }
+        h2 { font-size: 30px; font-weight: 600; margin-top: 50px; margin-bottom: 18px; line-height: 1.25; color: #24292e; }
+        h3 { font-size: 22px; font-weight: 600; margin-top: 35px; margin-bottom: 14px; color: #24292e; }
+        p { margin-bottom: 18px; color: #24292e; }
+        a { color: #0366d6; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        ul, ol { margin-left: 28px; margin-bottom: 18px; }
+        li { margin-bottom: 6px; }
 
         code {
-            background: #f6f8fa;
-            padding: 3px 6px;
-            border-radius: 3px;
+            background: #eef1f5;
+            padding: 3px 8px;
+            border-radius: 999px;
             font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
             font-size: 0.9em;
         }
 
         pre {
             background: #f6f8fa;
-            border: 1px solid #e1e4e8;
-            border-radius: 6px;
-            padding: 16px;
+            border-radius: 18px;
+            padding: 18px 20px;
             overflow-x: auto;
             margin: 24px 0;
             font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
@@ -85,118 +54,43 @@
             line-height: 1.5;
         }
 
-        pre code {
-            background: none;
-            padding: 0;
-        }
-
-        ul, ol {
-            margin-left: 28px;
-            margin-bottom: 18px;
-        }
-
-        li {
-            margin-bottom: 6px;
-        }
+        pre code { background: none; padding: 0; border-radius: 0; }
 
         img {
             max-width: 100%;
             height: auto;
             margin: 24px 0;
             display: block;
-            border-radius: 6px;
+            border-radius: 18px;
+        }
+
+        /* Section break: a row of round dots instead of a rule. */
+        hr {
+            border: none;
+            width: 72px;
+            height: 8px;
+            margin: 48px auto;
+            background: radial-gradient(circle, #c9d1d9 3px, transparent 3.5px) center / 24px 8px repeat-x;
         }
 
         blockquote {
-            border-left: 3px solid #0366d6;
-            padding: 12px 20px;
+            padding: 14px 22px;
             margin: 24px 0;
             color: #586069;
             font-style: italic;
-            background: #f6f8fa;
-            border-radius: 0 6px 6px 0;
+            background: #f1f6fd;
+            border-radius: 20px;
         }
 
-        blockquote p {
-            margin-bottom: 0;
-            color: #586069;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid #e1e4e8;
-            margin: 48px 0;
-        }
-
-        .site-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 60px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e1e4e8;
-            font-size: 15px;
-        }
-
-        .site-header a {
-            color: #586069;
-            text-decoration: none;
-        }
-
-        .site-header a:hover {
-            color: #24292e;
-        }
-
-        .site-header .site-name {
-            font-weight: 600;
-            color: #24292e;
-        }
-
-        .site-header nav a {
-            margin-left: 20px;
-        }
-
-        .article {
-            margin-bottom: 0;
-        }
-
-        .article-header {
-            margin-bottom: 24px;
-        }
-
-        .article-title {
-            font-size: 32px;
-            font-weight: 700;
-            line-height: 1.25;
-            color: #24292e;
-            margin-bottom: 8px;
-        }
-
-        .article-date {
-            color: #586069;
-            font-size: 14px;
-        }
-
-        .article-body h2 {
-            margin-top: 36px;
-        }
-
-        .article-body h3 {
-            margin-top: 28px;
-        }
-
-        .article-divider {
-            border: none;
-            border-top: 1px solid #e1e4e8;
-            margin: 56px 0;
-        }
+        blockquote p { margin-bottom: 0; color: #586069; }
 
         .note {
-            background: #f6f8fa;
-            border-left: 3px solid #586069;
-            padding: 15px 20px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 16px 20px;
             margin: 28px 0;
             font-size: 16px;
+            box-shadow: 0 2px 10px rgba(31,35,40,0.06);
         }
 
         .footer {
@@ -204,11 +98,114 @@
             color: #586069;
             font-size: 13px;
             padding: 24px 0;
-            margin-top: 60px;
-            border-top: 1px solid #e1e4e8;
+            margin-top: 48px;
         }
 
+        .footer p { margin-bottom: 0; color: #586069; }
         .footer a { color: #0366d6; }
+
+        /* Rounded header bar; the current page is a blue pill. */
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+            margin-bottom: 48px;
+            padding: 8px 8px 8px 22px;
+            background: #ffffff;
+            border-radius: 999px;
+            box-shadow: 0 1px 4px rgba(31,35,40,0.06);
+            font-size: 13px;
+        }
+
+        .site-header a {
+            color: #586069;
+            text-decoration: none;
+        }
+
+        .site-header .site-name {
+            font-weight: 600;
+            color: #24292e;
+        }
+
+        .site-header nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+        }
+
+        .site-header nav a {
+            margin: 0;
+            padding: 6px 12px;
+            border-radius: 999px;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .site-header nav a:hover {
+            background: #f3f5f8;
+            color: #24292e;
+            text-decoration: none;
+        }
+
+        .site-header nav a.active {
+            background: #0366d6;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .page-intro { color: #586069; margin-bottom: 28px; }
+
+        .latest-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 22px 12px;
+            margin-bottom: 36px;
+            box-shadow: 0 2px 10px rgba(31,35,40,0.06);
+        }
+
+        .latest-card .latest-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #586069;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .latest-card ul { list-style: none; margin: 0; padding: 0; }
+
+        /* Each article is its own rounded card. */
+        .article {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 32px 34px 18px;
+            box-shadow: 0 2px 10px rgba(31,35,40,0.06);
+            scroll-margin-top: 20px;
+        }
+
+        .article-header { margin-bottom: 24px; }
+
+        .article-title {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #24292e;
+            margin-bottom: 10px;
+        }
+
+        .article-date {
+            display: inline-block;
+            color: #586069;
+            background: #f3f5f8;
+            border-radius: 999px;
+            padding: 3px 12px;
+            font-size: 13px;
+        }
+
+        .article-body h2 { margin-top: 36px; }
+        .article-body h3 { margin-top: 28px; }
+
+        .article-divider { margin: 28px auto; }
 
         mjx-container[display="true"] {
             overflow-x: auto;
@@ -220,26 +217,26 @@
             padding: 60px 20px;
             color: #586069;
             font-size: 15px;
+            background: #ffffff;
+            border-radius: 28px;
         }
 
         @media (max-width: 680px) {
-            body {
-                font-size: 16px;
-                padding: 40px 16px;
-            }
-
+            body { font-size: 16px; padding: 32px 14px; }
             h1 { font-size: 32px; }
             h2 { font-size: 26px; }
             h3 { font-size: 20px; }
+            .article { padding: 24px 20px 10px; border-radius: 24px; }
             .article-title { font-size: 26px; }
+            .site-header { border-radius: 28px; padding: 10px 10px 10px 18px; }
         }
     </style>
 </head>
 <body>
     <div class="site-header">
         <a href="/" class="site-name">Matija Ivanović</a>
-        <nav>
-            <a href="#" style="color:#0366d6;font-weight:600;">Blog</a>
+                <nav>
+            <a href="index.html" class="active" aria-current="page">Blog</a>
             <a href="archive.html">Archive</a>
             <a href="https://github.com/matko-iv" target="_blank">GitHub</a>
             <a href="mailto:ivanovicmatija2007@gmail.com">Contact</a>
@@ -247,10 +244,10 @@
     </div>
 
     <h1>Blog</h1>
-    <p style="color:#586069;margin-bottom:24px;">Thoughts about programming, electronics, meteorology, and other interesting topics...</p>
+    <p class="page-intro">Thoughts about programming, electronics, meteorology, and other interesting topics...</p>
 
-    <nav id="latest-posts" style="margin-bottom:48px;display:none;">
-        <p style="font-size:14px;font-weight:600;color:#586069;margin-bottom:8px;letter-spacing:0.5px;">Newest posts</p>
+    <nav id="latest-posts" class="latest-card" style="display:none;">
+        <p class="latest-label">Newest posts</p>
         <ul id="latest-posts-list" style="list-style:none;margin:0;padding:0;">
         </ul>
     </nav>
